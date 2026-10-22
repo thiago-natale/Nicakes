@@ -1,0 +1,50 @@
+---
+/**
+ * Formas orgânicas atrás do header/hero (somente desktop), em duas peças:
+ * 1. a forma sálvia superior direita, presa à coluna da mídia do hero;
+ * 2. a faixa ondulada clara que nasce na borda esquerda e passa sob a mídia.
+ * Cada peça tem a própria caixa, calculada com as variáveis do hero (hero.css),
+ * por isso as curvas acompanham a mídia sem deformar em telas largas.
+ * As duas formas passam POR TRÁS da mídia, como camadas de papel: a faixa clara
+ * corre rente à base da foto e termina escondida sob a forma sálvia; a forma
+ * sálvia nasce por trás da foto e desce numa curva suave e contínua (a base da
+ * mídia = 80,9% da altura da forma). Nenhuma quina ou ponta fica visível.
+ */
+import './hero.css';
+---
+
+<div data-motion-section="hero-backdrop" data-motion-hero class="hero-backdrop pointer-events-none absolute inset-x-0 top-0 hidden overflow-hidden lg:block" aria-hidden="true">
+  <svg class="hero-backdrop__band" viewBox="0 0 1000 100" preserveAspectRatio="none" focusable="false">
+    <defs>
+      <!-- Estado inicial do morph: faixa recolhida junto à borda esquerda -->
+      <path id="band-seed" d="M7.7 90.6 C20 88 40 86 60 86 L80 86 C90 87 88 89 80 90 C60 91 40 91 30 91 C20 91 12 91 7.7 90.6 Z"></path>
+    </defs>
+    <path
+      data-motion="backdrop-band"
+      fill="var(--color-sage-mist)"
+      d="M7.7 90.6 C92.3 40.6 288.5 15.6 557.7 9.4 C700 6 860 6 980 10 C1000 11 1000 17 980 19 C860 24 760 40 680 62 C650 74 612 91.6 553.8 89.1 C403.8 82.8 288.5 65.6 157.7 71.9 C80.8 76.6 38.5 84.4 7.7 90.6 Z"
+    ></path>
+    <!-- Linha dourada sobre a crista da onda (DrawSVG) -->
+    <path
+      data-motion="backdrop-crest"
+      d="M7.7 90.6 C92.3 40.6 288.5 15.6 557.7 9.4 C700 6 860 6 980 10"
+      fill="none"
+      stroke="var(--color-gold)"
+      stroke-opacity="0.8"
+      stroke-width="1.2"
+      stroke-linecap="round"></path>
+  </svg>
+  <svg class="hero-backdrop__blob" viewBox="0 0 1000 1000" preserveAspectRatio="none" focusable="false">
+    <defs>
+      <!-- Gota recolhida no canto (entrada) e variação da forma (respiração no scroll) -->
+      <path id="blob-seed" d="M1000 0 L900 0 C880 60 900 120 950 150 C980 168 1000 170 1000 175 Z"></path>
+      <path id="blob-breathe" d="M351.9 0 C330 85 300 140 236 200 L262 300 L262 690 C262 760 270 795 300 808 C364 836 490 858 632 882 C800 912 915 944 1000 974 L1000 0 Z"></path>
+    </defs>
+    <path
+      data-motion="backdrop-blob"
+      fill="var(--color-sage-soft)"
+      d="M351.9 0 C342 75 312 130 236 190 L262 300 L262 690 C262 760 270 795 300 808 C360 832 480 850 620 872 C790 899 910 925 1000 954 L1000 0 Z"
+    ></path>
+  </svg>
+</div>
+

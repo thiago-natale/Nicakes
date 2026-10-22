@@ -1,0 +1,100 @@
+---
+/**
+ * Preloader da home (portado do projeto de origem C:\Sites\Nicakes).
+ * Aparece só na primeira visita da sessão; dura ~4s.
+ *
+ * A coreografia (frase letra a letra → letras somem → logo → painéis abrem) é
+ * feita em CSS puro (preloader.css): começa no 1º quadro, sem esperar o JS do
+ * site baixar. As letras já vêm divididas do HTML. O JS (preloader.ts, sem GSAP)
+ * só abre os painéis quando o logo terminou E as animações do site estão
+ * prontas, e dispara `nicakes:preloader-reveal` / `nicakes:preloader-complete`.
+ */
+import { SESSION_KEY } from './preloader-config';
+import './preloader.css';
+
+const words = [
+  { text: 'Seja', cls: '' },
+  { text: 'bem-vindo', cls: 'text-rose' },
+  { text: 'a', cls: '' },
+];
+const total = words.reduce((n, w) => n + [...w.text].length, 0);
+let index = 0;
+const chars = words.map((w) => ({ ...w, chars: [...w.text].map((ch) => ({ ch, i: index++ })) }));
+---
+
+<script is:inline define:vars={{ SESSION_KEY }}>
+  (function () {
+    var root = document.documentElement;
+    var seen = false;
+    try {
+      seen = sessionStorage.getItem(SESSION_KEY) === '1';
+    } catch (e) {}
+    if (seen) root.setAttribute('data-preloader-skip', '');
+    else {
+      root.classList.add('is-preloading');
+      // Começa quando a itálica da frase estiver pronta (no máximo 0,6s de espera)
+      var go = function () {
+        root.classList.add('preloader-go');
+      };
+      setTimeout(go, 600);
+      try {
+        document.fonts.load('italic 900 24px "Cormorant Garamond"').then(go, go);
+      } catch (e) {
+        go();
+      }
+    }
+  })();
+</script>
+
+<div id="preloader" class="fixed inset-0 z-50 flex flex-col overflow-hidden" style={`--pl-n: ${total}`} aria-hidden="true">
+  <div id="preloader-panel-up" class="preloader__panel preloader__panel--up relative z-10 flex h-[60vh] w-full items-end justify-center bg-blush pb-[8px]">
+    <div id="preloader-content" class="flex flex-col items-center justify-center">
+      <p
+        id="preloader-text"
+        class="preloader__text absolute bottom-[48px] font-display text-[24px] font-black text-sage italic"
+      >
+        {
+          chars.map((w, wi) => (
+            <>
+              {wi > 0 && ' '}
+              <span class:list={['preloader__word', w.cls]} aria-hidden="true">
+                {w.chars.map(({ ch, i }) => (
+                  <span class="preloader__mask">
+                    <span class="preloader__char" style={`--i: ${i}`}>{ch}</span>
+                  </span>
+                ))}
+              </span>
+            </>
+          ))
+        }
+      </p>
+      <img
+        id="preloader-logo"
+        class="preloader__logo relative w-[320px]"
+        src="/brand/logo-header.webp"
+        alt=""
+        width="484"
+        height="194"
+        decoding="async"
+      />
+    </div>
+  </div>
+  <div id="preloader-panel-down" class="preloader__panel preloader__panel--down h-[40vh] w-full bg-blush"></div>
+</div>
+
+<noscript>
+  <style is:inline>
+    #preloader {
+      display: none;
+    }
+    html.is-preloading {
+      overflow: auto;
+    }
+  </style>
+</noscript>
+
+<script>
+  import { initPreloader } from './preloader';
+
+  initPreloader();
+</script>

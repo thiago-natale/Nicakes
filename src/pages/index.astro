@@ -1,0 +1,28 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import HeroBackdrop from '../components/sections/Hero/HeroBackdrop.astro';
+import Hero from '../components/sections/Hero/Hero.astro';
+import About from '../components/sections/About/About.astro';
+import Bestsellers from '../components/sections/Bestsellers/Bestsellers.astro';
+import Recommended from '../components/sections/Recommended/Recommended.astro';
+import MenuPreview from '../components/sections/MenuPreview/MenuPreview.astro';
+import CustomOrders from '../components/sections/CustomOrders/CustomOrders.astro';
+import Store from '../components/sections/Store/Store.astro';
+import Testimonials from '../components/sections/Testimonials/Testimonials.astro';
+import Faq from '../components/sections/Faq/Faq.astro';
+import Contact from '../components/sections/Contact/Contact.astro';
+---
+
+<SiteLayout structuredData preloader>
+  <HeroBackdrop slot="backdrop" />
+  <Hero />
+  <About />
+  <Bestsellers />
+  <Recommended />
+  <MenuPreview />
+  <CustomOrders />
+  <Store />
+  <Testimonials />
+  <Faq />
+  <Contact />
+</SiteLayout>

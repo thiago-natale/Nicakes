@@ -1,0 +1,22 @@
+---
+/**
+ * Floreio dourado "escrito à mão" (o mesmo do "carinho." do hero), para ficar
+ * sob uma palavra. Posicione o pai com `position: relative` e use a classe
+ * `swash` (global.css) ou passe a sua. Desenhado pelo GSAP (DrawSVG).
+ */
+interface Props {
+  class?: string;
+  [key: string]: unknown;
+}
+const { class: className = 'swash', ...rest } = Astro.props;
+---
+
+<svg class={className} viewBox="0 0 220 22" aria-hidden="true" focusable="false" {...rest}>
+  <path
+    d="M4 13 C40 18 92 18 140 12 C170 9 196 5 214 3 C200 8 188 13 192 16 C196 19 208 17 216 13"
+    fill="none"
+    stroke="var(--color-gold)"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"></path>
+</svg>

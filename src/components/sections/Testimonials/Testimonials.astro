@@ -1,0 +1,119 @@
+---
+/**
+ * Depoimentos — "Memórias que adoçam" (trazida do projeto antigo, seção #inspiracoes).
+ * Carrossel acessível de 3 cards: o ativo no centro, sobre uma forma orgânica que
+ * muda de desenho a cada depoimento; laterais esmaecidos (só no desktop).
+ * Sem rotação automática: navegação por setas, pontos e teclado (← →).
+ */
+import Icon from '../../ui/Icon.astro';
+import SectionHeading from '../../ui/SectionHeading.astro';
+import { testimonials, initials, blobShapes } from './testimonials';
+import './testimonials.css';
+
+const count = testimonials.length;
+// Ordem inicial no trilho: anterior · ativo · próximo
+const order = count >= 3 ? [count - 1, 0, 1] : testimonials.map((_, i) => i);
+---
+
+<section
+  id="depoimentos"
+  data-motion-section="testimonials"
+  data-testimonials
+  class="testimonials content-x section-y relative z-10 scroll-mt-6 lg:section-x"
+  aria-labelledby="testimonials-title"
+  aria-roledescription="carrossel"
+>
+  <!-- Forma sálvia na borda direita (alterna com a do FAQ, à esquerda) -->
+  <span class="testimonials__edge hidden lg:block" aria-hidden="true" data-motion="tm-edge"></span>
+
+  <SectionHeading id="testimonials-title" align="center" eyebrow="Depoimentos" title="Memórias" accent="que adoçam" lead="O que dizem os clientes da Nicake’s." />
+
+  <div class="testimonials__stage relative mx-auto mt-[1.8rem] max-w-[68rem] lg:mt-[2.2rem]">
+    <svg class="testimonials__blob" data-motion="tm-blob-svg" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <defs>
+        <path id="tm-blob-seed" d="M200 140 C214 140 226 146 226 156 C226 166 214 172 200 172 C186 172 174 166 174 156 C174 146 186 140 200 140 Z"></path>
+      </defs>
+      <path data-motion="tm-blob" d={blobShapes[0]} fill="var(--color-blush)"></path>
+      <!-- Contorno dourado deslocado: o mesmo fio dourado do hero, das features e dos divisores -->
+      <path
+        data-motion="tm-blob-line"
+        d={blobShapes[0]}
+        fill="none"
+        stroke="var(--color-gold)"
+        stroke-opacity="0.6"
+        stroke-width="1.1"
+        stroke-linecap="round"
+        transform="rotate(7 200 150) translate(200 150) scale(1.04 1.06) translate(-200 -150)"></path>
+    </svg>
+
+    <ul
+      data-testimonial-track
+      class="grid grid-cols-1 items-center gap-[2rem] px-[0.5rem] lg:grid-cols-[minmax(0,1fr)_minmax(0,1.35fr)_minmax(0,1fr)] lg:gap-[clamp(1.5rem,3vw,4rem)] lg:px-0"
+    >
+      {
+        order.map((index) => {
+          const item = testimonials[index];
+          const active = index === 0;
+          return (
+            <li
+              data-testimonial={index}
+              data-motion="tm-card"
+              class:list={['testimonials__card text-center', active && 'is-active']}
+              aria-hidden={active ? 'false' : 'true'}
+              aria-roledescription="depoimento"
+              aria-label={`${index + 1} de ${count}`}
+            >
+              <figure class="relative mx-auto max-w-[24rem] px-[1.6rem] py-[1.2rem] lg:px-[2rem]">
+                <span class="testimonials__mark absolute top-[-0.6rem] left-[-0.2rem] font-display text-[4.5rem] leading-none text-rose" data-motion="tm-mark" aria-hidden="true">“</span>
+                <blockquote class="testimonials__quote relative font-display text-[1.12rem] leading-[1.5] text-current italic lg:text-[1.15rem]" data-motion="tm-quote">
+                  {item.quote}
+                </blockquote>
+                <figcaption class="mt-[1rem] flex items-center justify-center gap-[0.6rem] text-left">
+                  <span class="grid size-[2.2rem] shrink-0 place-items-center rounded-full bg-sage-deep font-display text-[0.9rem] font-semibold text-white" data-motion="tm-avatar" aria-hidden="true">
+                    {initials(item.name)}
+                  </span>
+                  <span data-motion="tm-author">
+                    <span class="block text-body leading-tight font-medium text-cocoa">{item.name}</span>
+                    <span class="type-small block text-cocoa-soft">
+                      {item.context}
+                      {item.placeholder && <span class="text-rose-darker"> · depoimento ilustrativo</span>}
+                    </span>
+                  </span>
+                </figcaption>
+                <span class="testimonials__mark absolute right-[-0.2rem] bottom-[-2.2rem] font-display text-[4.5rem] leading-none text-rose" data-motion="tm-mark" aria-hidden="true">”</span>
+              </figure>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+
+  <div class="mt-[2rem] flex items-center justify-center gap-[0.4rem] lg:mt-[1.8rem]" data-motion="tm-controls">
+    <button type="button" class="grid size-11 place-items-center rounded-full border border-rose-deep/70 text-rose-darker transition-colors hover:bg-blush lg:size-[2.2rem]" data-testimonial-prev aria-label="Depoimento anterior">
+      <Icon name="arrow" class="size-[0.95rem] rotate-180" />
+    </button>
+    <div class="flex items-center" role="group" aria-label="Escolher depoimento">
+      {
+        testimonials.map((item, i) => (
+          <button type="button" class="testimonials__dot" data-testimonial-dot={i} aria-label={`Depoimento ${i + 1}: ${item.context}`} aria-current={i === 0 ? 'true' : 'false'}>
+            <span class="testimonials__dot-mark" aria-hidden="true" />
+            <Icon name="heart-solid" class="testimonials__dot-heart" />
+          </button>
+        ))
+      }
+    </div>
+    <button type="button" class="grid size-11 place-items-center rounded-full border border-rose-deep/70 text-rose-darker transition-colors hover:bg-blush lg:size-[2.2rem]" data-testimonial-next aria-label="Próximo depoimento">
+      <Icon name="arrow" class="size-[0.95rem]" />
+    </button>
+  </div>
+  <p data-testimonial-status role="status" class="sr-only"></p>
+</section>
+
+<script>
+  // Carrossel (GSAP Flip + MorphSVG) só é baixado quando a seção se aproxima
+  import { onApproach } from '../../../scripts/motion/lazy';
+
+  const el = document.querySelector('[data-testimonials]');
+  if (el) onApproach(el, () => void import('./testimonials.carousel').then((m) => m.initTestimonialsCarousel()), '100%');
+</script>

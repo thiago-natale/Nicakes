@@ -1,0 +1,56 @@
+---
+import { formatPrice, type MenuItem } from '../../data/menu';
+
+/**
+ * Lista de itens do cardápio com linha pontilhada entre nome e preço.
+ * Com `columns`, exibe vários preços por item (ex.: 1 camada / 2 camadas).
+ */
+interface Props {
+  items: MenuItem[];
+  columns?: string[];
+  class?: string;
+}
+
+const { items, columns, class: className = '' } = Astro.props;
+---
+
+<div class:list={['menu-list', className]}>
+  {
+    columns && (
+      <div class="mb-1 flex justify-end gap-3 text-[0.6rem] tracking-[0.08em] text-cocoa-soft uppercase" aria-hidden="true">
+        {columns.map((col) => <span class="w-[4.2rem] text-right">{col}</span>)}
+      </div>
+    )
+  }
+  <ul class="space-y-[0.45rem]">
+    {
+      items.map((item) => (
+        <li data-motion="ml-row" class="flex items-baseline gap-2 text-[0.78rem] leading-[1.25] text-cocoa">
+          <span class="min-w-0" data-motion="ml-name">
+            {item.name}
+            {item.detail && <span class="block text-[0.65rem] text-cocoa-soft">{item.detail}</span>}
+          </span>
+          <span class="menu-list__leader min-w-[1rem] flex-1 self-end" aria-hidden="true" data-motion="ml-leader" />
+          {item.prices && columns ? (
+            item.prices.map((value, i) => (
+              <span class="w-[4.2rem] shrink-0 text-right font-medium whitespace-nowrap tabular-nums">
+                <span class="sr-only">{columns[i]}: {formatPrice(value)}</span>
+                <span aria-hidden="true" data-motion="ml-price">{formatPrice(value)}</span>
+              </span>
+            ))
+          ) : (
+            <span class="shrink-0 font-medium whitespace-nowrap tabular-nums">
+              {item.price !== undefined && (
+                <>
+                  <span class="sr-only">{formatPrice(item.price)}</span>
+                  <span aria-hidden="true" data-motion="ml-price">{formatPrice(item.price)}</span>
+                </>
+              )}
+            </span>
+          )}
+        </li>
+      ))
+    }
+  </ul>
+</div>
+

@@ -1,0 +1,94 @@
+---
+import Eyebrow from './Eyebrow.astro';
+import SectionDivider from './SectionDivider.astro';
+
+/**
+ * Cabeçalho de seção padrão da home — um componente, duas variantes:
+ *
+ * - `align="start"` (editorial): eyebrow + título `type-section` em linhas +
+ *   destaque em itálico rosa + lead. Para seções de narrativa/informação.
+ * - `align="center"` (catálogo): eyebrow centralizado + título entre linhas
+ *   douradas com corações (SectionDivider) + lead. Para vitrines e listas.
+ *
+ * Hooks (scripts/motion/heading.ts → headingIn):
+ * heading · eyebrow-line · eyebrow-text · heading-line · heading-accent ·
+ * heading-lead (e, no center, os hooks do divider).
+ */
+interface Props {
+  id: string;
+  eyebrow: string;
+  /** Linhas do título antes do destaque (cada uma vira um bloco no start). */
+  title: string | string[];
+  /** Fim do título em itálico rosa (assinatura da marca). */
+  accent?: string;
+  lead?: string;
+  align?: 'start' | 'center';
+  /** Força o destaque na mesma linha do título (start). */
+  inline?: boolean;
+  /** `sage`: sobre painel sálvia sólido (destaque e textos em cacau, contraste AA). */
+  tone?: 'default' | 'sage';
+  class?: string;
+  leadClass?: string;
+}
+
+const {
+  id,
+  eyebrow,
+  title,
+  accent,
+  lead,
+  align = 'start',
+  inline = false,
+  tone = 'default',
+  class: className = '',
+  leadClass = '',
+} = Astro.props;
+const lines = Array.isArray(title) ? title : [title];
+const onSage = tone === 'sage';
+const accentColor = onSage ? 'text-cocoa' : 'text-rose-deep';
+const leadColor = onSage ? 'text-cocoa' : 'text-cocoa-soft';
+---
+
+{
+  align === 'center' ? (
+    <header data-motion="heading" data-heading="center" class:list={['text-center', className]}>
+      <Eyebrow text={eyebrow} align="center" />
+      <SectionDivider id={id} class="mt-[0.7rem]">
+        {lines.join(' ')}
+        {accent && (
+          <>
+            {' '}
+            <em class="font-medium text-rose-deep italic">{accent}</em>
+          </>
+        )}
+      </SectionDivider>
+      {lead && (
+        <p data-motion="heading-lead" class:list={['type-body mx-auto mt-[0.6rem] max-w-[34rem] text-cocoa-soft', leadClass]}>
+          {lead}
+        </p>
+      )}
+    </header>
+  ) : (
+    <header data-motion="heading" data-heading="start" class={className}>
+      <Eyebrow text={eyebrow} tone={tone} />
+      <h2 id={id} class="type-section mt-[0.8rem] text-cocoa">
+        {lines.map((line) => (
+          <span class:list={[inline ? 'inline' : 'block']} data-motion="heading-line">
+            {line}
+            {inline && ' '}
+          </span>
+        ))}
+        {accent && (
+          <em class:list={['font-medium italic', accentColor, inline ? 'inline' : 'block']} data-motion="heading-accent">
+            {accent}
+          </em>
+        )}
+      </h2>
+      {lead && (
+        <p data-motion="heading-lead" class:list={['type-body mt-[0.9rem] max-w-[26rem]', leadColor, leadClass]}>
+          {lead}
+        </p>
+      )}
+    </header>
+  )
+}

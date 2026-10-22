@@ -1,0 +1,167 @@
+/* Header fixo + menu móvel (BEM) — portado do projeto de origem */
+.header[data-intro-pending],
+.header[data-intro-pending] > * {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.header__toggle {
+  display: none;
+}
+
+.header[data-enhanced] .header__nav {
+  order: 0;
+}
+
+.header__nav {
+  order: 1;
+}
+
+.header__link {
+  position: relative;
+}
+
+.header__link::after {
+  position: absolute;
+  right: 0;
+  bottom: 5px;
+  left: 0;
+  height: 1px;
+  background: var(--color-berry);
+  content: '';
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 180ms ease;
+}
+
+.header__link:hover::after,
+.header__link:focus-visible::after,
+.header__link[aria-current='location']::after {
+  transform: scaleX(1);
+}
+
+.header-menu__link[aria-current='location'] {
+  color: var(--color-berry);
+}
+
+.header a:focus-visible,
+.header button:focus-visible,
+.header-menu a:focus-visible,
+.header-menu button:focus-visible {
+  outline: 2px solid var(--color-berry);
+  outline-offset: 4px;
+}
+
+.header button,
+.header-menu button {
+  cursor: pointer;
+}
+
+.header-menu::backdrop {
+  background: transparent;
+}
+
+/* ---- Menu móvel como cardápio (palco → véu → cartão: página + capa) ---- */
+.header-menu__scrim {
+  background: rgb(48 44 43 / 45%);
+}
+
+.header-menu__card {
+  overflow: hidden;
+}
+
+/* Linha dourada sob cada link (cresce da esquerda na abertura) */
+.header-menu__rule {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 1px;
+  background: color-mix(in srgb, var(--color-gold) 25%, transparent);
+  transform-origin: 0 50%;
+}
+
+.header-menu__eyebrow-line {
+  display: inline-block;
+  width: 1.6rem;
+  height: 2px;
+  background: var(--color-gold);
+  transform-origin: 0 50%;
+}
+
+/* Capa: sálvia com moldura dourada, logo e "Menu". Fica escondida fora das
+   animações (sem JS de animação o menu abre direto na página). */
+.header-menu__cover {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  visibility: hidden;
+  background:
+    radial-gradient(120% 80% at 30% 20%, rgb(255 255 255 / 10%), transparent 60%),
+    var(--color-sage);
+  backface-visibility: hidden;
+  transform-origin: 0 50%;
+  pointer-events: none;
+}
+
+.header-menu__cover-frame {
+  position: absolute;
+  inset: 18px;
+  border: 1px solid color-mix(in srgb, var(--color-gold) 80%, transparent);
+  outline: 1px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
+  outline-offset: 5px;
+}
+
+.header-menu__cover-content {
+  display: grid;
+  justify-items: center;
+  gap: 18px;
+}
+
+.header-menu__cover-rule {
+  width: 56px;
+  height: 1px;
+  background: var(--color-gold);
+}
+
+/* Escurece a capa conforme ela gira (luz rasante) */
+.header-menu__cover-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, rgb(48 44 43 / 0%), rgb(48 44 43 / 55%));
+  opacity: 0;
+}
+
+/* Sombra da capa sobre a página, junto à dobra */
+.header-menu__page-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(90deg, rgb(48 44 43 / 28%), rgb(48 44 43 / 0%) 55%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (width < 48rem) {
+  .header[data-enhanced] .header__nav {
+    display: none;
+  }
+
+  .header[data-enhanced] .header__toggle:not([hidden]) {
+    display: inline-flex;
+  }
+}
+
+@media (width >= 48rem) {
+  .header__nav {
+    order: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .header__link::after {
+    transition: none;
+  }
+}

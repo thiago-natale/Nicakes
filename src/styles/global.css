@@ -1,0 +1,542 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Fontes locais (Cormorant Garamond + Jost, licença OFL — public/fonts)
+   Variáveis, com subset latino (pt-BR) e só as features usadas; WOFF2
+   (com WOFF de reserva).
+   ========================================================================== */
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("/fonts/cormorant-garamond.woff2") format("woff2"), url("/fonts/cormorant-garamond.woff") format("woff");
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Cormorant Garamond";
+  src: url("/fonts/cormorant-garamond-italic.woff2") format("woff2"), url("/fonts/cormorant-garamond-italic.woff") format("woff");
+  font-style: italic;
+  font-weight: 300 700;
+  font-display: swap;
+}
+/* Fallback com métricas da Cormorant (Times/Liberation ajustadas): a troca de
+   fonte quase não mexe no layout (CLS) */
+@font-face {
+  font-family: "Cormorant Fallback";
+  src: local("Times New Roman"), local("TimesNewRomanPSMT"), local("Liberation Serif"), local("Times");
+  font-style: normal;
+  size-adjust: 95.85%;
+  ascent-override: 96.4%;
+  descent-override: 29.94%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Cormorant Fallback";
+  src: local("Times New Roman Italic"), local("TimesNewRomanPS-ItalicMT"), local("Liberation Serif Italic"), local("Times Italic");
+  font-style: italic;
+  size-adjust: 85.86%;
+  ascent-override: 107.6%;
+  descent-override: 33.43%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: "Jost";
+  src: url("/fonts/jost.woff2") format("woff2"), url("/fonts/jost.woff") format("woff");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Jost";
+  src: url("/fonts/jost-italic.woff2") format("woff2"), url("/fonts/jost-italic.woff") format("woff");
+  font-style: italic;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+/* ==========================================================================
+   Design tokens — Nicake’s Confeitaria
+   Valores extraídos da imagem de referência. Use sempre os tokens,
+   nunca cores/medidas soltas.
+   ========================================================================== */
+@theme {
+  /* Cores — paleta oficial Nicake's + tons de apoio para contraste (AA) */
+  --color-sage: #939b80;         /* verde-sálvia (oficial) — fundo externo, painel de destaques */
+  --color-sage-deep: #6b7358;    /* sálvia escuro — ícones e botões secundários (5:1 com branco) */
+  --color-sage-soft: #cdd1c0;    /* formas orgânicas */
+  --color-sage-mist: #e4e6da;    /* faixa ondulada, detalhes */
+  --color-rose: #da8d8c;         /* rosa queimado (oficial) — detalhes, títulos grandes */
+  --color-rose-deep: #a9605e;    /* rosa profundo — fundo dos CTAs (4,6:1 com branco) */
+  --color-rose-darker: #924f4d;  /* hover dos CTAs */
+  --color-rose-soft: #f4cfcf;    /* bordas e realces suaves */
+  --color-blush: #ffe8eb;        /* rosa-claro (oficial) — painéis, círculos de ícones */
+  --color-blush-50: #fff7f6;     /* superfície principal */
+  --color-gold: #b99457;         /* dourado suave — somente ornamentos e linhas */
+  --color-gold-deep: #9a7a44;    /* dourado para texto grande (3,8:1 sobre o rosa-claro) */
+  --color-cocoa: #3a2a2c;        /* texto principal (11,6:1 sobre rosa-claro) */
+  --color-cocoa-soft: #6b5357;   /* texto secundário (6,6:1) */
+  --color-line: #ecd6d4;         /* bordas de cards */
+  --color-creme: #fffdf9;        /* fundo do header e do menu móvel */
+  --color-ink: #302c2b;          /* texto do header */
+  --color-berry: #8b4f52;        /* detalhes do header e dos botões */
+
+  /* Tipografia */
+  --font-display: "Cormorant Garamond", "Cormorant Fallback", Garamond, "Times New Roman", serif;
+  --font-sans: "Jost", "Segoe UI", system-ui, sans-serif;
+
+  /* Escala tipográfica (1rem = 16px na largura de referência de 941px) */
+  --text-micro: 0.625rem;            /* 10px — microcopy, rodapé */
+  --text-micro--line-height: 1.5;
+  --text-caption: 0.6875rem;         /* 11px — descrições curtas */
+  --text-caption--line-height: 1.55;
+  --text-nav: 0.8125rem;             /* 13px — navegação, botões */
+  --text-nav--line-height: 1.3;
+  --text-body: 0.8125rem;            /* 13px — parágrafos */
+  --text-body--line-height: 1.6;
+  --text-card: 1.125rem;             /* 18px serif — títulos de card */
+  --text-card--line-height: 1.12;
+  --text-title-sm: 1.3rem;           /* ~21px serif — títulos do bloco de contato */
+  --text-title-sm--line-height: 1.15;
+  --text-title: 1.65rem;             /* ~26px serif — títulos de seção */
+  --text-title--line-height: 1.1;
+  --text-title-lg: 1.8rem;           /* ~29px serif — títulos de painel */
+  --text-title-lg--line-height: 1.02;
+  --text-hero: 3.15rem;              /* ~50px serif — título principal */
+  --text-hero--line-height: 0.98;
+
+  /* Raios */
+  --radius-panel: 1.5rem;
+  --radius-card: 1rem;
+  --radius-control: 0.75rem;
+
+  /* Sombras (tingidas de cacau, nunca cinza puro) */
+  --shadow-soft: 0 0.75rem 2rem -1rem rgb(84 52 54 / 0.32);
+  --shadow-panel: 0 1rem 2.25rem -1.25rem rgb(84 52 54 / 0.4);
+  --shadow-cta: 0 0.5rem 1.1rem -0.5rem rgb(146 79 77 / 0.6);
+  --shadow-plate: 0 0.8rem 1.2rem -0.7rem rgb(84 52 54 / 0.5);    /* pratos e fotos redondas */
+  --shadow-control: 0 0.3rem 0.6rem -0.3rem rgb(146 79 77 / 0.6); /* botões pequenos (+) */
+
+  /* Breakpoints — layout desktop a partir de 900px; moldura centralizada só no ultrawide */
+  --breakpoint-lg: 56.25rem;
+  --breakpoint-ultra: 137.5rem; /* 2200px */
+
+  /* Animação */
+  --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+:root {
+  /* Layout fluido: a superfície ocupa toda a largura até o ultrawide */
+  --section-px: clamp(0.75rem, 2.2vw, 4rem);      /* linha externa: borda de painéis e cards */
+  --content-px: clamp(1.25rem, 5vw, 7rem);        /* linha de texto: header, hero e seções abertas */
+  /* Padding interno dos painéis: no desktop, o texto dentro do painel cai na
+     mesma coluna do texto das seções abertas (section-px + panel-px = content-px). */
+  --panel-px: max(1.5rem, calc(var(--content-px) - var(--section-px)));
+  --panel-py: clamp(1.75rem, 3vw, 3rem);
+  /* Ritmo vertical entre seções */
+  --section-gap: clamp(2.75rem, 4.2vw, 4.75rem);
+  --section-gap-tight: clamp(1.75rem, 2.4vw, 2.75rem);
+  --frame-max-ultra: 2000px; /* largura máxima do conteúdo em telas ≥ 2200px */
+  /* Header fixo (medidas do projeto de origem, em px) */
+  --header-gutter: clamp(22px, 4.5vw, 86px);
+  --header-height: 101px; /* gravado antes do 1º paint (Header.astro) e atualizado via JS */
+  --duration-fast: 180ms;
+  --duration-base: 260ms;
+}
+
+/* Ultrawide: o fundo segue de ponta a ponta e o conteúdo fica centralizado em
+   até --frame-max-ultra (o % é resolvido no elemento que usa a variável). */
+@media (min-width: 137.5rem) {
+  :root {
+    --content-px: calc((100% - var(--frame-max-ultra)) / 2 + 7rem);
+    --section-px: calc((100% - var(--frame-max-ultra)) / 2 + 5rem);
+  }
+}
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+@layer base {
+  html {
+    scroll-padding-top: calc(var(--header-height) + 18px);
+    font-size: 112.5%; /* 18px no celular/tablet: microtextos continuam legíveis */
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* A partir de 900px a tipografia cresce devagar (16px em 941px → 20px a
+     partir de ~1700px). Mais largura vira mais espaço, não letra maior. */
+  @media (min-width: 56.25rem) {
+    html {
+      font-size: clamp(1rem, 0.69rem + 0.527vw, 1.25rem);
+    }
+  }
+
+  body {
+    @apply bg-sage font-sans text-cocoa antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-rose-deep);
+    outline-offset: 3px;
+    border-radius: 0.375rem;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ==========================================================================
+   Utilitários de layout
+   ========================================================================== */
+@utility section-x {
+  padding-inline: var(--section-px);
+}
+@utility content-x {
+  padding-inline: var(--content-px);
+}
+@utility panel-x {
+  padding-inline: var(--panel-px);
+}
+@utility panel-y {
+  padding-block: var(--panel-py);
+}
+/* Respiro antes de cada seção (a seção anterior não leva padding-bottom) */
+@utility section-y {
+  padding-top: var(--section-gap);
+}
+@utility section-y-tight {
+  padding-top: var(--section-gap-tight);
+}
+
+/* ==========================================================================
+   Escala tipográfica semântica — use estas classes, nunca text-[…] soltos.
+   Os valores em rem acompanham a fonte-base fluida (18px no celular,
+   16→20px no desktop).
+   ========================================================================== */
+/* Título de seção (todo <h2> da home) */
+@utility type-section {
+  font-family: var(--font-display);
+  font-size: 2.1rem;
+  line-height: 1.05;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  @media (min-width: 56.25rem) {
+    font-size: 2.5rem;
+    line-height: 1.04;
+  }
+}
+/* Título dentro de cartão/convite (convite da Loja, colunas do Contato) */
+@utility type-panel {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  line-height: 1.12;
+  font-weight: 600;
+  @media (min-width: 56.25rem) {
+    font-size: 1.85rem;
+  }
+}
+/* Parágrafo de abertura e texto corrido */
+@utility type-body {
+  font-size: var(--text-body);
+  line-height: 1.6;
+}
+/* Descrições de card e de produto, legendas de lista */
+@utility type-small {
+  font-size: 0.7rem;
+  line-height: 1.57;
+}
+/* Eyebrow (chapéu da seção) */
+@utility type-eyebrow {
+  font-family: var(--font-sans);
+  font-size: 0.62rem;
+  line-height: 1.5;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   Componentes reutilizáveis
+   ========================================================================== */
+@layer components {
+  /* ------------------------------------------------------------------------
+     Botão (BEM) — tokens de componente → variantes → tamanhos → estados.
+     Primitivos (paleta) → semânticos (variante) → componente (--btn-*).
+     Contrastes (AA): branco/rose-deep 4,6:1 · branco/sage-deep 5:1 ·
+     rose-darker/blush-50 5,8:1 · cocoa/blush-50 12,9:1.
+     ------------------------------------------------------------------------ */
+  .btn {
+    /* tamanho (md) */
+    --btn-h: 2.5rem;
+    --btn-px: 1.35rem;
+    --btn-font: var(--text-nav);
+    --btn-icon: 1rem;
+    --btn-gap: 0.5rem;
+    --btn-radius: var(--radius-control);
+    /* cores (primary) */
+    --btn-bg: var(--color-rose-deep);
+    --btn-bg-hover: var(--color-rose-darker);
+    --btn-fg: #fff;
+    --btn-fg-hover: #fff;
+    --btn-border: transparent;
+    --btn-border-hover: transparent;
+    --btn-ring: var(--color-rose-darker);
+    --btn-shadow: inset 0 1px 0 rgb(255 255 255 / 0.18), var(--shadow-cta);
+    --btn-shadow-hover: inset 0 1px 0 rgb(255 255 255 / 0.18), 0 0.75rem 1.4rem -0.6rem rgb(146 79 77 / 0.62);
+    --btn-shadow-active: inset 0 1px 0 rgb(255 255 255 / 0.1), 0 0.25rem 0.6rem -0.35rem rgb(146 79 77 / 0.6);
+
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--btn-gap);
+    min-height: var(--btn-h);
+    padding-inline: var(--btn-px);
+    border: 1px solid var(--btn-border);
+    border-radius: var(--btn-radius);
+    background-color: var(--btn-bg);
+    color: var(--btn-fg);
+    box-shadow: var(--btn-shadow);
+    font-family: var(--font-sans);
+    font-size: var(--btn-font);
+    font-weight: 500;
+    line-height: 1.2;
+    letter-spacing: 0.025em;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    user-select: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      background-color var(--duration-fast) var(--ease-soft),
+      border-color var(--duration-fast) var(--ease-soft),
+      color var(--duration-fast) var(--ease-soft),
+      box-shadow 220ms var(--ease-soft),
+      transform 220ms var(--ease-soft);
+  }
+
+  /* Área de toque ≥ 44px mesmo quando o desenho é mais baixo */
+  .btn::after {
+    content: "";
+    position: absolute;
+    inset: min(0px, calc((var(--btn-h) - 44px) / 2)) 0;
+  }
+
+  .btn__label {
+    display: inline-block;
+  }
+  .btn__icon {
+    width: var(--btn-icon);
+    height: var(--btn-icon);
+    flex-shrink: 0;
+    transition: transform 220ms var(--ease-soft);
+  }
+
+  /* Estados */
+  @media (hover: hover) {
+    .btn:hover {
+      background-color: var(--btn-bg-hover);
+      border-color: var(--btn-border-hover);
+      color: var(--btn-fg-hover);
+      box-shadow: var(--btn-shadow-hover);
+      transform: translateY(-1px);
+    }
+    .btn:hover .btn__icon--end {
+      transform: translateX(0.18rem);
+    }
+  }
+  .btn:active {
+    box-shadow: var(--btn-shadow-active);
+    transform: translateY(0) scale(0.98);
+    transition-duration: 90ms;
+  }
+  .btn:focus-visible {
+    outline: 2px solid var(--btn-ring);
+    outline-offset: 3px;
+    border-radius: var(--btn-radius);
+  }
+  .btn:disabled,
+  .btn[aria-disabled="true"] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    box-shadow: none;
+    transform: none;
+  }
+
+  /* Variantes */
+  .btn--light {
+    --btn-bg: var(--color-blush-50);
+    --btn-bg-hover: #fff;
+    --btn-fg: var(--color-cocoa);
+    --btn-fg-hover: var(--color-rose-darker);
+    --btn-border: rgb(58 42 44 / 0.08);
+    --btn-border-hover: rgb(58 42 44 / 0.12);
+    --btn-ring: var(--color-cocoa);
+    --btn-shadow: var(--shadow-soft);
+    --btn-shadow-hover: 0 0.9rem 2rem -0.9rem rgb(84 52 54 / 0.4);
+    --btn-shadow-active: 0 0.3rem 0.8rem -0.5rem rgb(84 52 54 / 0.35);
+  }
+  .btn--sage {
+    --btn-bg: var(--color-sage-deep);
+    --btn-bg-hover: #5b624a;
+    --btn-ring: var(--color-sage-deep);
+    --btn-shadow: inset 0 1px 0 rgb(255 255 255 / 0.16), 0 0.5rem 1.1rem -0.5rem rgb(74 80 58 / 0.55);
+    --btn-shadow-hover: inset 0 1px 0 rgb(255 255 255 / 0.16), 0 0.75rem 1.4rem -0.6rem rgb(74 80 58 / 0.6);
+    --btn-shadow-active: inset 0 1px 0 rgb(255 255 255 / 0.1), 0 0.25rem 0.6rem -0.35rem rgb(74 80 58 / 0.55);
+  }
+  .btn--outline {
+    --btn-bg: transparent;
+    --btn-bg-hover: var(--color-blush);
+    --btn-fg: var(--color-rose-darker);
+    --btn-fg-hover: var(--color-rose-darker);
+    --btn-border: var(--color-rose-deep);
+    --btn-border-hover: var(--color-rose-darker);
+    --btn-shadow: none;
+    --btn-shadow-hover: 0 0.5rem 1rem -0.6rem rgb(146 79 77 / 0.45);
+    --btn-shadow-active: none;
+  }
+
+  /* Tamanhos */
+  .btn--sm {
+    --btn-h: 2.3rem;
+    --btn-px: 1.05rem;
+    --btn-font: 0.75rem;
+    --btn-icon: 0.95rem;
+    --btn-gap: 0.45rem;
+  }
+  .btn--lg {
+    --btn-h: 2.8rem;
+    --btn-px: 1.7rem;
+    --btn-font: 0.875rem;
+    --btn-icon: 1.05rem;
+    --btn-gap: 0.55rem;
+  }
+  .btn--pill {
+    --btn-radius: 9999px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn,
+    .btn:hover,
+    .btn:active,
+    .btn:hover .btn__icon--end {
+      transform: none;
+    }
+  }
+
+  /* Link de texto (inline): rosa-escuro, sublinhado dourado, seta opcional */
+  .text-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+    color: var(--color-rose-darker);
+    font-weight: 500;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--color-gold) 70%, transparent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.28em;
+    transition: color var(--duration-fast) var(--ease-soft), text-decoration-color var(--duration-fast) var(--ease-soft);
+  }
+  .text-link:hover {
+    color: var(--color-cocoa);
+    text-decoration-color: var(--color-rose-deep);
+  }
+  .text-link__icon {
+    width: 0.9em;
+    height: 0.9em;
+    flex-shrink: 0;
+    transition: transform var(--duration-fast) var(--ease-soft);
+  }
+  .text-link:hover .text-link__icon {
+    transform: translateX(0.15em);
+  }
+
+  .icon-circle {
+    @apply inline-grid shrink-0 place-items-center rounded-full bg-blush text-rose-deep;
+  }
+
+  /* Linha pontilhada dourada entre nome e preço no cardápio */
+  .menu-list__leader {
+    border-bottom: 1px dotted color-mix(in srgb, var(--color-gold) 70%, transparent);
+    transform: translateY(-0.28em);
+  }
+
+  .sr-only-focusable:not(:focus) {
+    @apply sr-only;
+  }
+}
+
+/* ==========================================================================
+   Animações (GSAP — src/scripts/motion)
+   Visitas repetidas (sem preloader): o hero fica oculto até o JS aplicar o
+   estado inicial (sem flash).
+   Um timeout de 3s (BaseLayout) libera tudo se o JS falhar.
+   ========================================================================== */
+html.js:not(.is-preloading):not(.motion-ready) [data-motion-hero] {
+  visibility: hidden;
+}
+/* Exceção: na 1ª visita da home o hero é pintado já no 1º quadro, coberto pelo
+   preloader (CSS) — o conteúdo principal fica pronto cedo (LCP) e o JS aplica o
+   estado inicial da entrada antes de os painéis abrirem. Nas demais páginas
+   (cardápio, 404…) e nas visitas repetidas, fica oculto até o JS. */
+/* Kerning: elementos divididos em letras recebem `font-kerning: none` de forma
+   permanente (split.ts), para não mudar de largura ao dividir nem ao reverter. */
+
+/* Páginas institucionais */
+.legal__body h2 {
+  margin-top: 1.6rem;
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--color-cocoa);
+}
+.legal__body a {
+  color: var(--color-rose-darker);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Preloader ativo: trava a rolagem; visitas seguintes na sessão pulam o preloader */
+html.is-preloading {
+  overflow: hidden;
+}
+html[data-preloader-skip] #preloader {
+  display: none;
+}
+
+/* Giro contínuo no compositor (selo da marca) — controlado por cssSpin() */
+.css-spin {
+  animation: css-spin var(--spin-duration, 30s) linear infinite;
+  animation-play-state: paused;
+  will-change: transform;
+}
+.css-spin.is-spinning {
+  animation-play-state: running;
+}
+@keyframes css-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .css-spin {
+    animation: none;
+  }
+}

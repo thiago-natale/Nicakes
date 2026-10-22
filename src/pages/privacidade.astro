@@ -1,0 +1,24 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import LegalContent from '../components/sections/LegalContent/LegalContent.astro';
+import { site } from '../data/site';
+---
+
+<!-- Texto-base: revisar com a Nicake's antes de publicar. -->
+<SiteLayout title="Política de privacidade | Nicake’s Confeitaria">
+  <LegalContent title="Política de privacidade" updated="outubro de 2026">
+    <p>
+      Este site apresenta a {site.fullName} e o nosso cardápio. Ele não possui formulários, cadastro nem área de login, e não
+      coleta dados pessoais diretamente.
+    </p>
+    <h2>Serviços de terceiros</h2>
+    <p>
+      Ao clicar nos botões de WhatsApp, iFood ou Instagram, você é direcionado a esses serviços, que tratam seus dados segundo as
+      próprias políticas de privacidade. As fontes do site são servidas pelo próprio site, sem serviços externos.
+    </p>
+    <h2>Contato</h2>
+    <p>
+      Dúvidas sobre privacidade podem ser enviadas pelo WhatsApp <a href={site.whatsapp} target="_blank" rel="noopener noreferrer">{site.phone.display}</a>.
+    </p>
+  </LegalContent>
+</SiteLayout>

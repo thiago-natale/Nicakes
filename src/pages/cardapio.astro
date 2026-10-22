@@ -1,0 +1,16 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import MenuHeader from '../components/sections/MenuHeader/MenuHeader.astro';
+import MenuCategory from '../components/sections/MenuCategory/MenuCategory.astro';
+import BirthdayCakes from '../components/sections/BirthdayCakes/BirthdayCakes.astro';
+import { menu } from '../data/menu';
+---
+
+<SiteLayout
+  title="Cardápio | Nicake’s Confeitaria — Uberaba-MG"
+  description="Cardápio completo da Nicake’s Confeitaria: salgados, cakes, donuts, brownies, tortas, cafés, milk-shakes e bolos de aniversário sob encomenda."
+>
+  <MenuHeader />
+  {menu.map((category) => <MenuCategory category={category} />)}
+  <BirthdayCakes />
+</SiteLayout>

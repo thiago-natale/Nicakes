@@ -1,0 +1,29 @@
+---
+import MenuList from '../../ui/MenuList.astro';
+import SectionDivider from '../../ui/SectionDivider.astro';
+import type { MenuCategory as Category } from '../../../data/menu';
+
+/** Uma categoria do cardápio completo (Salgados, Doces, Bebidas). */
+interface Props {
+  category: Category;
+}
+
+const { category } = Astro.props;
+const single = category.groups.length === 1;
+---
+
+<section id={category.id} data-motion-section="menu-category" class="section-x relative z-10 scroll-mt-6 pt-[1.75rem]" aria-labelledby={`${category.id}-title`}>
+  <SectionDivider id={`${category.id}-title`}>{category.title}</SectionDivider>
+
+  <div class:list={['mt-[1rem] gap-[0.7rem]', single ? 'grid' : 'md:columns-2 2xl:columns-3']}>
+    {
+      category.groups.map((group) => (
+        <article data-motion="menu-card" class="mb-[0.7rem] break-inside-avoid rounded-card border border-line bg-white/70 px-[1.15rem] pt-[1rem] pb-[1.1rem]">
+          {!single && <h3 data-motion="menu-card-title" class="mb-[0.7rem] font-display text-[1.2rem] leading-none font-semibold text-rose-darker">{group.title}</h3>}
+          <MenuList items={group.items} columns={group.columns} class={single ? 'md:columns-2 md:gap-x-10 2xl:columns-3' : ''} />
+          {group.note && <p class="mt-[0.7rem] text-[0.62rem] text-cocoa-soft italic">{group.note}</p>}
+        </article>
+      ))
+    }
+  </div>
+</section>

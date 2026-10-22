@@ -1,0 +1,16 @@
+---
+/**
+ * Página 404 (gerada como dist/404.html). Netlify, Vercel, Cloudflare Pages e
+ * GitHub Pages a usam automaticamente; no Apache, use `ErrorDocument 404 /404.html`.
+ */
+import SiteLayout from '../layouts/SiteLayout.astro';
+import NotFound from '../components/sections/NotFound/NotFound.astro';
+---
+
+<SiteLayout
+  title="Página não encontrada | Nicake’s Confeitaria"
+  description="A página que você procurou não existe ou mudou de endereço. Veja o cardápio, encomende pelo WhatsApp ou visite a loja da Nicake’s em Uberaba."
+  noindex
+>
+  <NotFound />
+</SiteLayout>

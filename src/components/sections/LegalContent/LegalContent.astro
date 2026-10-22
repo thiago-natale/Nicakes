@@ -1,0 +1,16 @@
+---
+/** Bloco de texto para páginas institucionais (privacidade, termos). */
+interface Props {
+  title: string;
+  updated: string;
+}
+const { title, updated } = Astro.props;
+---
+
+<section class="legal content-x relative z-10 pt-[calc(var(--header-height)+2.25rem)] pb-[2.5rem]" aria-labelledby="legal-title">
+  <h1 id="legal-title" class="font-display text-[2.4rem] leading-none font-semibold text-cocoa">{title}</h1>
+  <p class="mt-[0.6rem] text-[0.7rem] text-cocoa-soft">Atualizado em {updated}</p>
+  <div class="legal__body mt-[1.4rem] max-w-[70ch] space-y-[0.9rem] text-body text-cocoa-soft">
+    <slot />
+  </div>
+</section>

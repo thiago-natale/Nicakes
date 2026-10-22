@@ -1,0 +1,91 @@
+---
+/**
+ * "Nossa loja" (#loja) — trazida do projeto Nicakes-new (seção Store) e
+ * adaptada ao design system: painel sálvia-claro, título editorial com acento
+ * rosa, endereço + "Como chegar" e um convite em cartão creme (moldura dupla
+ * dourada desenhada, ilustração de café em traço e horários de funcionamento).
+ */
+import Button from '../../ui/Button.astro';
+import SectionHeading from '../../ui/SectionHeading.astro';
+import Icon from '../../ui/Icon.astro';
+import Swash from '../../ui/Swash.astro';
+import { site } from '../../../data/site';
+import { storeCopy } from './store';
+import './store.css';
+---
+
+<section id="loja" data-motion-section="store" class="store section-x section-y relative z-10 scroll-mt-6" aria-labelledby="store-title">
+  <div
+    data-motion="st-panel"
+    class="grid items-center gap-[2.6rem] overflow-hidden rounded-panel bg-sage-mist panel-x panel-y shadow-panel md:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)] md:gap-[8%]"
+  >
+    <!-- Texto, endereço e rota -->
+    <div>
+      <SectionHeading
+        id="store-title"
+        eyebrow={storeCopy.eyebrow}
+        title={storeCopy.titleLines}
+        accent={storeCopy.titleAccent}
+        lead={storeCopy.text}
+        leadClass="max-w-[24rem]"
+      />
+
+      <address class="type-body mt-[1.2rem] flex gap-[0.7rem] text-cocoa not-italic" data-motion="st-address">
+        <Icon name="pin" class="mt-[0.1rem] size-[1rem] shrink-0 text-sage-deep" data-motion="st-pin" />
+        <span>
+          <strong class="font-medium">{site.address.street}</strong><br />
+          {site.address.district} · {site.address.city} – {site.address.state}<br />
+          <span class="type-small text-cocoa-soft">CEP {site.address.postalCode}</span>
+        </span>
+      </address>
+
+      <div class="mt-[1.3rem] flex flex-wrap gap-[0.6rem]" data-motion="st-cta">
+        <Button href={site.address.mapsUrl} variant="sage" icon="pin" iconEnd="arrow">Como chegar</Button>
+      </div>
+    </div>
+
+    <!-- Convite -->
+    <div class="store__invite mx-auto w-full max-w-[25rem] bg-creme px-[10%] pt-[2.2rem] pb-[1.8rem] text-center" data-motion="st-invite">
+      <svg class="store__frame" aria-hidden="true" focusable="false">
+        <rect data-motion="st-frame" x="0" y="0" style="width: 100%; height: 100%" fill="none" stroke="var(--color-gold)" stroke-opacity="0.55" stroke-width="1"></rect>
+        <rect data-motion="st-frame" x="9" y="9" style="width: calc(100% - 18px); height: calc(100% - 18px)" fill="none" stroke="var(--color-gold)" stroke-opacity="0.4" stroke-width="1"></rect>
+      </svg>
+
+      <p class="type-eyebrow text-rose-darker" data-motion="st-invite-eyebrow">{storeCopy.inviteEyebrow}</p>
+
+      <!-- Ilustração: xícara de café em traço (desenhada na entrada) -->
+      <svg class="store__art mt-[1rem] text-sage-deep" viewBox="0 0 440 440" fill="none" aria-hidden="true" focusable="false" data-motion="st-art">
+        <g stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <ellipse cx="218" cy="313" rx="156" ry="35" opacity=".5"></ellipse>
+          <path d="M108 183c5 105 26 132 107 132s104-27 110-132M326 190c85-31 75 95-24 78m22-61c56-17 45 47-12 48"></path>
+          <ellipse cx="216" cy="181" rx="108" ry="30"></ellipse>
+          <ellipse cx="216" cy="186" rx="88" ry="18" opacity=".6"></ellipse>
+          <path data-motion="st-steam" d="M177 137c-37-33 31-33 3-64m40 56c-27-31 29-38 3-68m43 77c-23-27 25-29 7-55"></path>
+          <path d="M126 196c3 42 16 62 36 71" opacity=".6"></path>
+          <path d="m96 339 232 1c41 3 42 13 0 16l-232-5c-29 1-30-13 0-12Z"></path>
+          <path d="M68 105v20m-10-10h20m287 196v16m-8-8h16" opacity=".65"></path>
+        </g>
+      </svg>
+
+      <h3 class="type-panel mt-[0.4rem] text-cocoa" data-motion="st-invite-title">
+        <span class="block" data-motion="st-invite-line">{storeCopy.inviteTitle}</span>
+        <span class="store__swash-word text-rose-deep italic">
+          {storeCopy.inviteAccent}
+          <Swash class="store__swash" data-motion="st-swash" />
+        </span>
+      </h3>
+
+      <dl class="type-small mt-[1.6rem] text-left text-cocoa" aria-label="Horário de funcionamento">
+        {
+          site.hours.map((hour) => (
+            <div class="store__hour flex justify-between gap-[0.9rem] py-[0.65rem]" data-motion="st-hour">
+              <span class="store__hour-rule" data-motion="st-hour-rule" aria-hidden="true" />
+              <dt>{hour.long}</dt>
+              <dd class={hour.schema ? 'font-medium whitespace-nowrap tabular-nums' : 'whitespace-nowrap text-cocoa-soft'}>{hour.short}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,100 @@
+/* Depoimentos — "Memórias que adoçam" (BEM) */
+
+/* Palco: a forma orgânica fica atrás do card central */
+.testimonials__stage {
+  isolation: isolate;
+}
+.testimonials__blob {
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 50%;
+  width: min(100%, 34rem);
+  height: calc(100% + 4rem);
+  transform: translate(-50%, -50%) rotate(-6deg);
+  overflow: visible;
+  pointer-events: none;
+}
+
+.testimonials__card {
+  position: relative;
+  /* a opacidade é animada pelo GSAP (Flip) — aqui só a cor */
+  transition: color var(--duration-base) var(--ease-soft);
+}
+.testimonials__card:not(.is-active) {
+  /* Esmaecido, mas legível: texto cacau a 72% ainda passa de 4,5:1 (AA) */
+  opacity: 0.72;
+  color: var(--color-cocoa);
+}
+.testimonials__card:not(.is-active) [data-motion="tm-author"] span {
+  color: var(--color-cocoa);
+}
+.testimonials__card:not(.is-active) [data-motion="tm-avatar"] {
+  visibility: hidden; /* como as aspas: o avatar só aparece no card ativo */
+}
+/* As aspas grandes só aparecem no card ativo */
+.testimonials__card:not(.is-active) .testimonials__mark {
+  visibility: hidden;
+}
+/* Cards laterais: texto mais curto para não pesar */
+.testimonials__card:not(.is-active) .testimonials__quote {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Celular/tablet: só o depoimento ativo */
+@media (max-width: 56.2499rem) {
+  .testimonials__card:not(.is-active) {
+    display: none;
+  }
+}
+
+/* Pontos de navegação: o ativo vira um coração dourado */
+.testimonials__dot {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 9999px;
+  color: var(--color-gold);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.testimonials__dot-mark {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 9999px;
+  background: var(--color-cocoa-soft);
+  opacity: 0.45;
+  transition:
+    opacity var(--duration-fast) var(--ease-soft),
+    transform var(--duration-fast) var(--ease-soft);
+}
+.testimonials__dot:hover .testimonials__dot-mark {
+  opacity: 0.8;
+}
+.testimonials__dot-heart {
+  display: none;
+  width: 0.85rem;
+  height: 0.85rem;
+}
+.testimonials__dot[aria-current='true'] .testimonials__dot-mark {
+  display: none;
+}
+.testimonials__dot[aria-current='true'] .testimonials__dot-heart {
+  display: block;
+}
+
+/* Forma sálvia clara que toca a borda direita (alterna com a do FAQ, à esquerda) */
+.testimonials__edge {
+  position: absolute;
+  top: calc(var(--section-gap) + 1rem);
+  right: 0;
+  width: calc(var(--section-px) * 0.8);
+  height: 18rem;
+  border-radius: 2.6rem 0 0 2.6rem;
+  background: var(--color-sage-mist);
+  pointer-events: none;
+}

@@ -1,0 +1,19 @@
+---
+/** Seta linear (menu móvel do header). `diagonal` gira 45°. */
+interface Props {
+  diagonal?: boolean;
+  class?: string;
+}
+
+const { diagonal = false, class: className = '' } = Astro.props;
+---
+
+<svg
+  aria-hidden="true"
+  focusable="false"
+  viewBox="0 0 24 24"
+  fill="none"
+  class:list={['size-[20px] shrink-0', { '-rotate-45': diagonal }, className]}
+>
+  <path d="M4 12h15M13 5l7 7-7 7" stroke="currentColor" stroke-width="1.3"></path>
+</svg>

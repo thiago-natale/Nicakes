@@ -1,0 +1,62 @@
+/* Perguntas frequentes (BEM) */
+
+/* Forma sálvia que toca a borda esquerda (espelha a das encomendas, à direita) */
+.faq__edge {
+  position: absolute;
+  top: 1.5rem;
+  left: 0;
+  /* fica na margem lateral, sem invadir o texto */
+  width: calc(var(--section-px) + 0.6rem);
+  height: 19rem;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Linhas entre as perguntas (crescem da esquerda na entrada) */
+.faq__rule {
+  display: block;
+  height: 1px;
+  background: color-mix(in srgb, var(--color-gold) 45%, transparent);
+  transform-origin: 0 50%;
+}
+
+.faq__trigger {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.faq__trigger:hover .faq__question {
+  color: var(--color-rose-darker);
+}
+.faq__question {
+  transition: color var(--duration-fast) var(--ease-soft);
+}
+
+/* Botão +/− : o traço vertical some quando a pergunta está aberta */
+.faq__toggle {
+  transition:
+    background-color var(--duration-base) var(--ease-soft),
+    border-color var(--duration-base) var(--ease-soft),
+    color var(--duration-base) var(--ease-soft);
+}
+.faq__trigger[aria-expanded='true'] .faq__toggle {
+  background-color: var(--color-rose-deep);
+  border-color: var(--color-rose-deep);
+  color: #fff;
+}
+.faq__toggle-v {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  transition: transform var(--duration-base) var(--ease-soft);
+}
+.faq__trigger[aria-expanded='true'] .faq__toggle-v {
+  transform: scaleY(0);
+}
+
+/* Sem JS: todas as respostas visíveis. Com JS, só a pergunta aberta aparece
+   (fechada = fora do fluxo e da árvore de acessibilidade); o GSAP anima a altura. */
+.js .faq__panel[data-state='closed'] {
+  display: none;
+}
+.faq__panel {
+  overflow: hidden;
+}

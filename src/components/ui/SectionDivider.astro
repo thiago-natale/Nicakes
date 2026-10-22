@@ -1,0 +1,30 @@
+---
+import Icon from './Icon.astro';
+
+/**
+ * Título de seção centralizado entre linhas finas douradas com corações —
+ * ornamento recorrente da identidade.
+ * As linhas são SVG para serem desenhadas do centro para fora (DrawSVG).
+ */
+interface Props {
+  id?: string;
+  as?: 'h1' | 'h2';
+  class?: string;
+}
+
+const { id, as: Tag = 'h2', class: className = '' } = Astro.props;
+---
+
+<div data-motion="divider" class:list={['flex items-center justify-center gap-[0.45rem]', className]}>
+  <svg class="h-px min-w-0 flex-1 overflow-visible max-md:hidden" data-motion="divider-line" viewBox="0 0 100 1" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <line x1="0" y1="0.5" x2="100" y2="0.5" stroke="var(--color-gold)" stroke-opacity="0.55" stroke-width="1"></line>
+  </svg>
+  <Icon name="heart-solid" class="size-[0.6rem] shrink-0 text-gold max-md:hidden" data-motion="divider-heart" />
+  <Tag id={id} data-motion="divider-title" class="type-section min-w-0 px-[0.85rem] text-center text-cocoa max-md:px-[0.5rem]">
+    <slot />
+  </Tag>
+  <Icon name="heart-solid" class="size-[0.6rem] shrink-0 text-gold max-md:hidden" data-motion="divider-heart" />
+  <svg class="h-px min-w-0 flex-1 overflow-visible max-md:hidden" data-motion="divider-line" viewBox="0 0 100 1" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <line x1="0" y1="0.5" x2="100" y2="0.5" stroke="var(--color-gold)" stroke-opacity="0.55" stroke-width="1"></line>
+  </svg>
+</div>

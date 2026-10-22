@@ -1,0 +1,38 @@
+---
+import Icon from '../../ui/Icon.astro';
+import Logo from '../../ui/Logo.astro';
+import { site, social } from '../../../data/site';
+---
+
+<footer data-motion-section="footer" class="content-x w-full pt-[1.75rem] pb-[1.25rem] lg:pt-[1.25rem] lg:pb-[0.9rem] ultra:mx-auto ultra:max-w-(--frame-max-ultra) ultra:pb-[2rem]">
+  <div class="type-small flex flex-col items-center gap-4 text-cocoa lg:flex-row lg:gap-0">
+    <div class="flex items-center gap-[1.6rem] lg:flex-1">
+      <span class="block" data-motion="ft-logo"><Logo variant="white" class="h-[2.6rem]" /></span>
+      <ul class="flex items-center gap-[0.9rem]" aria-label="Redes e canais de pedido">
+        {
+          social.map((item) => (
+            <li>
+              <a
+                data-motion="ft-social"
+                href={item.href}
+                class="grid size-11 place-items-center rounded-full text-cocoa transition-colors duration-200 hover:bg-white/25 lg:size-[1.6rem]"
+                aria-label={item.name}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Icon name={item.icon} class="size-[1.1rem]" strokeWidth={1.6} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <p data-motion="ft-item">© {site.year} {site.fullName}</p>
+
+    <ul class="flex items-center gap-[2rem] lg:flex-1 lg:justify-end">
+      <li data-motion="ft-item"><a href="/privacidade" class="hover:underline">Política de privacidade</a></li>
+      <li data-motion="ft-item"><a href="/termos" class="hover:underline">Termos de uso</a></li>
+    </ul>
+  </div>
+</footer>

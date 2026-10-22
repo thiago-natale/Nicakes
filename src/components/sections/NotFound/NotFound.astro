@@ -1,0 +1,104 @@
+---
+/**
+ * Página 404 — "Essa página foi devorada."
+ * Mesma linguagem do site: eyebrow dourado, título com destaque em itálico rosa e
+ * floreio, botões do design system e um prato vazio desenhado em traço, com os
+ * farelos que sobraram. Plano: claude/plano-pagina-404.md.
+ */
+import Button from '../../ui/Button.astro';
+import Eyebrow from '../../ui/Eyebrow.astro';
+import Icon from '../../ui/Icon.astro';
+import Swash from '../../ui/Swash.astro';
+import { notFoundCopy } from './notFound';
+import './notFound.css';
+
+const crumbs = [
+  { cx: 168, cy: 236, r: 4.5 },
+  { cx: 192, cy: 258, r: 3 },
+  { cx: 226, cy: 228, r: 3.6 },
+  { cx: 251, cy: 252, r: 2.6 },
+  { cx: 214, cy: 270, r: 2.2 },
+  { cx: 274, cy: 236, r: 3.2 },
+];
+---
+
+<section
+  class="not-found content-x relative z-10 pt-[calc(var(--header-height)+2.25rem)] pb-[3rem] lg:pt-[calc(var(--header-height)+3rem)] lg:pb-[4rem]"
+  data-motion-section="not-found"
+  aria-labelledby="not-found-title"
+>
+  <div class="grid items-center gap-[2.5rem] lg:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] lg:gap-[clamp(2rem,5vw,6rem)]">
+    <!-- Texto -->
+    <div data-motion-hero>
+      <Eyebrow text={notFoundCopy.eyebrow} />
+      <h1 id="not-found-title" class="type-section mt-[0.8rem] text-cocoa lg:text-[3rem]">
+        <span class="block" data-motion="nf-line">{notFoundCopy.title}</span>
+        <span class="not-found__accent-wrap relative inline-block">
+          <em class="block font-medium text-rose-deep italic" data-motion="nf-accent">{notFoundCopy.accent}</em>
+          <Swash class="not-found__swash" data-motion="nf-swash" />
+        </span>
+      </h1>
+      <p class="type-body mt-[1.1rem] max-w-[28rem] text-cocoa-soft" data-motion="nf-lead">{notFoundCopy.lead}</p>
+
+      <div class="mt-[1.5rem] flex flex-wrap gap-[0.6rem]" data-motion="nf-cta">
+        <Button href="/" iconEnd="arrow">Voltar ao início</Button>
+        <Button href="/cardapio" variant="outline">Ver cardápio</Button>
+      </div>
+
+      <nav class="mt-[1.8rem]" aria-label="Atalhos do site">
+        <p class="type-eyebrow text-cocoa-soft" data-motion="nf-shortcut">{notFoundCopy.shortcutsLabel}</p>
+        <ul class="mt-[0.6rem] flex flex-wrap gap-x-[1.4rem] gap-y-[0.5rem]">
+          {
+            notFoundCopy.shortcuts.map((item) => (
+              <li data-motion="nf-shortcut">
+                <a href={item.href} class="text-link type-body">
+                  {item.label}
+                  <Icon name="arrow" class="text-link__icon" />
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Ilustração: prato vazio, garfo e farelos -->
+    <div class="not-found__art-wrap" data-motion-hero aria-hidden="true">
+      <svg class="not-found__art" viewBox="0 0 440 400" fill="none" focusable="false">
+        <path
+          data-motion="nf-blob"
+          fill="var(--color-sage-mist)"
+          d="M92 88 C150 30 290 26 360 92 C420 150 418 262 352 322 C292 378 158 384 96 326 C38 272 34 146 92 88 Z"
+        ></path>
+        <text
+          data-motion="nf-404"
+          x="220"
+          y="178"
+          text-anchor="middle"
+          fill="var(--color-sage-soft)"
+          style="font-family: var(--font-display); font-weight: 600; font-size: 168px; letter-spacing: -4px"
+        >404</text>
+        <g stroke="var(--color-sage-deep)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+          <!-- prato -->
+          <ellipse data-motion="nf-draw" cx="214" cy="250" rx="128" ry="44" fill="var(--color-creme)"></ellipse>
+          <ellipse data-motion="nf-draw" cx="214" cy="246" rx="88" ry="27"></ellipse>
+          <path data-motion="nf-draw" d="M136 262 C160 280 268 284 300 266"></path>
+          <path data-motion="nf-draw" d="M150 236 C164 228 182 224 198 223"></path>
+          <!-- garfo -->
+          <g data-motion="nf-fork">
+            <path data-motion="nf-draw" d="M362 300 L372 196"></path>
+            <path data-motion="nf-draw" d="M372 196 C360 194 354 186 355 172 L357 146"></path>
+            <path data-motion="nf-draw" d="M372 196 C384 197 391 190 392 176 L394 150"></path>
+            <path data-motion="nf-draw" d="M368 148 L367 182"></path>
+            <path data-motion="nf-draw" d="M381 149 L380 183"></path>
+          </g>
+        </g>
+        <!-- farelos -->
+        {crumbs.map((c) => <circle data-motion="nf-crumb" cx={c.cx} cy={c.cy} r={c.r} fill="var(--color-gold)" />)}
+        <!-- brilhos -->
+        <path data-motion="nf-draw" d="M96 210 l0 14 M89 217 l14 0" stroke="var(--color-gold)" stroke-width="1.4" stroke-linecap="round"></path>
+        <path data-motion="nf-draw" d="M330 118 l0 10 M325 123 l10 0" stroke="var(--color-gold)" stroke-width="1.4" stroke-linecap="round"></path>
+      </svg>
+    </div>
+  </div>
+</section>

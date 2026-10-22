@@ -1,0 +1,102 @@
+---
+/**
+ * Perguntas frequentes — "Antes do primeiro “quero pedir”."
+ * Trazida do site anterior (#faq) e adaptada ao design system atual:
+ * cabeçalho editorial (como o hero), acordeão acessível com linhas douradas,
+ * botão +/− em rosa e uma forma sálvia na borda esquerda (espelha a das encomendas).
+ * Inclui dados estruturados FAQPage para os buscadores.
+ */
+import Button from '../../ui/Button.astro';
+import Icon from '../../ui/Icon.astro';
+import SectionHeading from '../../ui/SectionHeading.astro';
+import { faqItems, faqSchema } from './faq';
+import { whatsappLink } from '../../../data/site';
+import './faq.css';
+---
+
+<section id="faq" data-motion-section="faq" data-faq class="faq content-x section-y relative scroll-mt-6" aria-labelledby="faq-title">
+  <svg class="faq__edge hidden lg:block" data-motion="faq-edge-svg" viewBox="0 0 200 300" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <defs>
+      <path id="faq-edge-seed" d="M0 120 C10 120 18 132 18 150 C18 168 10 180 0 180 Z"></path>
+    </defs>
+    <path data-motion="faq-edge" fill="var(--color-sage-mist)" d="M0 0 C70 6 132 34 150 92 C168 152 140 206 92 246 C60 272 28 290 0 300 Z"></path>
+  </svg>
+
+  <div class="relative z-10 grid gap-[2rem] lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] lg:gap-[clamp(2.5rem,5vw,6rem)]">
+    <!-- Cabeçalho -->
+    <div class="lg:sticky lg:top-[calc(var(--header-height)+2rem)] lg:self-start">
+      <SectionHeading
+        id="faq-title"
+        eyebrow="Dúvidas frequentes"
+        title="Antes do primeiro"
+        accent="“quero pedir”."
+        lead="Informações rápidas sobre pedidos, encomendas, endereço e funcionamento."
+        leadClass="max-w-[22rem]"
+      />
+      <div class="mt-[1.2rem] flex flex-wrap items-center gap-x-[0.8rem] gap-y-[0.4rem]" data-motion="faq-cta">
+        <Button href={whatsappLink('Olá! Tenho uma dúvida sobre a Nicake’s.')} icon="whatsapp">
+          Ainda com dúvida? Chama a gente
+        </Button>
+      </div>
+    </div>
+
+    <!-- Acordeão -->
+    <div class="faq__list" data-motion="faq-list">
+      <span class="faq__rule" data-motion="faq-rule" aria-hidden="true"></span>
+      {
+        faqItems.map((item, i) => {
+          const open = i === 0;
+          return (
+            <div class="faq__item" data-motion="faq-item">
+              <h3 class="m-0">
+                <button
+                  type="button"
+                  id={`faq-q-${i}`}
+                  class="faq__trigger flex w-full items-center justify-between gap-[1.2rem] py-[0.95rem] text-left lg:py-[1.05rem]"
+                  aria-expanded={open ? 'true' : 'false'}
+                  aria-controls={`faq-a-${i}`}
+                  data-faq-trigger
+                >
+                  <span class="faq__question font-display text-[1.2rem] leading-[1.2] font-semibold text-cocoa lg:text-[1.3rem]" data-motion="faq-question">
+                    {item.question}
+                  </span>
+                  <span class="faq__toggle grid size-11 shrink-0 lg:size-[2.2rem] place-items-center rounded-full border border-rose-deep/45 text-rose-darker" data-motion="faq-toggle" aria-hidden="true">
+                    <svg class="size-[0.85rem]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                      <path d="M5 12h14"></path>
+                      <path class="faq__toggle-v" d="M12 5v14"></path>
+                    </svg>
+                  </span>
+                </button>
+              </h3>
+              <div id={`faq-a-${i}`} class="faq__panel" role="region" aria-labelledby={`faq-q-${i}`} data-state={open ? 'open' : 'closed'} data-faq-panel>
+                <div class="pr-[2.8rem] pb-[1.05rem]" data-faq-content>
+                  <p class="type-body max-w-[38rem] text-cocoa-soft">{item.answer}</p>
+                  {
+                    item.link && (
+                      <a
+                        href={item.link.href}
+                        class="text-link type-small mt-[0.45rem]"
+                        {...(/^https?:/.test(item.link.href) ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                      >
+                        {item.link.label}
+                        <Icon name="arrow" class="text-link__icon" />
+                      </a>
+                    )
+                  }
+                </div>
+              </div>
+              <span class="faq__rule" data-motion="faq-rule" aria-hidden="true" />
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+</section>
+
+<script>
+  import { initFaqAccordion } from './faq.accordion';
+  initFaqAccordion();
+</script>

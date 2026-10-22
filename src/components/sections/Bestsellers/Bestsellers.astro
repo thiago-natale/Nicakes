@@ -1,0 +1,66 @@
+---
+import Button from '../../ui/Button.astro';
+import Icon from '../../ui/Icon.astro';
+import SectionHeading from '../../ui/SectionHeading.astro';
+import { bestsellers } from './bestsellers';
+import { srcsetOf } from '../../../data/images';
+import { formatPrice } from '../../../data/menu';
+import { whatsappOrderLink } from '../../../data/site';
+import './bestsellers.css';
+---
+
+<section id="delicias" data-motion-section="bestsellers" class="section-x section-y relative z-10 scroll-mt-6" aria-labelledby="bestsellers-title">
+  <div
+    data-motion="bs-panel"
+    class="bestsellers grid overflow-hidden rounded-panel bg-sage shadow-panel lg:min-h-[15.2rem] lg:grid-cols-3 min-[85rem]:grid-cols-[minmax(19.5rem,1.2fr)_repeat(3,minmax(0,1fr))] min-[85rem]:pr-(--panel-px)"
+  >
+    <!-- lg: cabeçalho em linha (título | botão) acima dos pratos · min-[85rem]: coluna à esquerda -->
+    <div class="panel-x pt-(--panel-py) pb-[0.5rem] lg:col-span-3 lg:flex lg:items-end lg:justify-between lg:gap-8 min-[85rem]:col-span-1 min-[85rem]:block min-[85rem]:pr-[1rem] min-[85rem]:self-center min-[85rem]:py-(--panel-py)">
+      <SectionHeading
+        id="bestsellers-title"
+        eyebrow="Mais pedidos"
+        title="Os queridinhos"
+        accent="da casa."
+        tone="sage"
+        lead="Os mais pedidos por quem já provou a Nicake’s."
+        leadClass="max-w-[15rem]"
+      />
+      <Button href="/cardapio" variant="light" iconEnd="arrow" class="mt-[1.4rem] shrink-0 lg:mt-0 min-[85rem]:mt-[1.4rem]" data-motion="bs-cta">
+        Ver cardápio completo
+      </Button>
+    </div>
+
+    <ul class="bestsellers__list flex snap-x snap-mandatory overflow-x-auto px-[0.75rem] pt-[1.5rem] pb-[1.6rem] lg:col-span-3 lg:grid lg:grid-cols-3 lg:overflow-visible lg:px-0 lg:pt-0 lg:pb-[0.5rem] min-[85rem]:pb-0" aria-label="Mais pedidos">
+      {
+        bestsellers.map((item) => (
+          <li data-motion="bs-item" class="bestsellers__item flex w-[11.5rem] shrink-0 snap-start flex-col items-center text-center lg:w-auto">
+            <a href={whatsappOrderLink(item.name)} target="_blank" rel="noopener noreferrer" class="group flex flex-col items-center rounded-card">
+              <span class="sr-only">Pedir pelo WhatsApp: </span>
+              <span class="block" data-motion="bs-plate-wrap">
+              <img
+                data-motion="bs-plate"
+                src={item.image}
+                srcset={srcsetOf(item.image, 420)}
+                sizes="(max-width: 899px) 8rem, clamp(8rem, 8.5vw, 10.5rem)"
+                alt={item.alt}
+                width="420"
+                height="420"
+                loading="lazy"
+                decoding="async"
+                class="bestsellers__image size-[8rem] rounded-full object-cover lg:size-[clamp(8rem,8.5vw,10.5rem)]"
+              />
+              </span>
+              <h3 data-motion="bs-name" class="mt-[0.7rem] font-display text-card font-semibold text-cocoa">{item.name}</h3>
+              <p class="type-small mt-[0.15rem] text-cocoa">{item.description}</p>
+              <p class="mt-[0.35rem] inline-flex items-center gap-1 text-body font-medium text-cocoa">
+                <span class="tabular-nums" data-motion="bs-price" data-price={item.price}>{formatPrice(item.price)}</span>
+                <Icon name="arrow" class="size-[0.8rem] opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+              </p>
+              <span class="sr-only"> (abre em nova aba)</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,27 @@
+/* Painel «Os queridinhos da casa» (BEM) */
+.bestsellers__image {
+  box-shadow: var(--shadow-plate);
+  transition: transform var(--duration-base) var(--ease-soft);
+}
+
+.bestsellers__item:hover .bestsellers__image {
+  transform: translateY(-3px) rotate(-2deg);
+}
+
+/* Divisores verticais discretos entre os produtos */
+.bestsellers__item + .bestsellers__item {
+  border-left: 1px solid rgb(255 255 255 / 0.28);
+}
+
+@media (min-width: 56.25rem) {
+  .bestsellers__item {
+    margin-block: 1rem;
+    padding-top: 0.8rem;
+  }
+}
+
+/* Barra de rolagem discreta no carrossel do celular */
+.bestsellers__list {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.45) transparent;
+}

@@ -1,0 +1,147 @@
+/* "A Nicake’s" (#sobre) — BEM */
+
+/* Floreio sob "amor" */
+.about__swash-word {
+  position: relative;
+  display: inline-block;
+}
+.about__swash {
+  position: absolute;
+  left: -6%;
+  top: 0.86em;
+  width: 112%;
+  height: auto;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* Colagem: foto principal (4:5) à esquerda, detalhe (1:1) sobreposto embaixo à direita */
+.about__collage {
+  aspect-ratio: 1 / 1.06;
+}
+.about__blob {
+  position: absolute;
+  z-index: 0;
+  left: -8%;
+  top: 8%;
+  width: 92%;
+  height: 86%;
+  overflow: visible;
+  pointer-events: none;
+}
+.about__photo {
+  position: absolute;
+  z-index: 1;
+  overflow: hidden;
+  transition: filter 0.6s var(--ease-soft);
+  filter: drop-shadow(0 0.9rem 1.2rem rgb(84 52 54 / 0.22));
+}
+/* Durante o morph do recorte a sombra fica desligada (desempenho) */
+.about__photo.is-revealing {
+  filter: none;
+}
+.about__photo img {
+  display: block;
+}
+.about__photo--main {
+  left: 0;
+  top: 0;
+  width: 72%;
+  aspect-ratio: 4 / 5;
+}
+.about__photo--main img {
+  clip-path: url(#about-clip-main);
+}
+.about__photo--detail {
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  width: 46%;
+  aspect-ratio: 1;
+}
+.about__photo--detail img {
+  clip-path: url(#about-clip-detail);
+}
+.about__seal {
+  position: absolute;
+  z-index: 3;
+  left: 56%;
+  top: 46%;
+  width: clamp(4.2rem, 22%, 5.6rem);
+  aspect-ratio: 1;
+}
+
+/* Promessas: numerais decorativos (dourado) ligados por segmentos curtos —
+   cada segmento vive dentro da promessa (01→02, 02→03), começa logo abaixo do
+   numeral e termina logo antes do próximo, então acompanha o tamanho do texto
+   e o respiro em volta dos números é sempre o mesmo. */
+.about__promise {
+  --numeral-h: 2.4rem;
+  --link-gap: 0.55rem;
+}
+.about__link {
+  position: absolute;
+  left: 1.5rem; /* centro da coluna de 3rem */
+  top: calc(var(--numeral-h) + var(--link-gap));
+  bottom: var(--link-gap);
+  width: 5px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.about__link-line {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 4px;
+  width: 1px;
+  margin-left: -0.5px;
+  border-radius: 1px;
+  background: color-mix(in srgb, var(--color-gold) 55%, transparent);
+  transform-origin: 50% 0;
+}
+.about__link-dot {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 9999px;
+  background: var(--color-gold);
+}
+/* Título alinhado ao centro da caixa do numeral */
+.about__promise-body {
+  padding-top: calc((var(--numeral-h) - 1.4rem) / 2);
+}
+.about__numeral {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: start;
+  height: var(--numeral-h);
+  line-height: 1;
+  text-align: center;
+  /* dourado profundo: numeral é texto grande e precisa de 3:1 de contraste */
+  color: var(--color-gold-deep);
+  -webkit-text-stroke: 1px var(--color-gold-deep);
+  transition: color 0.6s var(--ease-soft);
+}
+/* Com animação: o numeral começa só no contorno e "acende" quando o fio chega */
+.about__promise.is-dim .about__numeral {
+  color: transparent;
+}
+
+/* Linha dourada acima dos números + divisórias verticais (desktop) */
+.about__rule {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: color-mix(in srgb, var(--color-gold) 40%, transparent);
+  transform-origin: 0 50%;
+}
+@media (min-width: 56.25rem) {
+  .about__stat + .about__stat {
+    border-left: 1px solid color-mix(in srgb, var(--color-gold) 40%, transparent);
+  }
+}

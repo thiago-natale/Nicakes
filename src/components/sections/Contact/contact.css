@@ -1,0 +1,17 @@
+/* Contato (BEM) */
+.contact__link {
+  text-decoration: none;
+  transition: color var(--duration-fast) var(--ease-soft);
+}
+.contact__link:hover {
+  color: var(--color-rose-darker);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-gold) 70%, transparent);
+  text-underline-offset: 0.28em;
+}
+
+/* Ícone da marca (fouet + rosa) como elemento gráfico */
+.contact__mark {
+  opacity: 0.9;
+  filter: drop-shadow(0 0.6rem 0.8rem rgb(84 52 54 / 0.12));
+}

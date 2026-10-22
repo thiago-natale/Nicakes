@@ -1,0 +1,23 @@
+---
+import SiteLayout from '../layouts/SiteLayout.astro';
+import LegalContent from '../components/sections/LegalContent/LegalContent.astro';
+import { site } from '../data/site';
+---
+
+<!-- Texto-base: revisar com a Nicake's antes de publicar. -->
+<SiteLayout title="Termos de uso | Nicake’s Confeitaria">
+  <LegalContent title="Termos de uso" updated="outubro de 2026">
+    <p>
+      As informações deste site — produtos, preços e horários — têm caráter informativo e podem mudar sem aviso prévio. A
+      confirmação de preço, disponibilidade e prazo acontece no atendimento pela loja, pelo WhatsApp ou pelo iFood.
+    </p>
+    <h2>Encomendas</h2>
+    <p>
+      Encomendas de bolos e doces são combinadas diretamente com a {site.fullName} pelo WhatsApp
+      <a href={site.whatsapp} target="_blank" rel="noopener noreferrer">{site.phone.display}</a>, incluindo sabores, data de
+      retirada e forma de pagamento.
+    </p>
+    <h2>Imagens</h2>
+    <p>As fotos do site são ilustrativas; a apresentação dos produtos pode variar.</p>
+  </LegalContent>
+</SiteLayout>

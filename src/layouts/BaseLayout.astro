@@ -1,0 +1,95 @@
+---
+import '../styles/global.css';
+import { site } from '../data/site';
+
+interface Props {
+  title?: string;
+  description?: string;
+  /** Inclui os dados estruturados (schema.org) da confeitaria */
+  structuredData?: boolean;
+  /** Página fora dos buscadores (ex.: 404) */
+  noindex?: boolean;
+}
+
+const {
+  title = `${site.fullName} | Bolos, doces e café em Uberaba-MG`,
+  description = site.description,
+  structuredData = false,
+  noindex = false,
+} = Astro.props;
+
+const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).toString() : undefined;
+const ogImage = Astro.site ? new URL('/og-image.jpg', Astro.site).toString() : '/og-image.jpg';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Bakery',
+  name: site.fullName,
+  description: site.description,
+  image: ogImage,
+  telephone: site.phone.e164,
+  servesCuisine: ['Confeitaria', 'Doces', 'Salgados', 'Café'],
+  priceRange: 'R$',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    addressLocality: site.address.city,
+    addressRegion: site.address.state,
+    postalCode: site.address.postalCode,
+    addressCountry: 'BR',
+  },
+  openingHours: site.hours.map((hour) => hour.schema).filter(Boolean),
+  sameAs: [site.instagram.url, site.ifood],
+  hasMenu: canonical ? new URL('/cardapio', Astro.site).toString() : '/cardapio',
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta name="theme-color" content="#939b80" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:site_name" content={site.fullName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preload" href="/fonts/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/jost.woff2" as="font" type="font/woff2" crossorigin />
+    <!-- itálica usada no hero ("carinho.") e nos manifestos: sem preload ela trocava depois do 1º paint (CLS) -->
+    <link rel="preload" href="/fonts/cormorant-garamond-italic.woff2" as="font" type="font/woff2" crossorigin />
+
+    {structuredData && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+
+    <script is:inline>
+      document.documentElement.classList.add('js');
+      // Segurança: libera o hero mesmo se as animações não carregarem
+      setTimeout(function () {
+        document.documentElement.classList.add('motion-ready');
+      }, 3000);
+    </script>
+    <slot name="head" />
+  </head>
+  <body>
+    <a href="#main" class="sr-only-focusable fixed top-3 left-3 z-50 rounded-full bg-rose-deep px-4 py-2 text-sm font-medium text-white">
+      Pular para o conteúdo
+    </a>
+    <slot />
+
+    <script>
+      import '../scripts/motion/index';
+    </script>
+  </body>
+</html>

@@ -1,0 +1,177 @@
+---
+/**
+ * Header fixo (portado do projeto de origem C:\Sites\Nicakes).
+ * Medidas em px para ficar idêntico à origem, independentemente da escala
+ * tipográfica do restante do site.
+ */
+import { site } from '../../../data/site';
+import { navigation, type NavigationId } from '../../../data/navigation';
+import Arrow from '../../ui/Arrow.astro';
+import Button from '../../ui/Button.astro';
+import './header.css';
+
+interface Props {
+  availableSections?: readonly NavigationId[];
+}
+
+const { availableSections = navigation.map(({ id }) => id) } = Astro.props;
+const isHome = (Astro.url.pathname.replace(/\/$/, '') || '/') === '/';
+const items = navigation
+  .filter(({ id }) => availableSections.includes(id))
+  .map((item) => ({ ...item, href: isHome ? `#${item.id}` : `/#${item.id}` }));
+const ctaHref = site.whatsapp;
+---
+
+<header
+  id="topo"
+  data-header
+  data-intro-pending
+  class="header fixed top-0 z-40 flex w-full flex-wrap items-center justify-between gap-x-[24px] gap-y-[8px] border-b border-gold/25 bg-creme px-(--header-gutter) py-[10px] font-sans text-ink md:grid md:grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] md:gap-x-[16px] md:py-[14px]"
+>
+  <a
+    class="header__brand block w-[100px] shrink-0 md:col-start-1 md:row-start-1 md:justify-self-start xl:w-[121px]"
+    href={isHome ? '#inicio' : '/'}
+    aria-label={`${site.fullName} — início`}
+  >
+    <img
+      src="/brand/logo-header.webp"
+      alt={site.fullName}
+      width="484"
+      height="194"
+      class="h-[62px] w-full object-contain md:h-[60px] xl:h-[72px]"
+      decoding="async"
+    />
+  </a>
+  <nav
+    class="header__nav flex w-full flex-wrap items-center gap-x-[20px] md:col-start-2 md:row-start-1 md:w-auto md:justify-center md:justify-self-center md:gap-x-[14px] xl:gap-x-[28px]"
+    aria-label="Navegação principal"
+  >
+    {
+      items.map(({ href, label }) => (
+        <a class="header__link inline-flex min-h-[44px] items-center text-[12px] whitespace-nowrap" href={href}>
+          {label}
+        </a>
+      ))
+    }
+  </nav>
+
+  <div class="header__contact hidden whitespace-nowrap md:col-start-3 md:row-start-1 md:justify-self-end xl:flex">
+    <Button href={ctaHref} size="sm" shape="pill" icon="whatsapp" class="px-[18px] text-[13px]">Vamos conversar</Button>
+  </div>
+
+  <button
+    class="header__toggle min-h-[44px] items-center gap-[16px] border-0 bg-transparent px-[8px] text-[12px]"
+    type="button"
+    aria-expanded="false"
+    aria-controls="mobile-menu"
+    hidden
+  >
+    <span>Menu</span>
+    <span class="header__toggle-lines h-[9px] w-[24px] border-y" aria-hidden="true"></span>
+  </button>
+  <div class="header__progress pointer-events-none absolute -bottom-px left-0 h-[2px] w-full origin-left scale-x-0 bg-rose" aria-hidden="true">
+  </div>
+</header>
+<!-- Altura real do header gravada antes do 1º paint: o hero não "pula" quando o JS a mede -->
+<script is:inline>
+  (function () {
+    var h = document.querySelector('[data-header]');
+    if (!h) return;
+    // Mede já no estado "com JS" (botão Menu visível, nav recolhida no celular),
+    // que é o que o header.ts aplica logo depois; e desfaz para o header.ts seguir normal.
+    var t = h.querySelector('.header__toggle');
+    var enhanced = h.hasAttribute('data-enhanced');
+    if (!enhanced) h.setAttribute('data-enhanced', '');
+    if (t) t.hidden = false;
+    document.documentElement.style.setProperty('--header-height', h.getBoundingClientRect().height + 'px');
+    if (!enhanced) h.removeAttribute('data-enhanced');
+    if (t) t.hidden = true;
+  })();
+</script>
+
+<noscript>
+  <style is:inline>
+    .header[data-intro-pending],
+    .header[data-intro-pending] > * {
+      opacity: 1;
+      visibility: visible;
+    }
+  </style>
+</noscript>
+
+<!--
+  Menu móvel = um cardápio: o cartão é "arrastado" de baixo para a frente da tela
+  (inclinado → plano) e a capa sálvia se abre como a de um cardápio, revelando
+  os links. Ao fechar, a capa volta e o cartão desce. Orquestração em
+  header-menu.motion.ts; sem JS de animação (ou com movimento reduzido) abre seco/fade.
+-->
+<dialog
+  id="mobile-menu"
+  class="header-menu fixed inset-0 m-0 h-dvh max-h-none w-full max-w-none overflow-hidden border-0 bg-transparent p-0 font-sans text-ink"
+  aria-label="Menu de navegação"
+>
+  <div class="header-menu__scrim absolute inset-0" data-menu="scrim" aria-hidden="true"></div>
+
+  <div class="header-menu__card absolute inset-0" data-menu="card">
+    <div class="header-menu__sheet h-full overflow-y-auto overscroll-contain bg-creme px-(--header-gutter) pt-[24px] pb-[40px]" data-menu="sheet">
+      <div class="mb-[24px] flex items-center justify-end gap-[16px]">
+        <button
+          class="header-menu__close inline-flex min-h-[44px] items-center gap-[16px] border-0 bg-transparent px-[8px] text-[12px]"
+          type="button"
+          aria-label="Fechar menu"
+          data-menu="close"
+          autofocus
+        >
+          Fechar <span class="text-[30px] font-light" aria-hidden="true">×</span>
+        </button>
+      </div>
+      <p class="header-menu__eyebrow type-eyebrow flex items-center gap-[0.6rem] text-rose-darker" data-menu="eyebrow" aria-hidden="true">
+        <span class="header-menu__eyebrow-line" data-menu="eyebrow-line"></span>
+        Cardápio de navegação
+      </p>
+      <nav aria-label="Navegação móvel" class="mt-[8px]">
+        {
+          items.map(({ href, label }, index) => (
+            <a
+              class="header-menu__link relative flex min-h-[58px] items-center gap-[24px] py-[8px] font-display text-[clamp(27px,5.5vh,52px)] leading-snug"
+              href={href}
+              data-menu="link"
+            >
+              <span class="font-sans text-[12px] text-berry" aria-hidden="true" data-menu="link-num">
+                {String(index + 1).padStart(2, '0')}
+              </span>
+              <span class="header-menu__label" data-menu="link-label">{label}</span>
+              <span class="ml-auto inline-flex" data-menu="link-arrow"><Arrow diagonal /></span>
+              <span class="header-menu__rule" data-menu="link-rule" aria-hidden="true" />
+            </a>
+          ))
+        }
+      </nav>
+      <div class="mt-[32px]" data-menu="cta">
+        <Button href={ctaHref} size="lg" shape="pill" icon="whatsapp">Vamos conversar</Button>
+      </div>
+      <p class="mt-[32px] text-[12px] leading-relaxed" data-menu="note">
+        Um pouco de carinho.<br />Um encontro em Uberaba.
+      </p>
+    </div>
+
+    <!-- Capa do cardápio (só aparece durante a abertura/fechamento) -->
+    <div class="header-menu__cover" data-menu="cover" aria-hidden="true">
+      <span class="header-menu__cover-frame" aria-hidden="true"></span>
+      <div class="header-menu__cover-content">
+        <img src="/brand/logo-horizontal-white.webp" alt="" width="344" height="200" class="h-[86px] w-auto" decoding="async" loading="lazy" />
+        <span class="header-menu__cover-rule" aria-hidden="true"></span>
+        <span class="font-display text-[34px] leading-none text-creme italic">Menu</span>
+      </div>
+      <span class="header-menu__cover-shade" data-menu="cover-shade" aria-hidden="true"></span>
+    </div>
+    <!-- Sombra que a capa projeta na página enquanto abre -->
+    <span class="header-menu__page-shade" data-menu="page-shade" aria-hidden="true"></span>
+  </div>
+</dialog>
+
+<script>
+  import { initHeader } from './header';
+
+  initHeader();
+</script>

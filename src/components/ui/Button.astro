@@ -1,0 +1,74 @@
+---
+/**
+ * Botão/CTA reutilizável — Nicake’s.
+ * Renderiza <a> quando recebe `href`; caso contrário, <button>.
+ *
+ * Uso:
+ *   <Button href="/cardapio">Ver cardápio</Button>
+ *   <Button href={site.ifood} variant="outline" icon="bag">Pedir no iFood</Button>
+ *   <Button href="/cardapio" iconEnd="arrow" size="lg">Ver cardápio completo</Button>
+ *
+ * - Tamanhos, raio, cores e estados vêm de tokens de componente (`--btn-*`, global.css).
+ * - Ícones são decorativos (o texto já nomeia a ação) e recebem tamanho do próprio botão.
+ * - Links externos abrem em nova aba e avisam leitores de tela.
+ * - Área de toque mínima de 44px, mesmo nos tamanhos menores.
+ */
+import Icon, { type IconName } from './Icon.astro';
+
+interface Props {
+  href?: string;
+  variant?: 'primary' | 'light' | 'sage' | 'outline';
+  size?: 'sm' | 'md' | 'lg';
+  shape?: 'rounded' | 'pill';
+  icon?: IconName;
+  iconEnd?: IconName;
+  iconStroke?: number;
+  type?: 'button' | 'submit';
+  external?: boolean;
+  disabled?: boolean;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const {
+  href,
+  variant = 'primary',
+  size = 'md',
+  shape = 'rounded',
+  icon,
+  iconEnd,
+  iconStroke,
+  type = 'button',
+  external,
+  disabled = false,
+  class: className = '',
+  ...rest
+} = Astro.props;
+
+const classes = ['btn', `btn--${variant}`, `btn--${size}`, shape === 'pill' && 'btn--pill', className].filter(Boolean).join(' ');
+const isExternal = external ?? (href ? /^https?:\/\//.test(href) : false);
+const stroke = iconStroke;
+---
+
+{
+  href && !disabled ? (
+    <a href={href} class={classes} target={isExternal ? '_blank' : undefined} rel={isExternal ? 'noopener noreferrer' : undefined} {...rest}>
+      {icon && <Icon name={icon} class="btn__icon" strokeWidth={stroke} />}
+      <span class="btn__label"><slot /></span>
+      {isExternal && <span class="sr-only"> (abre em nova aba)</span>}
+      {iconEnd && <Icon name={iconEnd} class="btn__icon btn__icon--end" strokeWidth={stroke} />}
+    </a>
+  ) : href ? (
+    <a class={classes} role="link" aria-disabled="true" {...rest}>
+      {icon && <Icon name={icon} class="btn__icon" strokeWidth={stroke} />}
+      <span class="btn__label"><slot /></span>
+      {iconEnd && <Icon name={iconEnd} class="btn__icon btn__icon--end" strokeWidth={stroke} />}
+    </a>
+  ) : (
+    <button type={type} class={classes} disabled={disabled} {...rest}>
+      {icon && <Icon name={icon} class="btn__icon" strokeWidth={stroke} />}
+      <span class="btn__label"><slot /></span>
+      {iconEnd && <Icon name={iconEnd} class="btn__icon btn__icon--end" strokeWidth={stroke} />}
+    </button>
+  )
+}

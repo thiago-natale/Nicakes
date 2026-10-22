@@ -1,0 +1,32 @@
+---
+/**
+ * Selo circular da marca: ícone (fouet + rosa) ao centro e
+ * "Nicake's Confeitaria" distribuído em círculo — versão clara sobre sálvia.
+ * Elemento decorativo: o texto equivalente fica disponível para leitores de tela.
+ */
+interface Props {
+  class?: string;
+  label?: string;
+}
+
+const { class: className = 'relative size-[5rem]', label = 'Nicake’s Confeitaria — feito com carinho' } = Astro.props;
+const id = `seal-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<div data-motion="seal" class:list={['brand-seal grid place-items-center rounded-full bg-sage-deep text-white shadow-soft', className]} role="img" aria-label={label}>
+  <!-- O anel gira num <span> próprio com @keyframes CSS (só composição, na GPU):
+       girar um <g> dentro do SVG reescrevia o atributo transform e forçava
+       layout + repaint a cada quadro. -->
+  <span class="brand-seal__ring absolute inset-0" data-motion="seal-ring" aria-hidden="true">
+  <svg class="size-full" viewBox="0 0 100 100" aria-hidden="true" focusable="false">
+    <defs>
+      <path id={id} d="M50 50 m-36 0 a36 36 0 1 1 72 0 a36 36 0 1 1 -72 0"></path>
+    </defs>
+    <circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-opacity="0.45" stroke-width="0.6"></circle>
+    <text fill="currentColor" style="font-family: var(--font-display)" font-size="10.5" font-weight="600" letter-spacing="3.3">
+      <textPath href={`#${id}`}>NICAKE’S · CONFEITARIA ·</textPath>
+    </text>
+  </svg>
+  </span>
+  <img src="/brand/icon-white.webp" alt="" width="290" height="320" class="relative h-[44%] w-auto" decoding="async" fetchpriority="low" />
+</div>

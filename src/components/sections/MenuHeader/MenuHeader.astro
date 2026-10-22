@@ -1,0 +1,41 @@
+---
+import Button from '../../ui/Button.astro';
+import Eyebrow from '../../ui/Eyebrow.astro';
+import { menu } from '../../../data/menu';
+import { site } from '../../../data/site';
+
+const anchors = [...menu.map((c) => ({ id: c.id, title: c.title })), { id: 'bolos', title: 'Bolos de aniversário' }];
+---
+
+<section data-motion-section="menu-header" class="content-x relative z-10 pt-[calc(var(--header-height)+2.25rem)] pb-[1rem] lg:pt-[calc(var(--header-height)+2.6rem)]" aria-labelledby="menu-title">
+  <div class="grid items-end gap-6 md:grid-cols-[minmax(0,1fr)_auto]" data-motion-hero>
+    <div>
+      <Eyebrow text="Cardápio Nicake’s" />
+      <h1 id="menu-title" data-motion="mh-title" class="mt-[0.7rem] font-display text-[2.6rem] leading-none font-semibold text-cocoa lg:text-[3rem]">
+        Nosso <em class="text-rose-deep italic">cardápio</em>
+      </h1>
+      <p data-motion="mh-copy" class="mt-[0.8rem] max-w-[30rem] text-body text-cocoa-soft">
+        Doces, salgados e cafés preparados com carinho todos os dias. Os preços podem mudar e alguns sabores dependem da
+        disponibilidade na vitrine.
+      </p>
+    </div>
+    <div class="flex flex-wrap gap-[0.5rem]" data-motion="mh-cta">
+      <Button href={site.whatsapp} icon="whatsapp">Pedir no WhatsApp</Button>
+      <Button href={site.ifood} variant="outline" icon="bag">iFood</Button>
+    </div>
+  </div>
+
+  <nav data-motion-hero class="mt-[1.6rem]" aria-label="Categorias do cardápio">
+    <ul class="flex flex-wrap gap-[0.5rem]">
+      {
+        anchors.map((a) => (
+          <li data-motion="mh-chip">
+            <a href={`#${a.id}`} class="inline-flex h-[2.5rem] items-center lg:h-[2.1rem] rounded-full border border-line bg-white/80 px-[1rem] text-[0.75rem] font-medium text-cocoa transition-colors hover:border-rose hover:bg-blush">
+              {a.title}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</section>

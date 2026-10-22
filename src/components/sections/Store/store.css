@@ -1,0 +1,58 @@
+/* "Nossa loja" (#loja) — BEM */
+
+/* Convite: cartão creme levemente girado, moldura dupla desenhada em SVG */
+.store__invite {
+  position: relative;
+  isolation: isolate;
+  transform: rotate(2deg);
+}
+.store__frame {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.store__art {
+  width: clamp(7.5rem, 30%, 9.5rem);
+  margin-inline: auto;
+}
+.store__art path,
+.store__art ellipse {
+  vector-effect: non-scaling-stroke;
+}
+
+/* Horários: linha dourada entre as linhas (cresce na entrada) */
+.store__hour {
+  position: relative;
+}
+.store__hour-rule {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: color-mix(in srgb, var(--color-gold) 40%, transparent);
+  transform-origin: 0 50%;
+}
+
+/* Floreio sob "pausa doce." */
+.store__swash-word {
+  position: relative;
+  display: inline-block;
+}
+.store__swash {
+  position: absolute;
+  left: -4%;
+  top: 0.86em;
+  width: 108%;
+  height: auto;
+  overflow: visible;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .store__invite {
+    transform: none;
+  }
+}

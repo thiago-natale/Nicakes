@@ -1,0 +1,43 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/sections/Header/Header.astro';
+import Preloader from '../components/sections/Preloader/Preloader.astro';
+import Footer from '../components/sections/Footer/Footer.astro';
+
+/**
+ * Estrutura comum das páginas: header fixo, superfície rosa-clara de ponta a
+ * ponta (sem moldura) e rodapé sobre o fundo sálvia.
+ * O espaço do header fixo é reservado pela primeira seção de cada página
+ * (padding-top com `--header-height`, medido via JS).
+ * No ultrawide (≥ 2200px) o conteúdo fica centralizado em até 2000px pelo
+ * respiro lateral (`--content-px`/`--section-px`), mantendo o fundo de ponta a ponta.
+ * O slot "backdrop" recebe formas decorativas da página.
+ */
+interface Props {
+  title?: string;
+  description?: string;
+  structuredData?: boolean;
+  /** Exibe o preloader de boas-vindas (somente na home) */
+  preloader?: boolean;
+  /** Página fora dos buscadores (ex.: 404) */
+  noindex?: boolean;
+}
+
+const { title, description, structuredData, preloader = false, noindex = false } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} structuredData={structuredData} noindex={noindex}>
+  {preloader && <Preloader />}
+  <Header />
+  <div class="overflow-x-clip">
+    <div class="w-full bg-blush-50 pb-[1rem] lg:pb-0">
+      <div class="site-frame relative flow-root w-full">
+        <slot name="backdrop" />
+        <main id="main">
+          <slot />
+        </main>
+      </div>
+    </div>
+    <Footer />
+  </div>
+</BaseLayout>

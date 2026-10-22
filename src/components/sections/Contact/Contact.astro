@@ -1,0 +1,75 @@
+---
+/**
+ * Contato (#contato) — o fechamento da página: "Peça do seu jeito."
+ * Endereço e horários completos ficam na seção Loja (#loja); aqui ficam só os
+ * canais de pedido e um atalho para a loja, sem repetir conteúdo.
+ */
+import Button from '../../ui/Button.astro';
+import Icon from '../../ui/Icon.astro';
+import SectionHeading from '../../ui/SectionHeading.astro';
+import { site } from '../../../data/site';
+import './contact.css';
+---
+
+<section id="contato" data-motion-section="contact" class="section-x section-y relative z-10 scroll-mt-6" aria-labelledby="contact-title">
+  <div
+    data-motion="ct-panel"
+    class="contact grid grid-cols-1 items-center gap-[2rem] rounded-panel border border-line bg-white panel-x panel-y shadow-panel md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] md:gap-[2.5rem] lg:-mb-[0.75rem] lg:grid-cols-[minmax(0,1.15fr)_1px_minmax(0,1fr)_auto] lg:gap-[clamp(2rem,4vw,4.5rem)]"
+  >
+    <!-- Chamada e canais de pedido -->
+    <div>
+      <SectionHeading
+        id="contact-title"
+        eyebrow="Contato"
+        title="Peça"
+        accent="do seu jeito."
+        inline
+        lead="Na loja, por encomenda no WhatsApp ou com entrega pelo iFood — escolha o caminho mais doce para você."
+        leadClass="max-w-[24rem]"
+      />
+      <div class="mt-[1.3rem] flex flex-wrap gap-[0.6rem]" data-motion="ct-buttons">
+        <Button href={site.whatsapp} icon="whatsapp">Chamar no WhatsApp</Button>
+        <Button href={site.ifood} variant="outline" icon="bag">Pedir no iFood</Button>
+      </div>
+    </div>
+
+    <span data-motion="ct-divider" class="hidden w-px self-stretch bg-line lg:block" aria-hidden="true"></span>
+
+    <!-- Contatos diretos + atalho para a loja -->
+    <ul class="type-body space-y-[0.85rem] text-cocoa" aria-label="Contatos">
+      <li class="flex items-start gap-[0.75rem]" data-motion="ct-item">
+        <Icon name="whatsapp" class="mt-[0.2rem] size-[1.05rem] shrink-0 text-sage-deep" strokeWidth={1.6} />
+        <span>
+          <span class="type-small block text-cocoa-soft">WhatsApp</span>
+          <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" class="contact__link font-medium">{site.phone.display}</a>
+        </span>
+      </li>
+      <li class="flex items-start gap-[0.75rem]" data-motion="ct-item">
+        <Icon name="instagram" class="mt-[0.2rem] size-[1.05rem] shrink-0 text-sage-deep" strokeWidth={1.6} />
+        <span>
+          <span class="type-small block text-cocoa-soft">Instagram</span>
+          <a href={site.instagram.url} target="_blank" rel="noopener noreferrer" class="contact__link font-medium">{site.instagram.handle}</a>
+        </span>
+      </li>
+      <li class="flex items-start gap-[0.75rem]" data-motion="ct-item">
+        <Icon name="pin" class="mt-[0.2rem] size-[1.05rem] shrink-0 text-sage-deep" data-motion="ct-pin" />
+        <span>
+          <span class="type-small block text-cocoa-soft">Loja</span>
+          <span class="font-medium">{site.address.street} · {site.address.city}</span><br />
+          <a href="#loja" class="text-link type-small mt-[0.2rem]">Horários e como chegar<Icon name="arrow" class="text-link__icon" /></a>
+        </span>
+      </li>
+    </ul>
+
+    <img
+      src="/brand/icon.webp"
+      alt=""
+      width="290"
+      height="320"
+      loading="lazy"
+      decoding="async"
+      data-motion="ct-mark"
+      class="contact__mark hidden h-[7rem] w-auto self-center justify-self-end lg:block"
+    />
+  </div>
+</section>

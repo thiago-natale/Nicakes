@@ -1,0 +1,128 @@
+/* Hero — grid fluido + recorte orgânico da mídia (BEM)
+ *
+ * As variáveis ficam na superfície (.site-frame) porque o HeroBackdrop,
+ * desenhado atrás do header, usa as mesmas medidas da coluna da mídia.
+ * Em ambos, 100% = largura da superfície. */
+.site-frame {
+  --hero-gap: clamp(1rem, 4vw - 1rem, 4.5rem);
+  --hero-media-share: 0.6154; /* 1.6fr ÷ 2.6fr — mesma proporção do grid do hero */
+  --hero-media-w: calc((100% - 2 * var(--content-px) - var(--hero-gap)) * var(--hero-media-share));
+  --hero-media-h: clamp(29.6rem, 36vw, min(46rem, 82svh));
+  --hero-media-offset: 1.9rem; /* distância entre o header e o topo da mídia */
+  --hero-header-h: var(--header-height); /* espaço reservado para o header fixo */
+}
+
+.hero__media {
+  aspect-ratio: 514 / 474;
+}
+
+/* Sombra da mídia: camada estática (mesma forma do recorte) desfocada uma única
+   vez; a entrada anima só a opacidade (composição na GPU). Substitui o antigo
+   filter: drop-shadow no .hero__frame, que era refeito a cada quadro do vídeo. */
+.hero__shadow {
+  position: absolute;
+  z-index: 5;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: translateY(1.1rem);
+  filter: blur(0.7rem);
+  pointer-events: none;
+  will-change: opacity;
+}
+
+/* Ornamento do celular/tablet — caixas relativas à mídia.
+   Começa a ~30% da largura da mídia (atrás da foto) e vai até a borda da tela
+   à direita; a faixa clara passa sob o canto inferior esquerdo da foto. */
+.hero__ornament {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+.hero__ornament-blob {
+  position: absolute;
+  top: -1.4rem;
+  left: 30%;
+  width: calc(70% + var(--content-px));
+  height: calc(100% + 4rem);
+}
+.hero__ornament-band {
+  position: absolute;
+  top: calc(100% - 1.1rem);
+  left: calc(-1 * var(--content-px));
+  width: calc(78% + var(--content-px));
+  height: 2.8rem;
+}
+@media (min-width: 48rem) {
+  /* Em duas colunas o texto fica à esquerda: a faixa não passa da mídia */
+  .hero__ornament-band {
+    left: -3%;
+    width: 80%;
+  }
+}
+
+@media (min-width: 56.25rem) {
+  .hero__media {
+    aspect-ratio: auto;
+  }
+}
+
+.hero__photo {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  clip-path: url(#hero-photo-clip);
+}
+
+.hero__photo img {
+  object-position: 50% 42%;
+}
+
+/* Formas do fundo (HeroBackdrop) — caixas derivadas da coluna da mídia */
+.hero-backdrop {
+  /* topo da mídia e base da forma, relativos ao topo da superfície */
+  --media-top: calc(var(--hero-header-h) + var(--hero-media-offset));
+  --blob-h: calc((var(--media-top) + var(--hero-media-h)) / 0.809); /* base da mídia = 80,9% da forma */
+  height: calc(var(--blob-h) + 1rem);
+}
+.hero-backdrop__blob {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: calc(var(--hero-media-w) + var(--content-px));
+  height: var(--blob-h);
+}
+.hero-backdrop__band {
+  position: absolute;
+  left: 0;
+  top: calc(var(--media-top) + var(--hero-media-h) - 0.6rem);
+  /* a ponta da faixa vai até ~50% da mídia, escondida sob a foto e a forma sálvia */
+  width: calc(100% - var(--hero-media-w) - var(--content-px) + 0.5 * var(--hero-media-w));
+  height: 4rem;
+}
+
+/* Título — máscaras das linhas (a folga evita cortar acentos e descendentes) */
+.hero__mask {
+  /* display vem do markup (block nas linhas inteiras, inline-block no "de") */
+  overflow: clip;
+  padding-block: 0.06em 0.14em;
+  margin-block: -0.06em -0.14em;
+}
+.hero__accent {
+  position: relative;
+  display: inline-block;
+}
+.hero__accent em {
+  display: inline-block;
+}
+/* Floreio dourado escrito à mão sob "carinho." (DrawSVG) */
+.hero__swash {
+  position: absolute;
+  left: -3%;
+  top: 0.82em;
+  width: 106%;
+  height: auto;
+  overflow: visible;
+  pointer-events: none;
+}

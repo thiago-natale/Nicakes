@@ -1,0 +1,69 @@
+# ---------------------------------------------------------------------------
+# Dependências e build (Astro)
+# ---------------------------------------------------------------------------
+node_modules/
+dist/
+.astro/
+
+# ---------------------------------------------------------------------------
+# Variáveis de ambiente (nunca versionar segredos)
+# ---------------------------------------------------------------------------
+.env
+.env.*
+!.env.example
+
+# ---------------------------------------------------------------------------
+# Logs e caches de ferramentas
+# ---------------------------------------------------------------------------
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.log
+.cache/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+
+# Testes e relatórios gerados (Playwright, Lighthouse, cobertura)
+test-results/
+playwright-report/
+blob-report/
+coverage/
+lighthouse-reports/
+
+# Pastas locais de plataformas de deploy
+.netlify/
+.vercel/
+.wrangler/
+
+# ---------------------------------------------------------------------------
+# Sistema operacional e editores
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+*.swp
+*~
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# ---------------------------------------------------------------------------
+# Arquivos de trabalho locais (não fazem parte do site)
+# ---------------------------------------------------------------------------
+# Capturas e prévias geradas durante o desenvolvimento
+Claude outputs/
+# Configurações pessoais do Claude Code (as skills em .claude/skills ficam versionadas)
+.claude/settings.local.json
+# Pacotes temporários de sincronização
+_*.tgz
+
+
+.claude/
+skills-lock.json
+/docs
+.gitattributes

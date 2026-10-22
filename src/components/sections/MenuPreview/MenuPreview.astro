@@ -1,0 +1,29 @@
+---
+import Button from '../../ui/Button.astro';
+import MenuList from '../../ui/MenuList.astro';
+import SectionHeading from '../../ui/SectionHeading.astro';
+import { menuPreview } from './menuPreview';
+import { site } from '../../../data/site';
+---
+
+<section id="cardapio" data-motion-section="menu-preview" class="section-x section-y-tight relative z-10 scroll-mt-6" aria-labelledby="menu-preview-title">
+  <SectionHeading id="menu-preview-title" align="center" eyebrow="Prévia do cardápio" title="Um pouco do" accent="nosso cardápio" />
+
+  <div class="mt-[1.4rem] grid gap-[0.7rem] lg:mt-[1.6rem] lg:grid-cols-3 lg:gap-[clamp(0.7rem,1.2vw,1.4rem)]">
+    {
+      menuPreview.map((category) => (
+        <article data-motion="menu-card" class="rounded-card border border-line bg-white/70 px-[clamp(1.15rem,1.8vw,2.2rem)] pt-[1rem] pb-[1.1rem]">
+          <h3 data-motion="menu-card-title" class="mb-[0.7rem] font-display text-card font-semibold text-rose-darker">{category.title}</h3>
+          <MenuList items={category.items} />
+        </article>
+      ))
+    }
+  </div>
+
+  <div data-motion="menu-cta" class="mt-[1.4rem] flex flex-col items-center gap-[0.6rem] sm:flex-row sm:justify-center sm:gap-[1rem]">
+    <Button href="/cardapio" iconEnd="arrow">Ver cardápio completo</Button>
+    <p class="type-small text-cocoa-soft">
+      Também entregamos pelo <a href={site.ifood} target="_blank" rel="noopener noreferrer" class="text-link">iFood</a>.
+    </p>
+  </div>
+</section>

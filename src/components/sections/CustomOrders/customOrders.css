@@ -1,0 +1,24 @@
+/* Seção de encomendas (BEM) */
+.custom-orders__media {
+  aspect-ratio: 16 / 9;
+  border-top-left-radius: 3.5rem 2.75rem;
+  overflow: hidden;
+}
+
+.custom-orders__media img {
+  object-position: 62% 50%;
+}
+
+@media (min-width: 48rem) {
+  .custom-orders__media {
+    aspect-ratio: auto;
+    min-height: 100%;
+    border-top-left-radius: 6.2rem 4.6rem;
+  }
+
+  /* A altura do painel vem do texto; a foto apenas preenche a coluna */
+  .custom-orders__media img {
+    position: absolute;
+    inset: 0;
+  }
+}

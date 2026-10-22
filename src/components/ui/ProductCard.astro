@@ -1,0 +1,63 @@
+---
+import Icon from './Icon.astro';
+import { srcsetOf } from '../../data/images';
+import { whatsappOrderLink } from '../../data/site';
+import { formatPrice } from '../../data/menu';
+
+/** Card horizontal de produto (foto à esquerda, informações à direita). */
+interface Props {
+  name: string;
+  description: string;
+  price: number;
+  image: string;
+  alt: string;
+}
+
+const { name, description, price, image, alt } = Astro.props;
+const plainName = name.replace(/\n/g, ' ');
+const [nameLine1, ...nameRest] = name.split('\n');
+const [descLine1, ...descRest] = description.split('\n');
+---
+
+<article data-motion="pc-card" class="flex h-full gap-[0.95rem] rounded-card border border-line bg-white/70 p-[0.6rem] shadow-soft">
+  <div class="w-[7.85rem] shrink-0 overflow-hidden rounded-control lg:w-[clamp(7.85rem,8.5vw,10rem)]" data-motion="pc-media">
+  <img
+    src={image}
+    srcset={srcsetOf(image, 420)}
+    sizes="(max-width: 899px) 7.85rem, clamp(7.85rem, 8.5vw, 10rem)"
+    alt={alt}
+    width="420"
+    height="420"
+    loading="lazy"
+    decoding="async"
+    class="aspect-square w-full object-cover"
+  />
+  </div>
+  <div class="flex min-w-0 flex-1 flex-col pt-[0.3rem] pr-[0.2rem]">
+    <h3 data-motion="pc-name" class="font-display text-card font-semibold text-cocoa">
+      {nameLine1}
+      {nameRest.length > 0 && <br class="hidden lg:inline" />}
+      {nameRest.length > 0 && <span class="lg:hidden">{' '}</span>}
+      {nameRest.join(' ')}
+    </h3>
+    <p class="type-small mt-[0.4rem] text-cocoa-soft">
+      {descLine1}
+      {descRest.length > 0 && <br class="hidden lg:inline" />}
+      {descRest.length > 0 && <span class="lg:hidden">{' '}</span>}
+      {descRest.join(' ')}
+    </p>
+    <div class="mt-auto flex items-center justify-between pt-2">
+      <p class="text-body font-medium text-cocoa tabular-nums"><span data-motion="pc-price" data-price={price}>{formatPrice(price)}</span></p>
+      <a
+        href={whatsappOrderLink(plainName)}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="grid size-[2.4rem] place-items-center rounded-control lg:size-[1.85rem] bg-rose-deep text-white shadow-control transition-colors duration-200 hover:bg-rose-darker"
+        aria-label={`Pedir ${plainName} pelo WhatsApp`}
+        data-motion="pc-plus"
+      >
+        <Icon name="plus" class="size-[0.95rem]" strokeWidth={2} />
+      </a>
+    </div>
+  </div>
+</article>

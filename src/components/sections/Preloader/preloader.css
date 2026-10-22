@@ -1,0 +1,97 @@
+/* Preloader (BEM por id, como na origem) — coreografia em CSS puro.
+   Mesma sequência da versão GSAP:
+   1. frase letra a letra, subindo de máscaras (0,5s cada, distribuídas em 1,2s);
+   2. letras somem (0,35s, 0,015s entre elas);
+   3. logo aparece (0,75s);
+   4. painéis abrem (0,85s) — disparado pelo JS (classe .is-opening). */
+#preloader {
+  --pl-rise: 0.5s;
+  --pl-spread: 1.2s;
+  --pl-fade-at: calc(var(--pl-spread) + var(--pl-rise)); /* 1,7s */
+  --pl-logo-at: calc(var(--pl-fade-at) + 0.35s + 0.015s * (var(--pl-n) - 1)); /* ~2,25s */
+}
+
+.preloader__word {
+  display: inline-block;
+  white-space: nowrap;
+}
+.preloader__mask {
+  display: inline-block;
+  overflow: hidden;
+  vertical-align: top;
+  /* folga para as hastes da itálica não serem cortadas */
+  padding-inline: 0.04em;
+  margin-inline: -0.04em;
+}
+.preloader__char {
+  display: inline-block;
+  transform: translateY(120px);
+}
+.preloader__logo {
+  opacity: 0;
+}
+
+html.preloader-go .preloader__char {
+  animation:
+    pl-rise var(--pl-rise) cubic-bezier(0.25, 0.46, 0.45, 0.94) calc(var(--i) * var(--pl-spread) / (var(--pl-n) - 1)) forwards,
+    pl-fade 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94) calc(var(--pl-fade-at) + var(--i) * 0.015s) forwards;
+}
+html.preloader-go .preloader__logo {
+  animation: pl-logo 0.75s cubic-bezier(0.215, 0.61, 0.355, 1) var(--pl-logo-at) forwards;
+}
+
+/* Abertura dos painéis (power3.inOut) */
+.preloader__panel {
+  transition: transform 0.85s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+#preloader.is-opening .preloader__panel--up {
+  transform: translateY(-100%);
+}
+#preloader.is-opening .preloader__panel--down {
+  transform: translateY(100%);
+}
+
+@keyframes pl-rise {
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes pl-fade {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 0;
+  }
+}
+@keyframes pl-logo {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Movimento reduzido: versão estática (frase e logo visíveis, sem animação) */
+@media (prefers-reduced-motion: reduce) {
+  #preloader-text {
+    position: static;
+  }
+  .preloader__char,
+  html.preloader-go .preloader__char {
+    transform: none;
+    animation: none;
+  }
+  .preloader__logo,
+  html.preloader-go .preloader__logo {
+    position: static;
+    opacity: 1;
+    animation: none;
+  }
+  #preloader-content {
+    flex-direction: column;
+  }
+  .preloader__panel {
+    transition: none;
+  }
+}

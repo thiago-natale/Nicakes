@@ -1,0 +1,171 @@
+---
+import Button from '../../ui/Button.astro';
+import Eyebrow from '../../ui/Eyebrow.astro';
+import BrandSeal from '../../ui/BrandSeal.astro';
+import Icon from '../../ui/Icon.astro';
+import { heroHighlights, heroImage, heroVideo } from './hero';
+import { site } from '../../../data/site';
+import './hero.css';
+
+/** Forma orgânica do recorte da mídia (objectBoundingBox) — usada no clipPath e na sombra. */
+const heroClipD =
+  'M0.1615 0 L0.9222 0 Q1 0 1 0.0844 L1 0.9156 Q1 1 0.9222 1 L0 1 C0.0584 0.9747 0.0973 0.9198 0.1128 0.8354 C0.1362 0.7089 0.1362 0.5401 0.1167 0.4135 C0.1012 0.308 0.0837 0.2025 0.0837 0.097 Q0.0837 0 0.1615 0 Z';
+---
+
+<section id="inicio" data-motion-section="hero" class="hero content-x relative z-10 pt-(--header-height) md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] md:items-center md:gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-x-(--hero-gap) lg:pt-[calc(var(--header-height)+var(--hero-media-offset))]" aria-labelledby="hero-title">
+  <div class="hero__content pt-[2.25rem] md:pt-[1.5rem] lg:pt-0" data-motion-hero>
+    <Eyebrow text="Confeitaria artesanal em Uberaba" />
+    <h1 id="hero-title" class="mt-[0.9rem] font-display text-[2.9rem] leading-[0.98] font-semibold tracking-[-0.01em] text-cocoa sm:text-[3.3rem] md:text-[3rem] lg:text-hero 2xl:text-[3.5rem]">
+      <span class="block" data-motion="title-line"><span class="hero__mask block"><span class="block" data-motion="title-rise">Cada doce,</span></span></span>{' '}
+      <span class="block" data-motion="title-line"><span class="hero__mask block"><span class="block" data-motion="title-rise">um gesto</span></span></span>{' '}
+      <span class="block whitespace-nowrap" data-motion="title-line"
+        ><span class="hero__mask inline-block align-bottom"><span class="inline-block" data-motion="title-rise">de</span></span>{' '}
+        <span class="hero__accent">
+          <em class="text-rose-deep italic" data-motion="title-accent">carinho.</em>
+          <svg class="hero__swash" data-motion="title-swash" viewBox="0 0 220 22" aria-hidden="true" focusable="false">
+            <path
+              d="M4 13 C40 18 92 18 140 12 C170 9 196 5 214 3 C200 8 188 13 192 16 C196 19 208 17 216 13"
+              fill="none"
+              stroke="var(--color-gold)"
+              stroke-width="1.6"
+              stroke-linecap="round"
+              stroke-linejoin="round"></path>
+          </svg>
+        </span></span
+      >
+    </h1>
+
+    <p data-motion="hero-copy" class="mt-[1.1rem] max-w-[22rem] text-body text-cocoa-soft lg:mt-[1.15rem] lg:max-w-[34ch] lg:text-[0.8125rem] lg:leading-[1.3rem]">
+      A Nicake’s é feita para quem quer adoçar momentos com amor. De brigadeiros a bolos, o cuidado artesanal encontra a
+      delicadeza de celebrar.
+    </p>
+
+    <div data-motion="hero-cta" class="mt-[1.5rem] flex flex-wrap items-center gap-[0.7rem] lg:mt-[1.45rem]">
+      <Button href="/cardapio" iconEnd="arrow">Ver cardápio</Button>
+      <Button href={site.ifood} variant="outline" icon="bag">Pedir no iFood</Button>
+    </div>
+
+    <ul class="mt-[2.2rem] flex flex-wrap gap-x-[1.1rem] gap-y-3 lg:mt-[2.6rem] lg:gap-x-[clamp(0.8rem,1.6vw,2rem)]" aria-label="Nossos diferenciais">
+      {
+        heroHighlights.map((item) => (
+          <li class="flex items-center gap-[0.45rem]" data-motion="highlight">
+            <span class="icon-circle size-[2rem]" data-motion="highlight-circle">
+              <Icon name={item.icon} class="size-[1.15rem]" strokeWidth={1.4} data-motion="highlight-icon" />
+            </span>
+            <span class="text-[0.625rem] leading-[0.9rem] text-cocoa-soft" data-motion="highlight-text">
+              {item.lines[0]}
+              <br />
+              {item.lines[1]}
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  <div data-motion="hero-media" data-motion-hero class="hero__media relative mt-[2rem] md:mt-[1.5rem] lg:mt-0 lg:h-(--hero-media-h)">
+    <!-- Ornamento orgânico (celular/tablet): fica atrás da mídia e nunca alcança o texto.
+         No desktop quem desenha as formas é o HeroBackdrop. -->
+    <div class="hero__ornament lg:hidden" aria-hidden="true" data-motion="ornament">
+      <svg class="hero__ornament-blob" viewBox="0 0 100 100" preserveAspectRatio="none" focusable="false">
+        <defs><path id="ornament-blob-seed" d="M100 0 L80 0 C78 10 85 18 100 20 Z"></path></defs>
+        <path data-motion="ornament-blob" fill="var(--color-sage-soft)" d="M34 0 C16 0 7 5 5 15 L5 82 C5 87 12 89 26 90.5 C50 93 78 95 100 100 L100 0 Z"></path>
+      </svg>
+      <svg class="hero__ornament-band" viewBox="0 0 1000 100" preserveAspectRatio="none" focusable="false">
+        <defs>
+          <path id="ornament-band-seed" d="M7.7 90.6 C20 88 40 86 60 86 L80 86 C90 87 88 89 80 90 C60 91 40 91 30 91 C20 91 12 91 7.7 90.6 Z"></path>
+        </defs>
+        <path
+          data-motion="ornament-band"
+          fill="var(--color-sage-mist)"
+          d="M7.7 90.6 C92.3 40.6 288.5 15.6 557.7 9.4 C700 6 860 8 960 14 C1000 17 1000 26 960 30 C880 36 800 50 720 66 C668 78 615 91.2 553.8 89.1 C403.8 82.8 288.5 65.6 157.7 71.9 C80.8 76.6 38.5 84.4 7.7 90.6 Z"
+        ></path>
+      </svg>
+    </div>
+
+    <!-- Sombra estática com a mesma forma do recorte: rasterizada uma vez e
+         animada só por opacidade (o drop-shadow sobre o vídeo custava a cada quadro) -->
+    <svg class="hero__shadow" viewBox="0 0 1 1" preserveAspectRatio="none" aria-hidden="true" focusable="false" data-motion="hero-shadow">
+      <path d={heroClipD} fill="rgb(84 52 54 / 0.26)"></path>
+    </svg>
+    <div class="hero__frame relative z-10 h-full">
+    <div class="hero__photo">
+      {
+        heroVideo ? (
+          <>
+            {/* Poster = 1º quadro do vídeo (WebP leve): é o LCP. O vídeo só baixa
+                quando a entrada do hero termina (preload="none"). Um único
+                elemento: poster e vídeo contam como o mesmo candidato a LCP. */}
+            <link rel="preload" as="image" href={heroVideo.poster.src} fetchpriority="high" />
+            <video
+              class="h-full w-full object-cover"
+              data-motion="hero-video"
+              style={`object-position: ${heroVideo.position}`}
+              poster={heroVideo.poster.src}
+              width={heroVideo.poster.width}
+              height={heroVideo.poster.height}
+              muted
+              playsinline
+              preload="none"
+              aria-hidden="true"
+              data-hero-video
+            >
+              <source src={heroVideo.mobile.webm} type="video/webm" media="(max-width: 899px)" />
+              <source src={heroVideo.mobile.mp4} type="video/mp4" media="(max-width: 899px)" />
+              <source src={heroVideo.desktop.webm} type="video/webm" />
+              <source src={heroVideo.desktop.mp4} type="video/mp4" />
+            </video>
+          </>
+        ) : (
+          <img
+            src={heroImage.src}
+            alt={heroImage.alt}
+            width={heroImage.width}
+            height={heroImage.height}
+            fetchpriority="high"
+            decoding="async"
+            data-motion="hero-video"
+            class="h-full w-full object-cover"
+          />
+        )
+      }
+    </div>
+    </div>
+    {
+      heroVideo && (
+        <button
+          type="button"
+          class="hero__video-toggle absolute z-20 top-[0.9rem] right-[0.9rem] grid size-11 place-items-center rounded-full bg-white/80 text-cocoa shadow-soft backdrop-blur-sm transition-colors hover:bg-white lg:size-[2.1rem]"
+          aria-pressed="false"
+          data-hero-video-toggle
+          data-motion="video-toggle"
+        >
+          <span class="sr-only" data-label>Pausar vídeo</span>
+          <Icon name="pause" class="size-[0.9rem]" data-icon-pause />
+          <Icon name="play" class="hidden size-[0.9rem]" data-icon-play />
+        </button>
+      )
+    }
+    <div class="absolute z-20 right-[1.2rem] bottom-[1.2rem] size-[5.4rem] lg:right-[1.35rem] lg:bottom-[1.35rem]" data-motion="seal-scroll">
+      <BrandSeal class="relative size-full" />
+    </div>
+  </div>
+
+  <!-- Forma orgânica de recorte da fotografia (coordenadas relativas) -->
+  <svg class="absolute size-0" aria-hidden="true" focusable="false">
+    <defs>
+      <path id="hero-clip-seed" d="M0.62 0.42 C0.70 0.36 0.80 0.38 0.84 0.46 C0.88 0.55 0.82 0.64 0.72 0.64 C0.62 0.64 0.56 0.52 0.62 0.42 Z"></path>
+    </defs>
+    <clipPath id="hero-photo-clip" clipPathUnits="objectBoundingBox">
+      <path
+        data-motion="hero-clip"
+        d={heroClipD}
+      ></path>
+    </clipPath>
+  </svg>
+</section>
+
+<script>
+  import { initHeroVideo } from './hero';
+  initHeroVideo();
+</script>

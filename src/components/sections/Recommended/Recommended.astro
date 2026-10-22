@@ -1,0 +1,19 @@
+---
+import ProductCard from '../../ui/ProductCard.astro';
+import SectionHeading from '../../ui/SectionHeading.astro';
+import { recommended } from './recommended';
+---
+
+<section id="recomendados" data-motion-section="recommended" class="section-x section-y-tight relative z-10 scroll-mt-6" aria-labelledby="recommended-title">
+  <SectionHeading id="recommended-title" align="center" eyebrow="Sugestões da casa" title="Para adoçar" accent="o seu dia" />
+
+  <ul class="mt-[1.4rem] grid grid-cols-1 gap-[0.7rem] sm:grid-cols-2 lg:mt-[1.6rem] lg:grid-cols-3 lg:gap-[clamp(0.7rem,1.2vw,1.4rem)]">
+    {
+      recommended.map((product) => (
+        <li class="sm:last:col-span-2 lg:last:col-span-1">
+          <ProductCard {...product} />
+        </li>
+      ))
+    }
+  </ul>
+</section>
