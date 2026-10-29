@@ -2,8 +2,9 @@
 import Button from '../../ui/Button.astro';
 import MenuList from '../../ui/MenuList.astro';
 import SectionDivider from '../../ui/SectionDivider.astro';
-import { birthdayCake, formatPrice, formatKg } from '../../../data/menu';
+import { birthdayCake, cakePriceFrom, formatPrice, formatKg } from '../../../data/menu';
 
+const priceFrom = cakePriceFrom();
 const yields = birthdayCake.sizes.filter((s) => s.kg <= 2).map((s) => `${formatKg(s.kg)}: ${s.serves}`);
 ---
 
@@ -13,15 +14,26 @@ const yields = birthdayCake.sizes.filter((s) => s.kg <= 2).map((s) => `${formatK
   <div data-motion="bc-panel" class="mt-[1rem] grid overflow-hidden rounded-panel bg-blush shadow-panel md:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,42%)]">
     <div class="px-[1.5rem] py-[1.6rem] lg:px-[2rem]">
       <p class="font-display text-[1.6rem] leading-none font-semibold text-cocoa">
-        <span class="sr-only">{formatPrice(birthdayCake.pricePerKg)} o quilo</span>
-        <span aria-hidden="true" class="tabular-nums" data-motion="bc-price" data-price={birthdayCake.pricePerKg}>{formatPrice(birthdayCake.pricePerKg)}</span>
-        <span class="font-sans text-[0.7rem] font-normal text-cocoa-soft" aria-hidden="true">/ kg</span>
-        <span class="font-sans text-[0.7rem] font-normal text-cocoa-soft">· sob encomenda</span>
+        <span class="sr-only">A partir de {formatPrice(priceFrom)} o quilo</span>
+        <span class="mr-[0.35em] font-sans text-[0.7rem] font-normal text-cocoa-soft" aria-hidden="true">a partir de</span>
+        <span aria-hidden="true" class="tabular-nums" data-motion="bc-price" data-price={priceFrom}>{formatPrice(priceFrom)}</span>
+        <span class="ml-[0.2em] font-sans text-[0.7rem] font-normal text-cocoa-soft" aria-hidden="true">/ kg</span>
+        <span class="ml-[0.3em] font-sans text-[0.7rem] font-normal text-cocoa-soft">· sob encomenda</span>
       </p>
 
       <p class="mt-[0.5rem] type-small text-cocoa-soft">Rendimento — {yields.join(' · ')} · acima de 2 kg, cerca de 10 pessoas por kg.</p>
 
-      <h3 class="mt-[1.2rem] text-[0.62rem] font-medium tracking-[0.18em] text-rose-darker uppercase">Massas</h3>
+      <h3 class="mt-[1.2rem] text-[0.62rem] font-medium tracking-[0.18em] text-rose-darker uppercase">Decoração <span class="font-normal tracking-normal normal-case text-cocoa-soft">· preço por kg</span></h3>
+      <p class="mt-[0.35rem] text-[0.8rem] text-cocoa">
+        {birthdayCake.decorations.map((d, i) => (
+          <>
+            {i > 0 && ' · '}
+            {d.name} <span class="text-rose-darker tabular-nums">{formatPrice(d.pricePerKg)}</span>
+          </>
+        ))}
+      </p>
+
+      <h3 class="mt-[1rem] text-[0.62rem] font-medium tracking-[0.18em] text-rose-darker uppercase">Massas</h3>
       <p class="mt-[0.35rem] text-[0.8rem] text-cocoa">{birthdayCake.doughs.join(' · ')}</p>
 
       <h3 class="mt-[1rem] text-[0.62rem] font-medium tracking-[0.18em] text-rose-darker uppercase">Recheios <span class="font-normal tracking-normal normal-case text-cocoa-soft">· até {birthdayCake.rules.maxFillings} por bolo</span></h3>

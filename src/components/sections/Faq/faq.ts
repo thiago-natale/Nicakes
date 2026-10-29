@@ -3,7 +3,7 @@
  * Endereço e horários vêm de `data/site.ts` — mude lá e o FAQ acompanha.
  */
 import { site } from '../../../data/site';
-import { birthdayCake, formatPrice } from '../../../data/menu';
+import { birthdayCake, cakePriceFrom, formatPrice } from '../../../data/menu';
 
 export interface FaqItem {
   question: string;
@@ -27,7 +27,9 @@ export const faqItems: FaqItem[] = [
   {
     question: 'Posso encomendar um bolo de aniversário?',
     answer:
-      `Pode, sim. O bolo custa ${formatPrice(birthdayCake.pricePerKg)} o quilo: você escolhe o tamanho, a massa, até ${birthdayCake.rules.maxFillings} recheios e os adicionais, e a gente cuida do resto.`,
+      `Pode, sim. O quilo sai a partir de ${formatPrice(cakePriceFrom())} e varia com a decoração: ${birthdayCake.decorations
+        .map((d) => `${d.name.toLowerCase()}, ${formatPrice(d.pricePerKg)}`)
+        .join('; ')}. Você escolhe a decoração, o tamanho, a massa, até ${birthdayCake.rules.maxFillings} recheios e os adicionais, e a gente cuida do resto.`,
     link: { label: 'Montar meu bolo', href: '/encomendas' },
   },
   {

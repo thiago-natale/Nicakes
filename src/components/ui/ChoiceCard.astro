@@ -22,6 +22,8 @@ interface Props {
   /** Valor já formatado ("R$ 80,00", "+R$ 10,00") */
   price?: string;
   icon?: IconName;
+  /** Selo curto ao lado do título (ex.: "padrão") */
+  badge?: string;
   /** Bolinha de cor (ex.: cor da massa) */
   swatch?: string;
   size?: 'md' | 'sm';
@@ -31,7 +33,7 @@ interface Props {
   [key: string]: unknown;
 }
 
-const { type, name, value, title, meta, price, icon, swatch, size = 'md', layout = 'row', class: className = '', ...rest } = Astro.props;
+const { type, name, value, title, meta, price, icon, swatch, badge, size = 'md', layout = 'row', class: className = '', ...rest } = Astro.props;
 ---
 
 <label class:list={['choice', `choice--${size}`, layout === 'stack' && 'choice--stack', className]} data-motion="choice">
@@ -46,7 +48,10 @@ const { type, name, value, title, meta, price, icon, swatch, size = 'md', layout
       )
     }
     <span class="choice__text">
-      <span class="choice__title">{title}</span>
+      <span class="choice__title">
+        {title}
+        {badge && <span class="choice__badge">{badge}</span>}
+      </span>
       {meta && <span class="choice__meta">{meta}</span>}
     </span>
     {price && <span class="choice__price">{price}</span>}
