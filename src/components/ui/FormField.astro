@@ -1,0 +1,65 @@
+---
+/**
+ * Campo de formulário — rótulo, controle (input/textarea), ajuda e erro.
+ * O erro fica em `#err-<name>` (vazio e oculto até a validação) e a ajuda em
+ * `#<id>-hint`; os dois entram no `aria-describedby` do controle.
+ * Altura mínima de 44px; tipografia nos tokens type-body/type-small.
+ */
+import './form-field.css';
+
+interface Props {
+  id: string;
+  name: string;
+  label: string;
+  type?: 'text' | 'date' | 'textarea';
+  hint?: string;
+  optional?: boolean;
+  maxlength?: number;
+  autocomplete?: string;
+  placeholder?: string;
+  /** Mostra o contador "0/300" (textarea com maxlength) */
+  counter?: boolean;
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { id, name, label, type = 'text', hint, optional = false, maxlength, autocomplete, placeholder, counter = false, class: className = '', ...rest } = Astro.props;
+const hintId = `${id}-hint`;
+const errId = `err-${name}`;
+const describedBy = [hint && hintId, errId].filter(Boolean).join(' ');
+---
+
+<div class:list={['field', className]}>
+  <div class="field__head">
+    <label for={id} class="field__label">
+      {label}
+      {optional && <span class="field__optional">(opcional)</span>}
+    </label>
+    {
+      counter && maxlength && (
+        <span class="field__counter" data-counter-for={id} aria-hidden="true">
+          0/{maxlength}
+        </span>
+      )
+    }
+  </div>
+  {
+    type === 'textarea' ? (
+      <textarea id={id} name={name} class="field__control field__control--area" rows="3" maxlength={maxlength} placeholder={placeholder} aria-describedby={describedBy} {...rest} />
+    ) : (
+      <input
+        id={id}
+        name={name}
+        type={type}
+        class="field__control"
+        maxlength={maxlength}
+        autocomplete={autocomplete}
+        placeholder={placeholder}
+        aria-describedby={describedBy}
+        {...rest}
+      />
+    )
+  }
+  {hint && <p id={hintId} class="field__hint" data-hint-for={name}>{hint}</p>}
+  <p id={errId} class="field-error" data-error-for={name} hidden></p>
+</div>

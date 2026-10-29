@@ -165,30 +165,73 @@ export const menu: MenuCategory[] = [
   },
 ];
 
-/** Bolos de aniversário (sob encomenda) */
+/** Recheio do bolo de aniversário. */
+export interface CakeFilling {
+  name: string;
+  /** Taxa adicional (R$), cobrada uma vez por bolo */
+  price?: number;
+  /** Pergunta do campo complementar (ex.: qual fruta?) — obrigatório quando escolhido */
+  ask?: string;
+  /** Disponibilidade confirmada pelo WhatsApp */
+  confirm?: boolean;
+}
+
+/** Tamanho (peso) do bolo e quanto rende. */
+export interface CakeSize {
+  kg: number;
+  serves: string;
+}
+
+/**
+ * Bolos de aniversário (sob encomenda) — fonte única para o /cardapio#bolos e
+ * para o formulário de /encomendas. Preço por kg; adicionais com valor fixo.
+ */
 export const birthdayCake = {
-  price: 80,
+  /** Preço por quilo (R$) */
+  pricePerKg: 80,
   doughs: ['Massa branca', 'Massa de chocolate'],
   fillings: [
-    'Brigadeiro de chocolate',
-    'Brigadeiro de Ninho',
-    'Ninho trufado',
-    'Mousse de Ninho',
-    'Mousse de chocolate',
-    'Ninho trufado com Nutella',
-    'Sabor à escolha com geleia',
-    'Sabor à escolha com frutas',
-    'Creme belga',
-    'Prestígio',
-    'Maracujá',
-    'Red Velvet',
-  ],
+    { name: 'Brigadeiro de chocolate' },
+    { name: 'Brigadeiro de Ninho' },
+    { name: 'Ninho trufado' },
+    { name: 'Mousse de Ninho' },
+    { name: 'Mousse de chocolate' },
+    { name: 'Ninho trufado com Nutella' },
+    { name: 'Sabor à escolha com geleia', ask: 'Qual sabor de geleia?', confirm: true },
+    { name: 'Sabor à escolha com frutas', price: 10, ask: 'Qual fruta?', confirm: true },
+    { name: 'Creme belga' },
+    { name: 'Prestígio' },
+    { name: 'Maracujá' },
+    { name: 'Red Velvet' },
+  ] as CakeFilling[],
+  /** `ask`: pergunta do campo complementar no formulário de /encomendas */
   extras: [
-    { name: 'Topo de bolo', price: 20 },
-    { name: 'Mais de 2 cores no bolo', price: 5 },
+    { name: 'Topo de bolo', price: 20, ask: 'Tema ou nome no topo' },
+    { name: 'Mais de 2 cores no bolo', price: 5, ask: 'Quais cores?' },
     { name: 'Caixa para levar o bolo', price: 10 },
-  ],
+  ] as Array<{ name: string; price: number; ask?: string }>,
+  /** Rendimento informado pela loja: até 2 kg por fatias; acima disso, ~10 pessoas por kg */
+  sizes: [
+    { kg: 1, serves: '8 fatias' },
+    { kg: 1.5, serves: '12 a 15 fatias' },
+    { kg: 2, serves: 'até 20 fatias' },
+    { kg: 2.5, serves: 'cerca de 25 pessoas' },
+    { kg: 3, serves: 'cerca de 30 pessoas' },
+    { kg: 4, serves: 'cerca de 40 pessoas' },
+    { kg: 5, serves: 'cerca de 50 pessoas' },
+  ] as CakeSize[],
+  rules: {
+    /** Recheios por bolo (mínimo 1) */
+    maxFillings: 2,
+    /** Antecedência mínima, em dias de funcionamento da loja */
+    leadBusinessDays: 1,
+    /** Por enquanto só retirada na loja */
+    pickupOnly: true,
+  },
 };
+
+/** "1,5 kg" */
+export const formatKg = (kg: number): string => `${kg.toLocaleString('pt-BR')} kg`;
 
 const brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 

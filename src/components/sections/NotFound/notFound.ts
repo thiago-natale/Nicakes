@@ -6,7 +6,7 @@ export const notFoundCopy = {
   lead: 'Parece que alguém chegou antes e não sobrou nem farelo. Mas a vitrine continua cheia de doces esperando por você.',
   shortcutsLabel: 'Ou vá direto para',
   shortcuts: [
-    { label: 'Encomendas', href: '/#encomendas' },
+    { label: 'Encomendas', href: '/encomendas' },
     { label: 'Nossa loja', href: '/#loja' },
     { label: 'Dúvidas', href: '/#faq' },
     { label: 'Contato', href: '/#contato' },

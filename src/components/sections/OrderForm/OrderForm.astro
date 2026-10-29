@@ -1,0 +1,248 @@
+---
+/**
+ * /encomendas — formulário "Monte o seu bolo" + resumo com valor estimado.
+ *
+ * Cinco etapas (fieldset/legend), com inputs reais: tamanho → massa → recheios
+ * (até `rules.maxFillings`) → adicionais → retirada e contato. O resumo fica
+ * fixo ao lado no desktop; no celular, uma barra de total no rodapé leva até ele.
+ * O envio monta a mensagem padrão (orderForm.ts) e abre o WhatsApp.
+ * Lógica: orderForm.ts (pura) · orderForm.client.ts (DOM) · orderForm.motion.ts.
+ */
+import Button from '../../ui/Button.astro';
+import ChoiceCard from '../../ui/ChoiceCard.astro';
+import FormField from '../../ui/FormField.astro';
+import Icon from '../../ui/Icon.astro';
+import StepBadge from '../../ui/StepBadge.astro';
+import { birthdayCake, formatKg, formatPrice } from '../../../data/menu';
+import { site, whatsappLink } from '../../../data/site';
+import { answerField, NOTES_MAX } from './orderForm';
+import './orderForm.css';
+
+const { maxFillings } = birthdayCake.rules;
+const doughSwatch: Record<string, string> = {
+  'Massa branca': '#f6e7cc',
+  'Massa de chocolate': '#5b3a2e',
+};
+const openHours = site.hours.filter((h) => h.schema).map((h) => `${h.long.toLowerCase()}, ${h.time}`);
+const closedDays = site.hours.filter((h) => !h.schema).map((h) => h.long.toLowerCase());
+const TOTAL_STEPS = 5;
+const step = (n: number): string => `Etapa ${n} de ${TOTAL_STEPS}:`;
+---
+
+<section id="pedido" class="order section-x relative z-10 pb-[2.5rem] lg:pb-[3.5rem]" data-motion-section="order-form" aria-label="Monte o seu bolo">
+  <form class="order__grid" data-order-form data-motion-hero novalidate>
+    <!-- ================= Etapas ================= -->
+    <div class="order__steps">
+      <noscript>
+        <p class="order__noscript type-body">
+          O formulário precisa de JavaScript para montar a mensagem. Você pode
+          <a class="text-link" href={site.whatsapp}>encomendar direto pelo WhatsApp</a>.
+        </p>
+      </noscript>
+
+      <!-- 1. Tamanho -->
+      <fieldset id="etapa-tamanho" class="order-step" data-motion="of-step" aria-describedby="err-size">
+        <legend class="order-step__legend">
+          <StepBadge n={1} data-motion="of-badge" />
+          <span class="sr-only">{step(1)}</span>
+          <span class="type-panel" data-motion="of-legend">Tamanho</span>
+        </legend>
+        <p class="order-step__lead type-small">
+          {formatPrice(birthdayCake.pricePerKg)} o quilo. O rendimento depende de como o bolo é cortado.
+        </p>
+        <div class="order-step__options grid grid-cols-2 gap-[0.6rem] sm:grid-cols-3 xl:grid-cols-4">
+          {
+            birthdayCake.sizes.map((s) => (
+              <ChoiceCard type="radio" name="size" value={String(s.kg)} title={formatKg(s.kg)} meta={s.serves} price={formatPrice(s.kg * birthdayCake.pricePerKg)} layout="stack" />
+            ))
+          }
+        </div>
+        <p id="err-size" class="field-error" data-error-for="size" hidden></p>
+      </fieldset>
+
+      <!-- 2. Massa -->
+      <fieldset id="etapa-massa" class="order-step" data-motion="of-step" aria-describedby="err-dough">
+        <legend class="order-step__legend">
+          <StepBadge n={2} data-motion="of-badge" />
+          <span class="sr-only">{step(2)}</span>
+          <span class="type-panel" data-motion="of-legend">Massa</span>
+        </legend>
+        <div class="order-step__options grid gap-[0.6rem] sm:grid-cols-2">
+          {birthdayCake.doughs.map((d) => <ChoiceCard type="radio" name="dough" value={d} title={d} swatch={doughSwatch[d]} />)}
+        </div>
+        <p id="err-dough" class="field-error" data-error-for="dough" hidden></p>
+      </fieldset>
+
+      <!-- 3. Recheios -->
+      <fieldset id="etapa-recheios" class="order-step" data-motion="of-step" aria-describedby="err-filling filling-count">
+        <legend class="order-step__legend">
+          <StepBadge n={3} data-motion="of-badge" />
+          <span class="sr-only">{step(3)}</span>
+          <span class="type-panel" data-motion="of-legend">Recheios</span>
+        </legend>
+        <div class="order-step__lead flex flex-wrap items-baseline justify-between gap-x-[1rem] gap-y-[0.25rem]">
+          <p class="type-small">Escolha até {maxFillings} recheios. Os sabores à escolha dependem da disponibilidade.</p>
+          <p id="filling-count" class="order-step__count" data-filling-count aria-live="polite">0 de {maxFillings} escolhidos</p>
+        </div>
+        <div class="order-step__options grid gap-[0.5rem] sm:grid-cols-2 xl:grid-cols-3">
+          {
+            birthdayCake.fillings.map((f) => (
+              <ChoiceCard
+                type="checkbox"
+                name="filling"
+                value={f.name}
+                title={f.name}
+                size="sm"
+                meta={f.confirm ? 'Consultar disponibilidade' : undefined}
+                price={f.price ? `+${formatPrice(f.price)}` : undefined}
+              />
+            ))
+          }
+        </div>
+        <p class="order-step__note type-small" data-filling-max hidden>
+          Você já escolheu {maxFillings} recheios. Para trocar, desmarque um deles.
+        </p>
+        {
+          birthdayCake.fillings
+            .filter((f) => f.ask)
+            .map((f) => (
+              <div class="order-ask" data-ask={answerField('filling', f.name)} hidden>
+                <FormField
+                  id={answerField('filling', f.name)}
+                  name={answerField('filling', f.name)}
+                  label={`${f.ask} (${f.name.toLowerCase()})`}
+                  hint="Vamos confirmar a disponibilidade pelo WhatsApp."
+                  maxlength={60}
+                />
+              </div>
+            ))
+        }
+        <p id="err-filling" class="field-error" data-error-for="filling" hidden></p>
+      </fieldset>
+
+      <!-- 4. Adicionais -->
+      <fieldset id="etapa-adicionais" class="order-step" data-motion="of-step">
+        <legend class="order-step__legend">
+          <StepBadge n={4} data-motion="of-badge" />
+          <span class="sr-only">{step(4)}</span>
+          <span class="type-panel" data-motion="of-legend">Adicionais</span>
+          <span class="order-step__optional">(opcional)</span>
+        </legend>
+        <div class="order-step__options grid gap-[0.6rem] sm:grid-cols-3">
+          {
+            birthdayCake.extras.map((e) => (
+              <ChoiceCard type="checkbox" name="extra" value={e.name} title={e.name} size="sm" price={`+${formatPrice(e.price)}`} />
+            ))
+          }
+        </div>
+        {
+          birthdayCake.extras
+            .filter((e) => e.ask)
+            .map((e) => (
+              <div class="order-ask" data-ask={answerField('extra', e.name)} hidden>
+                <FormField id={answerField('extra', e.name)} name={answerField('extra', e.name)} label={e.ask ?? ''} maxlength={80} />
+              </div>
+            ))
+        }
+      </fieldset>
+
+      <!-- 5. Retirada e contato -->
+      <fieldset id="etapa-retirada" class="order-step" data-motion="of-step">
+        <legend class="order-step__legend">
+          <StepBadge n={5} data-motion="of-badge" />
+          <span class="sr-only">{step(5)}</span>
+          <span class="type-panel" data-motion="of-legend">Retirada</span>
+        </legend>
+        <p class="order-step__lead order-step__pickup type-small">
+          <Icon name="storefront" class="size-[1.1rem] shrink-0 text-rose-deep" />
+          <span>
+            Retirada na loja: {site.address.street}, {site.address.district}. Horários: {openHours.join('; ')}. {closedDays.map((d) => d[0].toUpperCase() + d.slice(1)).join(', ')} fechado.
+          </span>
+        </p>
+
+        <div class="grid gap-[1.1rem] md:grid-cols-2" data-motion="choice">
+          <FormField
+            id="order-date"
+            name="date"
+            type="date"
+            label="Data de retirada"
+            hint={`Encomende com ${birthdayCake.rules.leadBusinessDays} dia útil de antecedência. Segunda-feira a loja fica fechada.`}
+          />
+          <fieldset class="order-sub" aria-describedby="err-period">
+            <legend class="field__label">Período</legend>
+            <div class="mt-[0.35rem] grid grid-cols-2 gap-[0.5rem]">
+              <ChoiceCard type="radio" name="period" value="manha" title="Manhã" meta="a partir das 9h" size="sm" />
+              <ChoiceCard type="radio" name="period" value="tarde" title="Tarde" meta="até o fechamento" size="sm" />
+            </div>
+            <p id="err-period" class="field-error mt-[0.35rem]" data-error-for="period" hidden></p>
+          </fieldset>
+        </div>
+
+        <div class="mt-[1.1rem] grid gap-[1.1rem]" data-motion="choice">
+          <FormField id="order-name" name="name" label="Seu nome" autocomplete="name" maxlength={80} />
+          <FormField
+            id="order-notes"
+            name="notes"
+            type="textarea"
+            label="Observações"
+            optional
+            counter
+            maxlength={NOTES_MAX}
+            placeholder="Ex.: decoração em tons de lilás, nome da aniversariante, alguma restrição…"
+          />
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- ================= Resumo / valor estimado ================= -->
+    <aside id="resumo" class="order-summary" data-motion="of-summary" aria-labelledby="summary-title">
+      <div class="order-summary__card">
+        <p class="type-eyebrow text-rose-darker">Resumo</p>
+        <h2 id="summary-title" class="type-panel mt-[0.2rem] text-cocoa">Seu bolo</h2>
+
+        <dl class="order-summary__details" data-summary-details>
+          <div><dt>Tamanho</dt><dd data-summary="size">A escolher</dd></div>
+          <div><dt>Massa</dt><dd data-summary="dough">A escolher</dd></div>
+          <div><dt>Recheios</dt><dd data-summary="fillings">A escolher</dd></div>
+          <div><dt>Adicionais</dt><dd data-summary="extras">Nenhum</dd></div>
+          <div><dt>Retirada</dt><dd data-summary="pickup">A escolher</dd></div>
+        </dl>
+
+        <ul class="order-summary__lines" data-summary-lines aria-label="Composição do valor"></ul>
+
+        <div class="order-summary__total">
+          <span class="order-summary__total-label">Total estimado</span>
+          <span class="order-summary__total-value" aria-hidden="true"><span data-total>{formatPrice(0)}</span></span>
+        </div>
+        <p class="sr-only" aria-live="polite" data-total-sr></p>
+        <p class="order-summary__note type-small">Valor estimado. O valor final é confirmado com você pelo WhatsApp.</p>
+
+        <div class="order-summary__errors" role="alert" data-errors hidden></div>
+
+        <Button type="submit" size="lg" icon="whatsapp" class="order-summary__submit" data-order-submit>Enviar pedido pelo WhatsApp</Button>
+
+        <div class="order-summary__links">
+          <button type="button" class="text-link order-summary__reset" data-order-reset>Limpar escolhas</button>
+          <a class="text-link" href={whatsappLink()} target="_blank" rel="noopener noreferrer">
+            Prefere conversar antes?<span class="sr-only"> Fale com a gente pelo WhatsApp (abre em nova aba)</span>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Barra de total (celular) -->
+    <div class="order-bar" data-order-bar aria-hidden="true">
+      <div class="order-bar__total">
+        <span class="order-bar__label">Total estimado</span>
+        <span class="order-bar__value" data-bar-total>{formatPrice(0)}</span>
+      </div>
+      <a href="#resumo" class="btn btn--primary btn--sm" tabindex="-1">
+        <span class="btn__label">Revisar e enviar</span>
+      </a>
+    </div>
+  </form>
+</section>
+
+<script>
+  import './orderForm.client';
+</script>

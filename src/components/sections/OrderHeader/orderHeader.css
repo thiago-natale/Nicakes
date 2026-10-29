@@ -1,0 +1,23 @@
+/* Cabeçalho de /encomendas (BEM) */
+.order-header__swash {
+  position: absolute;
+  left: -3%;
+  top: 0.92em;
+  width: 106%;
+  height: auto;
+  overflow: visible;
+  pointer-events: none;
+}
+.order-header__media {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-panel);
+}
+.order-header__photo {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: 62% 50%;
+}

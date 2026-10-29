@@ -14,4 +14,3 @@ export const ordersImage = {
   height: 614,
 };
 
-export const ordersMessage = 'Olá! Gostaria de encomendar um bolo de aniversário na Nicake’s.';

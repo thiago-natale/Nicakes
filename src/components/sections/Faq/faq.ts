@@ -2,7 +2,8 @@
  * Perguntas frequentes (trazidas do site anterior, nicakeconfeitaria.netlify.app #faq).
  * Endereço e horários vêm de `data/site.ts` — mude lá e o FAQ acompanha.
  */
-import { site, whatsappLink } from '../../../data/site';
+import { site } from '../../../data/site';
+import { birthdayCake, formatPrice } from '../../../data/menu';
 
 export interface FaqItem {
   question: string;
@@ -16,8 +17,8 @@ export const faqItems: FaqItem[] = [
   {
     question: 'Vocês fazem encomendas?',
     answer:
-      'Sim! A Nicake’s recebe encomendas. Para consultar sabores, disponibilidade e prazo, é só falar com a gente pelo WhatsApp.',
-    link: { label: 'Falar no WhatsApp', href: whatsappLink('Olá! Gostaria de saber mais sobre encomendas na Nicake’s.') },
+      'Sim! Encomendas com pelo menos 1 dia de antecedência, para retirada na loja. Monte o pedido no site: ele chega pronto no nosso WhatsApp e a gente confirma sabores, disponibilidade e data.',
+    link: { label: 'Montar minha encomenda', href: '/encomendas' },
   },
   {
     question: 'Como faço meu pedido?',
@@ -26,8 +27,8 @@ export const faqItems: FaqItem[] = [
   {
     question: 'Posso encomendar um bolo de aniversário?',
     answer:
-      'Pode, sim. Você escolhe a massa, o recheio e os detalhes da decoração. Conte a sua ideia pelo WhatsApp e a gente cuida do resto.',
-    link: { label: 'Ver opções de bolos', href: '/cardapio#bolos' },
+      `Pode, sim. O bolo custa ${formatPrice(birthdayCake.pricePerKg)} o quilo: você escolhe o tamanho, a massa, até ${birthdayCake.rules.maxFillings} recheios e os adicionais, e a gente cuida do resto.`,
+    link: { label: 'Montar meu bolo', href: '/encomendas' },
   },
   {
     question: 'Vocês estão no iFood?',

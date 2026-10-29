@@ -2,8 +2,7 @@
 import Button from '../../ui/Button.astro';
 import Icon from '../../ui/Icon.astro';
 import SectionHeading from '../../ui/SectionHeading.astro';
-import { whatsappLink } from '../../../data/site';
-import { orderPerks, ordersImage, ordersMessage } from './customOrders';
+import { orderPerks, ordersImage } from './customOrders';
 import { srcsetOf } from '../../../data/images';
 import './customOrders.css';
 ---
@@ -21,8 +20,8 @@ import './customOrders.css';
       />
 
       <div class="mt-[1.1rem] flex flex-col gap-[0.6rem] sm:flex-row sm:items-start sm:gap-[1.6rem] md:flex-col md:gap-[0.6rem] lg:mt-[0.9rem] lg:flex-row lg:gap-[1.6rem]">
-        <Button href={whatsappLink(ordersMessage)} icon="whatsapp" class="self-start sm:mt-[1.95rem] md:mt-0 lg:mt-[1.95rem]" data-motion="co-cta">
-          Encomendar
+        <Button href="/encomendas" iconEnd="arrow" class="self-start sm:mt-[1.95rem] md:mt-0 lg:mt-[1.95rem]" data-motion="co-cta">
+          Montar meu bolo
         </Button>
 
         <!-- pt reserva o espaço do caminho pontilhado (que passa acima dos ícones) -->

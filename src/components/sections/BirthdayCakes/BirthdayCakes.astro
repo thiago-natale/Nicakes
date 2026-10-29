@@ -2,10 +2,9 @@
 import Button from '../../ui/Button.astro';
 import MenuList from '../../ui/MenuList.astro';
 import SectionDivider from '../../ui/SectionDivider.astro';
-import { birthdayCake, formatPrice } from '../../../data/menu';
-import { whatsappLink } from '../../../data/site';
+import { birthdayCake, formatPrice, formatKg } from '../../../data/menu';
 
-const message = 'Olá! Gostaria de encomendar um bolo de aniversário na Nicake’s.';
+const yields = birthdayCake.sizes.filter((s) => s.kg <= 2).map((s) => `${formatKg(s.kg)}: ${s.serves}`);
 ---
 
 <section id="bolos" data-motion-section="birthday-cakes" class="section-x relative z-10 scroll-mt-6 pt-[1.75rem] pb-[2rem] lg:pb-[2.5rem]" aria-labelledby="bolos-title">
@@ -14,24 +13,32 @@ const message = 'Olá! Gostaria de encomendar um bolo de aniversário na Nicake�
   <div data-motion="bc-panel" class="mt-[1rem] grid overflow-hidden rounded-panel bg-blush shadow-panel md:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,42%)]">
     <div class="px-[1.5rem] py-[1.6rem] lg:px-[2rem]">
       <p class="font-display text-[1.6rem] leading-none font-semibold text-cocoa">
-        <span class="sr-only">{formatPrice(birthdayCake.price)}</span>
-        <span aria-hidden="true" class="tabular-nums" data-motion="bc-price" data-price={birthdayCake.price}>{formatPrice(birthdayCake.price)}</span>
+        <span class="sr-only">{formatPrice(birthdayCake.pricePerKg)} o quilo</span>
+        <span aria-hidden="true" class="tabular-nums" data-motion="bc-price" data-price={birthdayCake.pricePerKg}>{formatPrice(birthdayCake.pricePerKg)}</span>
+        <span class="font-sans text-[0.7rem] font-normal text-cocoa-soft" aria-hidden="true">/ kg</span>
         <span class="font-sans text-[0.7rem] font-normal text-cocoa-soft">· sob encomenda</span>
       </p>
+
+      <p class="mt-[0.5rem] type-small text-cocoa-soft">Rendimento — {yields.join(' · ')} · acima de 2 kg, cerca de 10 pessoas por kg.</p>
 
       <h3 class="mt-[1.2rem] text-[0.62rem] font-medium tracking-[0.18em] text-rose-darker uppercase">Massas</h3>
       <p class="mt-[0.35rem] text-[0.8rem] text-cocoa">{birthdayCake.doughs.join(' · ')}</p>
 
-      <h3 class="mt-[1rem] text-[0.62rem] font-medium tracking-[0.18em] text-rose-darker uppercase">Recheios</h3>
+      <h3 class="mt-[1rem] text-[0.62rem] font-medium tracking-[0.18em] text-rose-darker uppercase">Recheios <span class="font-normal tracking-normal normal-case text-cocoa-soft">· até {birthdayCake.rules.maxFillings} por bolo</span></h3>
       <ul class="mt-[0.45rem] flex flex-wrap gap-[0.4rem]">
-        {birthdayCake.fillings.map((f) => <li data-motion="bc-chip" class="rounded-full bg-white/80 px-[0.7rem] py-[0.25rem] text-[0.7rem] text-cocoa">{f}</li>)}
+        {birthdayCake.fillings.map((f) => (
+          <li data-motion="bc-chip" class="rounded-full bg-white/80 px-[0.7rem] py-[0.25rem] text-[0.7rem] text-cocoa">
+            {f.name}
+            {f.price && <span class="text-rose-darker"> +{formatPrice(f.price)}</span>}
+          </li>
+        ))}
       </ul>
 
       <h3 class="mt-[1rem] mb-[0.5rem] text-[0.62rem] font-medium tracking-[0.18em] text-rose-darker uppercase">Adicionais</h3>
       <div data-motion="bc-extras"><MenuList items={birthdayCake.extras} class="max-w-[22rem]" /></div>
 
-      <Button href={whatsappLink(message)} variant="sage" icon="whatsapp" class="mt-[1.4rem]" data-motion="bc-cta">
-        Encomendar pelo WhatsApp
+      <Button href="/encomendas" iconEnd="arrow" class="mt-[1.4rem]" data-motion="bc-cta">
+        Montar meu bolo
       </Button>
     </div>
     <img

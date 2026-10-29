@@ -26,6 +26,8 @@ import { initMotion as heroBackdrop } from '../../components/sections/Hero/heroB
 import { initMotion as hero } from '../../components/sections/Hero/hero.motion';
 import { initMotion as menuHeader } from '../../components/sections/MenuHeader/menuHeader.motion';
 import { initMotion as notFound } from '../../components/sections/NotFound/notFound.motion';
+import { initMotion as orderHeader } from '../../components/sections/OrderHeader/orderHeader.motion';
+import { initMotion as orderForm } from '../../components/sections/OrderForm/orderForm.motion';
 
 export type SectionInit = (root: HTMLElement, c: MotionConditions, order: number) => (() => void) | void;
 
@@ -53,6 +55,8 @@ const SECTIONS: Entry[] = [
   ['contact', () => import('../../components/sections/Contact/contact.motion'), 'lazy'],
   ['menu-header', menuHeader, 'eager'],
   ['not-found', notFound, 'eager'],
+  ['order-header', orderHeader, 'eager'],
+  ['order-form', orderForm, 'eager'],
   ['menu-category', () => import('../../components/sections/MenuCategory/menuCategory.motion'), 'lazy'],
   ['birthday-cakes', () => import('../../components/sections/BirthdayCakes/birthdayCakes.motion'), 'lazy'],
   ['footer', () => import('../../components/sections/Footer/footer.motion'), 'lazy'],

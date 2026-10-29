@@ -1,0 +1,57 @@
+---
+/**
+ * Cartão de escolha — um <input> real (radio ou checkbox) visualmente oculto,
+ * dentro de um <label>: teclado, leitores de tela e FormData funcionam como num
+ * campo comum. Estados: hover, foco visível, marcado (borda rosa, fundo blush e
+ * check que se desenha) e desabilitado. Área de toque ≥ 44px.
+ *
+ * Uso:
+ *   <ChoiceCard type="radio" name="dough" value="Massa branca" title="Massa branca" swatch="#f3e2c7" />
+ *   <ChoiceCard type="checkbox" name="extra" value="Topo de bolo" title="Topo de bolo" price="+R$ 20,00" />
+ */
+import Icon, { type IconName } from './Icon.astro';
+import './choice-card.css';
+
+interface Props {
+  type: 'radio' | 'checkbox';
+  name: string;
+  value: string;
+  title: string;
+  /** Linha de apoio (rendimento, observação) */
+  meta?: string;
+  /** Valor já formatado ("R$ 80,00", "+R$ 10,00") */
+  price?: string;
+  icon?: IconName;
+  /** Bolinha de cor (ex.: cor da massa) */
+  swatch?: string;
+  size?: 'md' | 'sm';
+  /** `stack`: título, apoio e preço empilhados (cards estreitos em grade) */
+  layout?: 'row' | 'stack';
+  class?: string;
+  [key: string]: unknown;
+}
+
+const { type, name, value, title, meta, price, icon, swatch, size = 'md', layout = 'row', class: className = '', ...rest } = Astro.props;
+---
+
+<label class:list={['choice', `choice--${size}`, layout === 'stack' && 'choice--stack', className]} data-motion="choice">
+  <input class="choice__input" type={type} name={name} value={value} {...rest} />
+  <span class="choice__box">
+    {swatch && <span class="choice__swatch" style={`--swatch:${swatch}`} aria-hidden="true"></span>}
+    {
+      icon && (
+        <span class="choice__icon icon-circle" aria-hidden="true">
+          <Icon name={icon} class="size-[1.1rem]" />
+        </span>
+      )
+    }
+    <span class="choice__text">
+      <span class="choice__title">{title}</span>
+      {meta && <span class="choice__meta">{meta}</span>}
+    </span>
+    {price && <span class="choice__price">{price}</span>}
+    <span class:list={['choice__check', type === 'radio' && 'choice__check--round']} aria-hidden="true">
+      <svg viewBox="0 0 16 16" focusable="false"><path d="M3.6 8.4 6.7 11.3 12.4 4.9"></path></svg>
+    </span>
+  </span>
+</label>

@@ -1,0 +1,179 @@
+/* Cartão de escolha (BEM) — ui/ChoiceCard.astro */
+.choice {
+  position: relative;
+  display: block;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.choice__input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: inherit;
+  z-index: 1;
+}
+.choice__box {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-height: 3.6rem;
+  height: 100%;
+  padding: 0.75rem 0.85rem 0.75rem 1rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: rgb(255 255 255 / 0.75);
+  color: var(--color-cocoa);
+  transition:
+    border-color var(--duration-fast) var(--ease-soft),
+    background-color var(--duration-fast) var(--ease-soft),
+    box-shadow var(--duration-fast) var(--ease-soft),
+    transform var(--duration-fast) var(--ease-soft);
+}
+.choice--sm .choice__box {
+  min-height: 2.75rem;
+  padding: 0.55rem 0.7rem 0.55rem 0.85rem;
+  gap: 0.6rem;
+}
+.choice:hover .choice__box {
+  border-color: var(--color-rose-soft);
+  background: #fff;
+}
+.choice__input:focus-visible + .choice__box {
+  outline: 2px solid var(--color-rose-deep);
+  outline-offset: 2px;
+}
+.choice__input:checked + .choice__box {
+  border-color: var(--color-rose-deep);
+  background: var(--color-blush);
+  box-shadow: inset 0 0 0 1px var(--color-rose-deep);
+}
+.choice__input:active:not(:disabled) + .choice__box {
+  transform: scale(0.985);
+}
+.choice__input:disabled {
+  cursor: not-allowed;
+}
+.choice__input:disabled + .choice__box {
+  opacity: 0.5;
+  background: transparent;
+}
+.choice__input[aria-invalid='true'] + .choice__box {
+  border-color: var(--color-rose-deep);
+  border-style: dashed;
+}
+
+.choice__swatch {
+  width: 1.6rem;
+  height: 1.6rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  background: var(--swatch);
+  box-shadow: inset 0 0 0 1px rgb(58 42 44 / 0.15), 0 0.2rem 0.4rem -0.2rem rgb(84 52 54 / 0.5);
+}
+.choice__icon {
+  width: 2.2rem;
+  height: 2.2rem;
+  background: var(--color-blush-50);
+}
+.choice__text {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+  flex: 1;
+}
+.choice__title {
+  font-size: var(--text-body);
+  line-height: 1.3;
+  font-weight: 500;
+}
+.choice--md .choice__title {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1.1;
+  font-weight: 600;
+}
+.choice__meta {
+  font-size: 0.66rem;
+  line-height: 1.4;
+  color: var(--color-cocoa-soft);
+}
+.choice__price {
+  flex-shrink: 0;
+  font-size: 0.7rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--color-rose-darker);
+  white-space: nowrap;
+}
+
+/* Empilhado: título → apoio → preço; check no canto */
+.choice--stack .choice__box {
+  position: relative;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 0.35rem;
+  padding: 0.9rem 2.6rem 0.9rem 1rem;
+}
+.choice--stack .choice__text {
+  flex: none;
+}
+.choice--stack .choice__price {
+  margin-top: auto;
+  padding-top: 0.25rem;
+  font-size: 0.75rem;
+}
+.choice--stack .choice__check {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+}
+
+/* Check desenhado ao marcar (stroke-dashoffset) */
+.choice__check {
+  display: grid;
+  place-items: center;
+  width: 1.3rem;
+  height: 1.3rem;
+  flex-shrink: 0;
+  border: 1px solid var(--color-rose-soft);
+  border-radius: 0.4rem;
+  background: #fff;
+  transition: background-color var(--duration-fast) var(--ease-soft), border-color var(--duration-fast) var(--ease-soft);
+}
+.choice__check--round {
+  border-radius: 999px;
+}
+.choice__check svg {
+  width: 0.85rem;
+  height: 0.85rem;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 16;
+  stroke-dashoffset: 16;
+  transition: stroke-dashoffset 0.32s var(--ease-soft) 0.05s;
+}
+.choice__input:checked + .choice__box .choice__check {
+  border-color: var(--color-rose-deep);
+  background: var(--color-rose-deep);
+}
+.choice__input:checked + .choice__box .choice__check svg {
+  stroke-dashoffset: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .choice__box,
+  .choice__check,
+  .choice__check svg {
+    transition: none;
+  }
+  .choice__input:active:not(:disabled) + .choice__box {
+    transform: none;
+  }
+}
