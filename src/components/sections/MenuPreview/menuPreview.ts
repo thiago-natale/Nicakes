@@ -14,10 +14,10 @@ export const menuPreview = [
     title: 'Salgados',
     items: [
       pick('salgados', 'Salgados', 'Pão de queijo'),
-      pick('salgados', 'Salgados', 'Pão de queijo recheado'),
+      pick('salgados', 'Salgados', 'Pão de queijo recheado frango com catupiry', 'Pão de queijo recheado de frango'),
       pick('salgados', 'Salgados', 'Coxinha de frango com catupiry', 'Coxinha de frango'),
       pick('salgados', 'Salgados', 'Coxinha de costela com catupiry', 'Coxinha de costela'),
-      pick('salgados', 'Salgados', 'Torta italiana'),
+      pick('salgados', 'Salgados', 'Torta de frango cremoso'),
     ],
   },
   {
