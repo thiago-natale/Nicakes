@@ -5,20 +5,11 @@
   overflow: hidden;
 }
 
-.custom-orders__media img {
-  object-position: 62% 50%;
-}
-
-@media (min-width: 48rem) {
+@media (min-width: 56.25rem) {
   .custom-orders__media {
     aspect-ratio: auto;
     min-height: 100%;
     border-top-left-radius: 6.2rem 4.6rem;
   }
-
-  /* A altura do painel vem do texto; a foto apenas preenche a coluna */
-  .custom-orders__media img {
-    position: absolute;
-    inset: 0;
-  }
+  /* A altura do painel vem do texto; o slider apenas preenche a coluna */
 }

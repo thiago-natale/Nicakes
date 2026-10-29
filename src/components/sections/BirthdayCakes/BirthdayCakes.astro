@@ -1,5 +1,6 @@
 ---
 import Button from '../../ui/Button.astro';
+import CakeSlider from '../../ui/CakeSlider.astro';
 import MenuList from '../../ui/MenuList.astro';
 import SectionDivider from '../../ui/SectionDivider.astro';
 import { birthdayCake, cakePriceFrom, formatPrice, formatKg } from '../../../data/menu';
@@ -11,7 +12,7 @@ const yields = birthdayCake.sizes.filter((s) => s.kg <= 2).map((s) => `${formatK
 <section id="bolos" data-motion-section="birthday-cakes" class="section-x relative z-10 scroll-mt-6 pt-[1.75rem] pb-[2rem] lg:pb-[2.5rem]" aria-labelledby="bolos-title">
   <SectionDivider id="bolos-title">Bolos de aniversário</SectionDivider>
 
-  <div data-motion="bc-panel" class="mt-[1rem] grid overflow-hidden rounded-panel bg-blush shadow-panel md:grid-cols-[minmax(0,1fr)_minmax(0,20rem)] xl:grid-cols-[minmax(0,1fr)_minmax(0,42%)]">
+  <div data-motion="bc-panel" class="mt-[1rem] grid overflow-hidden rounded-panel bg-blush shadow-panel xl:grid-cols-[minmax(0,1fr)_minmax(0,42%)]">
     <div class="px-[1.5rem] py-[1.6rem] lg:px-[2rem]">
       <p class="font-display text-[1.6rem] leading-none font-semibold text-cocoa">
         <span class="sr-only">A partir de {formatPrice(priceFrom)} o quilo</span>
@@ -53,16 +54,10 @@ const yields = birthdayCake.sizes.filter((s) => s.kg <= 2).map((s) => `${formatK
         Montar meu bolo
       </Button>
     </div>
-    <img
-      data-motion="bc-image"
-      src="/images/custom-birthday-cake.webp"
-      alt="Bolo de aniversário de dois andares em tons de rosa, decorado com rosas"
-      width="1100"
-      height="614"
-      loading="lazy"
-      decoding="async"
-      class="h-full max-h-[22rem] w-full object-cover object-[62%_50%] md:max-h-none"
-    />
+    <!-- Empilhado (16:9) até 1280px; ao lado do texto a partir daí -->
+    <div class="relative aspect-video xl:aspect-auto">
+      <CakeSlider sizes="(max-width: 1279px) 100vw, 42vw" motion="bc-image" awaitIntro class="absolute inset-0" />
+    </div>
   </div>
 
   <svg class="absolute size-0" aria-hidden="true" focusable="false">

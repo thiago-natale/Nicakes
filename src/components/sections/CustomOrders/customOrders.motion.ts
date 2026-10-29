@@ -16,7 +16,7 @@ import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 gsap.registerPlugin(MotionPathPlugin);
 import { EASE } from '../../../scripts/motion/eases';
 import { speed, START, type MotionConditions } from '../../../scripts/motion/config';
-import { q, q1, onceInView, gentleFade } from '../../../scripts/motion/utils';
+import { q, q1, onceInView, gentleFade, sliderReady } from '../../../scripts/motion/utils';
 import { split, finish } from '../../../scripts/motion/split';
 import { drawIcon } from '../../../scripts/motion/draw';
 import { headingIn } from '../../../scripts/motion/heading';
@@ -124,6 +124,8 @@ export function initMotion(root: HTMLElement, c: MotionConditions, order: number
   icons.forEach((icon) => gsap.set(icon.querySelectorAll('path'), { drawSVG: '0%' }));
   intro.from(icons, { scale: 0.6, autoAlpha: 0, duration: 0.5, ease: EASE.pop, stagger: 0.1, clearProps: 'transform,opacity,visibility' }, '<');
   intro.from(perkTexts, { autoAlpha: 0, y: 6, duration: 0.4, stagger: 0.1 }, '<0.1');
+  // Fim da entrada: o slider de fotos começa a trocar (controles e barra aparecem)
+  intro.call(() => sliderReady(root), undefined, '>');
 
   // O primeiro ícone se desenha; o coração pousa e percorre o caminho até o último
   const travel = 2.2 * k;

@@ -89,3 +89,8 @@ export function gentleFade(targets: Element | Element[], order?: number): void {
     });
   });
 }
+
+/** Avisa o slider de fotos (ui/CakeSlider) dentro de `scope` que a entrada da seção terminou. */
+export function sliderReady(scope: Element | null): void {
+  scope?.querySelector('[data-cake-slider]')?.dispatchEvent(new CustomEvent('cake-slider:ready'));
+}

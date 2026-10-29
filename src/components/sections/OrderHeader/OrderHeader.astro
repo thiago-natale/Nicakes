@@ -2,16 +2,15 @@
 /**
  * Cabeçalho da página /encomendas — mesma linguagem do Cardápio e da 404:
  * eyebrow dourado, título com destaque em itálico rosa e floreio, lead e os
- * passos do pedido (âncoras para cada etapa). No desktop, a foto do bolo
+ * passos do pedido (âncoras para cada etapa). No desktop, o slider de bolos
  * aparece com a gota que cresce (como nas Encomendas da home).
  */
 import Eyebrow from '../../ui/Eyebrow.astro';
 import Swash from '../../ui/Swash.astro';
-import { srcsetOf } from '../../../data/images';
+import CakeSlider from '../../ui/CakeSlider.astro';
 import { orderHeaderCopy as copy } from './orderHeader';
 import './orderHeader.css';
 
-const photo = '/images/custom-birthday-cake.webp';
 ---
 
 <section
@@ -52,19 +51,8 @@ const photo = '/images/custom-birthday-cake.webp';
       </nav>
     </div>
 
-    <div class="order-header__media hidden lg:block" data-motion-hero aria-hidden="true">
-      <img
-        data-motion="oh-image"
-        src={photo}
-        srcset={srcsetOf(photo, 1100)}
-        sizes="40vw"
-        alt=""
-        width="1100"
-        height="614"
-        loading="lazy"
-        decoding="async"
-        class="order-header__photo"
-      />
+    <div class="order-header__media hidden lg:block" data-motion-hero>
+      <CakeSlider sizes="40vw" motion="oh-image" awaitIntro class="absolute inset-0" />
     </div>
   </div>
 

@@ -8,7 +8,7 @@ import gsap from 'gsap';
 import { EASE } from '../../../scripts/motion/eases';
 import { speed, type MotionConditions } from '../../../scripts/motion/config';
 import { whenReadyToPlay } from '../../../scripts/motion/reveal';
-import { q, q1 } from '../../../scripts/motion/utils';
+import { q, q1, sliderReady } from '../../../scripts/motion/utils';
 import { split, finish } from '../../../scripts/motion/split';
 import { eyebrowEnter } from '../../../scripts/motion/heading';
 
@@ -56,7 +56,10 @@ export function initMotion(root: HTMLElement, c: MotionConditions): void {
     tl.fromTo(clip, { morphSVG: '#oh-clip-seed' }, { morphSVG: 'M0 0 H1 V1 H0 Z', duration: 1.4 * k, ease: EASE.drip }, '<');
     tl.fromTo(image, { scale: 1.2, yPercent: -5 }, { scale: 1, yPercent: 0, duration: 1.6 * k }, '<');
     // Depois da entrada, devolve o recorte normal (borda arredondada do CSS)
-    tl.call(() => gsap.set(image, { clearProps: 'clipPath,transform' }), undefined, '>');
+    tl.call(() => {
+      gsap.set(image, { clearProps: 'clipPath,transform' });
+      sliderReady(root);
+    }, undefined, '>');
   }
 
   finish(tl, splits);

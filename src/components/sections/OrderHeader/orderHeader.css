@@ -14,10 +14,6 @@
   border-radius: var(--radius-panel);
   box-shadow: var(--shadow-panel);
 }
-.order-header__photo {
-  display: block;
-  width: 100%;
+.order-header__media {
   aspect-ratio: 4 / 3;
-  object-fit: cover;
-  object-position: 62% 50%;
 }

@@ -6,7 +6,7 @@
 import gsap from 'gsap';
 import { EASE } from '../../../scripts/motion/eases';
 import { speed, type MotionConditions } from '../../../scripts/motion/config';
-import { q, q1, onceInView, revealButtons, gentleFade } from '../../../scripts/motion/utils';
+import { q, q1, onceInView, revealButtons, gentleFade, sliderReady } from '../../../scripts/motion/utils';
 import { split, finish } from '../../../scripts/motion/split';
 import { dividerIn } from '../../../scripts/motion/divider';
 import { priceIn } from '../../../scripts/motion/counters';
@@ -41,6 +41,7 @@ export function initMotion(root: HTMLElement, c: MotionConditions, order: number
     gsap.set(image, { clipPath: 'url(#bc-clip)' });
     tl.fromTo(clip, { morphSVG: '#bc-clip-seed' }, { morphSVG: 'M0 0 H1 V1 H0 Z', duration: 1.3 * k, ease: EASE.drip }, '<0.1');
     tl.fromTo(image, { scale: 1.2 }, { scale: 1, duration: 1.5 * k, clearProps: 'transform' }, '<');
+    tl.call(() => sliderReady(root), undefined, '>');
   }
   if (price) tl.add(priceIn(price), '<0.2');
   tl.from(chips, { scale: 0.6, autoAlpha: 0, duration: 0.45, ease: EASE.pop, stagger: 0.04, clearProps: 'transform,opacity,visibility' }, '<0.3');

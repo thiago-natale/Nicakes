@@ -1,0 +1,93 @@
+---
+/**
+ * Slider de fotos dos bolos de encomenda (data/orderGallery.ts).
+ * Preenche o pai (que define o tamanho/recorte). Troca automática com barra de
+ * progresso em segmentos, setas mínimas, contador, pausa (WCAG 2.2.2), teclado
+ * e arraste no celular. Só a 1ª foto vem no HTML; as demais carregam quando vão
+ * aparecer. Comportamento: cakeSlider.ts · estilos: cake-slider.css.
+ *
+ * `motion` vai no viewport (alvo do recorte em gota da seção). Com `awaitIntro`,
+ * a troca automática espera o evento `cake-slider:ready`, disparado pela
+ * animação de entrada da seção.
+ */
+import { orderGallery, photoSrc, photoSrcset, GALLERY_SIZES } from '../../data/orderGallery';
+import './cake-slider.css';
+
+interface Props {
+  /** `sizes` do <img> (largura exibida) */
+  sizes: string;
+  /** data-motion do viewport (recorte da entrada da seção) */
+  motion?: string;
+  awaitIntro?: boolean;
+  label?: string;
+  class?: string;
+}
+
+const { sizes, motion, awaitIntro = false, label = 'Bolos de aniversário feitos pela Nicake’s', class: className = '' } = Astro.props;
+const total = orderGallery.length;
+const pad = (n: number): string => String(n).padStart(2, '0');
+---
+
+<div
+  class:list={['cake-slider', className]}
+  role="region"
+  aria-roledescription="carrossel"
+  aria-label={label}
+  data-cake-slider
+  data-await-intro={awaitIntro ? '' : undefined}
+>
+  <div class="cake-slider__viewport" data-motion={motion} data-slider-viewport>
+    {
+      orderGallery.map((photo, i) => (
+        <figure
+          class:list={['cake-slider__slide', i === 0 && 'is-active']}
+          role="group"
+          aria-roledescription="slide"
+          aria-label={`${i + 1} de ${total}`}
+          aria-hidden={i === 0 ? undefined : 'true'}
+          inert={i === 0 ? undefined : true}
+          data-slide
+        >
+          <img
+            class="cake-slider__image"
+            src={i === 0 ? photoSrc(photo) : undefined}
+            srcset={i === 0 ? photoSrcset(photo) : undefined}
+            data-src={i === 0 ? undefined : photoSrc(photo)}
+            data-srcset={i === 0 ? undefined : photoSrcset(photo)}
+            sizes={sizes}
+            alt={photo.alt}
+            width={GALLERY_SIZES.full}
+            height={GALLERY_SIZES.height}
+            loading="lazy"
+            decoding="async"
+            style={`object-position: ${photo.focus}`}
+          />
+        </figure>
+      ))
+    }
+  </div>
+
+  <div class="cake-slider__progress" aria-hidden="true">
+    {orderGallery.map(() => <span class="cake-slider__segment"><span class="cake-slider__fill" data-fill></span></span>)}
+  </div>
+
+  <div class="cake-slider__controls">
+    <button type="button" class="cake-slider__button" data-prev aria-label="Foto anterior">
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M10 3 5 8l5 5"></path></svg>
+    </button>
+    <span class="cake-slider__count" aria-hidden="true"><span data-current>{pad(1)}</span><span class="cake-slider__sep">/</span><span class="cake-slider__total">{pad(total)}</span></span>
+    <button type="button" class="cake-slider__button" data-next aria-label="Próxima foto">
+      <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 3l5 5-5 5"></path></svg>
+    </button>
+    <button type="button" class="cake-slider__button cake-slider__button--pause" data-toggle aria-label="Pausar troca automática">
+      <svg class="cake-slider__icon--pause" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M6 4v8M10 4v8"></path></svg>
+      <svg class="cake-slider__icon--play" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M5.5 3.8v8.4L12 8z"></path></svg>
+    </button>
+  </div>
+
+  <p class="sr-only" aria-live="polite" data-live></p>
+</div>
+
+<script>
+  import './cakeSlider';
+</script>
