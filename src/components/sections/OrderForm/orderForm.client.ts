@@ -15,9 +15,12 @@ import {
   answerField,
   buildMessage,
   calcTotal,
+  decorationOf,
   earliestPickup,
+  extraAvailable,
   emptySelection,
   formatPickupDate,
+  pricePerKgOf,
   fromISODate,
   isOpenDay,
   PERIODS,
@@ -77,6 +80,7 @@ function setup(form: HTMLFormElement): void {
   function read(): OrderSelection {
     const fd = new FormData(form);
     const sel = emptySelection();
+    sel.decoration = String(fd.get('decoration') ?? '');
     const kg = Number(fd.get('size'));
     sel.kg = kg > 0 ? kg : null;
     sel.dough = String(fd.get('dough') ?? '');
@@ -117,6 +121,61 @@ function setup(form: HTMLFormElement): void {
       });
     }
     if (!show && input) clearError(input.name);
+  }
+
+  /* ---------- Decoração → preço do quilo nos tamanhos ---------- */
+  const sizeRate = $('[data-size-rate]');
+  const extraNote = $('[data-extra-note]');
+  let lastRate = pricePerKgOf(emptySelection());
+
+  /** Troca um valor exibido: o antigo sobe e sai, o novo sobe da máscara. */
+  function swapText(el: HTMLElement, text: string, delay = 0): void {
+    if (el.textContent === text) return;
+    if (booting || reduceMotion()) {
+      el.textContent = text;
+      return;
+    }
+    gsap.killTweensOf(el);
+    gsap.to(el, {
+      yPercent: -60,
+      autoAlpha: 0,
+      duration: 0.18,
+      delay,
+      ease: 'power2.in',
+      onComplete: () => {
+        el.textContent = text;
+        priceIn(el, { duration: 0.45 });
+      },
+    });
+  }
+
+  function applyDecoration(sel: OrderSelection): void {
+    const rate = pricePerKgOf(sel);
+    const deco = decorationOf(sel);
+    if (sizeRate) sizeRate.textContent = `${formatPrice(rate)} o quilo com ${deco.name.toLowerCase()}`;
+    if (rate !== lastRate || booting) {
+      $$<HTMLInputElement>('input[name="size"]').forEach((input, i) => {
+        const price = input.closest('.choice')?.querySelector<HTMLElement>('.choice__price');
+        if (price) swapText(price, formatPrice(Number(input.value) * rate), i * 0.03);
+      });
+      lastRate = rate;
+    }
+    // Adicionais indisponíveis com a decoração (ex.: cores com ganache)
+    const blocked: string[] = [];
+    $$<HTMLInputElement>('input[name="extra"]').forEach((input) => {
+      const ok = extraAvailable(input.value, deco.name);
+      if (!ok) {
+        if (input.checked) input.checked = false;
+        blocked.push(input.value);
+      }
+      input.disabled = !ok;
+    });
+    if (extraNote) {
+      extraNote.hidden = !blocked.length;
+      extraNote.textContent = blocked.length
+        ? `Com ${deco.name.toLowerCase()}, ${blocked.map((b) => `“${b}”`).join(' e ')} não ${blocked.length > 1 ? 'estão disponíveis' : 'está disponível'}.`
+        : '';
+    }
   }
 
   /* ---------- Valor ---------- */
@@ -185,6 +244,7 @@ function setup(form: HTMLFormElement): void {
   }
 
   function renderSummary(sel: OrderSelection): void {
+    setDetail('decoration', `${decorationOf(sel).name} · ${formatPrice(pricePerKgOf(sel))}/kg`, false);
     const size = birthdayCake.sizes.find((s) => s.kg === sel.kg);
     setDetail('size', size ? `${formatKg(size.kg)} · ${size.serves}` : 'A escolher', !size);
     setDetail('dough', sel.dough || 'A escolher', !sel.dough);
@@ -232,7 +292,7 @@ function setup(form: HTMLFormElement): void {
   }
 
   /* ---------- Erros ---------- */
-  const groupKeys = new Set(['size', 'dough', 'filling', 'period']);
+  const groupKeys = new Set(['decoration', 'size', 'dough', 'filling', 'period']);
 
   function controlsOf(key: string): HTMLElement[] {
     return $$<HTMLInputElement>(`[name="${key}"]`);
@@ -336,6 +396,7 @@ function setup(form: HTMLFormElement): void {
 
   /* ---------- Atualização ---------- */
   function update(opts: { save?: boolean } = {}): void {
+    applyDecoration(read()); // pode desmarcar um adicional indisponível
     const sel = read();
     applyFillingLimit(sel);
     applyAsks(sel);
@@ -392,7 +453,7 @@ function setup(form: HTMLFormElement): void {
     }
     renderErrors({});
     update({ save: false });
-    $<HTMLElement>('#etapa-tamanho')?.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+    $<HTMLElement>('#etapa-decoracao')?.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
   });
 
   /* ---------- Barra do celular: some quando o resumo está na tela ---------- */

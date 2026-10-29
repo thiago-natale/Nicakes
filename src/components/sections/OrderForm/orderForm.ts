@@ -3,10 +3,12 @@
  * mensagem do WhatsApp. Fonte dos dados: `birthdayCake` (src/data/menu.ts) e os
  * horários da loja (`site.hours`). Testável em Node.
  */
-import { birthdayCake, formatKg, formatPrice } from '../../../data/menu';
+import { birthdayCake, defaultDecoration, formatKg, formatPrice, type CakeDecoration } from '../../../data/menu';
 import { site } from '../../../data/site';
 
 export interface OrderSelection {
+  /** Nome da decoração (define o preço do quilo) */
+  decoration: string;
   kg: number | null;
   dough: string;
   fillings: string[];
@@ -23,6 +25,7 @@ export interface OrderSelection {
 }
 
 export const emptySelection = (): OrderSelection => ({
+  decoration: defaultDecoration().name,
   kg: null,
   dough: '',
   fillings: [],
@@ -47,17 +50,30 @@ export interface PriceLine {
   value: number;
 }
 
+/** Decoração escolhida (ou a padrão, se não houver/for desconhecida). */
+export const decorationOf = (sel: Pick<OrderSelection, 'decoration'>): CakeDecoration =>
+  birthdayCake.decorations.find((d) => d.name === sel.decoration) ?? defaultDecoration();
+
+/** Preço do quilo conforme a decoração. */
+export const pricePerKgOf = (sel: Pick<OrderSelection, 'decoration'>): number => decorationOf(sel).pricePerKg;
+
+/** O adicional pode ser escolhido com a decoração atual? */
+export function extraAvailable(name: string, decoration: string): boolean {
+  const e = birthdayCake.extras.find((x) => x.name === name);
+  return !e?.notWith?.includes(decoration);
+}
+
 /** Linhas do valor estimado (bolo por kg + taxas de recheio + adicionais). */
 export function priceLines(sel: OrderSelection): PriceLine[] {
   const lines: PriceLine[] = [];
-  if (sel.kg) lines.push({ label: `Bolo de ${formatKg(sel.kg)}`, value: sel.kg * birthdayCake.pricePerKg });
+  if (sel.kg) lines.push({ label: `Bolo de ${formatKg(sel.kg)} · ${decorationOf(sel).name}`, value: sel.kg * pricePerKgOf(sel) });
   for (const name of sel.fillings) {
     const f = birthdayCake.fillings.find((x) => x.name === name);
     if (f?.price) lines.push({ label: `Recheio: ${f.name}`, value: f.price });
   }
   for (const name of sel.extras) {
     const e = birthdayCake.extras.find((x) => x.name === name);
-    if (e) lines.push({ label: e.name, value: e.price });
+    if (e && extraAvailable(e.name, sel.decoration)) lines.push({ label: e.name, value: e.price });
   }
   return lines;
 }
@@ -130,6 +146,7 @@ export type OrderErrors = Partial<Record<string, string>>;
 /** Erros por campo (chave = `name` do campo no formulário). */
 export function validate(sel: OrderSelection, today: Date = new Date()): OrderErrors {
   const e: OrderErrors = {};
+  if (!birthdayCake.decorations.some((d) => d.name === sel.decoration)) e.decoration = 'Escolha a decoração.';
   if (!sel.kg) e.size = 'Escolha o tamanho do bolo.';
   if (!sel.dough) e.dough = 'Escolha a massa.';
   if (!sel.fillings.length) e.filling = 'Escolha pelo menos 1 recheio.';
@@ -140,6 +157,7 @@ export function validate(sel: OrderSelection, today: Date = new Date()): OrderEr
   });
   sel.extras.forEach((name) => {
     const x = birthdayCake.extras.find((i) => i.name === name);
+    if (!extraAvailable(name, sel.decoration)) return;
     if (x?.ask && !sel.extraAnswers[name]?.trim()) e[answerField('extra', name)] = `Preencha: ${x.ask.toLowerCase()}`;
   });
   const date = fromISODate(sel.date);
@@ -173,7 +191,7 @@ export function buildMessage(sel: OrderSelection): string {
     if (f?.price) text += ` +${formatPrice(f.price)}`;
     return text;
   });
-  const extras = sel.extras.map((name) => {
+  const extras = sel.extras.filter((name) => extraAvailable(name, sel.decoration)).map((name) => {
     const answer = sel.extraAnswers[name]?.trim();
     return answer ? `${name} (${answer})` : name;
   });
@@ -183,6 +201,7 @@ export function buildMessage(sel: OrderSelection): string {
   const lines = [
     `Olá, ${site.name}! Montei meu bolo de aniversário pelo site:`,
     '',
+    `• Decoração: ${decorationOf(sel).name} (${formatPrice(pricePerKgOf(sel))}/kg)`,
     `• Tamanho: ${sel.kg ? formatKg(sel.kg) : '—'}${size ? ` (${size.serves})` : ''}`,
     `• Massa: ${sel.dough || '—'}`,
     `• Recheio${fillings.length > 1 ? 's' : ''}: ${fillings.join(' e ') || '—'}`,

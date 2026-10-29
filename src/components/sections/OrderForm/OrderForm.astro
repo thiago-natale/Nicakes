@@ -2,8 +2,9 @@
 /**
  * /encomendas — formulário "Monte o seu bolo" + resumo com valor estimado.
  *
- * Cinco etapas (fieldset/legend), com inputs reais: tamanho → massa → recheios
- * (até `rules.maxFillings`) → adicionais → retirada e contato. O resumo fica
+ * Seis etapas (fieldset/legend), com inputs reais: decoração (define o preço do
+ * quilo) → tamanho → massa → recheios (até `rules.maxFillings`) → adicionais →
+ * retirada e contato. O resumo fica
  * fixo ao lado no desktop; no celular, uma barra de total no rodapé leva até ele.
  * O envio monta a mensagem padrão (orderForm.ts) e abre o WhatsApp.
  * Lógica: orderForm.ts (pura) · orderForm.client.ts (DOM) · orderForm.motion.ts.
@@ -13,7 +14,7 @@ import ChoiceCard from '../../ui/ChoiceCard.astro';
 import FormField from '../../ui/FormField.astro';
 import Icon from '../../ui/Icon.astro';
 import StepBadge from '../../ui/StepBadge.astro';
-import { birthdayCake, formatKg, formatPrice } from '../../../data/menu';
+import { birthdayCake, defaultDecoration, formatKg, formatPrice } from '../../../data/menu';
 import { site, whatsappLink } from '../../../data/site';
 import { answerField, NOTES_MAX } from './orderForm';
 import './orderForm.css';
@@ -25,7 +26,8 @@ const doughSwatch: Record<string, string> = {
 };
 const openHours = site.hours.filter((h) => h.schema).map((h) => `${h.long.toLowerCase()}, ${h.time}`);
 const closedDays = site.hours.filter((h) => !h.schema).map((h) => h.long.toLowerCase());
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 6;
+const baseDecoration = defaultDecoration();
 const step = (n: number): string => `Etapa ${n} de ${TOTAL_STEPS}:`;
 ---
 
@@ -40,31 +42,60 @@ const step = (n: number): string => `Etapa ${n} de ${TOTAL_STEPS}:`;
         </p>
       </noscript>
 
-      <!-- 1. Tamanho -->
-      <fieldset id="etapa-tamanho" class="order-step" data-motion="of-step" aria-describedby="err-size">
+      <!-- 1. Decoração -->
+      <fieldset id="etapa-decoracao" class="order-step" data-motion="of-step" aria-describedby="err-decoration">
         <legend class="order-step__legend">
           <StepBadge n={1} data-motion="of-badge" />
           <span class="sr-only">{step(1)}</span>
+          <span class="type-panel" data-motion="of-legend">Decoração</span>
+        </legend>
+        <p class="order-step__lead type-small">A decoração define o valor do quilo do bolo.</p>
+        <div class="order-step__options grid gap-[0.6rem] sm:grid-cols-3">
+          {
+            birthdayCake.decorations.map((d) => (
+              <ChoiceCard
+                type="radio"
+                name="decoration"
+                value={d.name}
+                title={d.name}
+                meta={d.description}
+                price={`${formatPrice(d.pricePerKg)} / kg`}
+                swatch={d.swatch}
+                badge={d.default ? 'padrão' : undefined}
+                layout="stack"
+                checked={d.name === baseDecoration.name}
+              />
+            ))
+          }
+        </div>
+        <p id="err-decoration" class="field-error" data-error-for="decoration" hidden></p>
+      </fieldset>
+
+      <!-- 2. Tamanho -->
+      <fieldset id="etapa-tamanho" class="order-step" data-motion="of-step" aria-describedby="err-size">
+        <legend class="order-step__legend">
+          <StepBadge n={2} data-motion="of-badge" />
+          <span class="sr-only">{step(2)}</span>
           <span class="type-panel" data-motion="of-legend">Tamanho</span>
         </legend>
         <p class="order-step__lead type-small">
-          {formatPrice(birthdayCake.pricePerKg)} o quilo. O rendimento depende de como o bolo é cortado.
+          <span data-size-rate>{formatPrice(baseDecoration.pricePerKg)} o quilo com {baseDecoration.name.toLowerCase()}</span>. O rendimento depende de como o bolo é cortado.
         </p>
         <div class="order-step__options grid grid-cols-2 gap-[0.6rem] sm:grid-cols-3 xl:grid-cols-4">
           {
             birthdayCake.sizes.map((s) => (
-              <ChoiceCard type="radio" name="size" value={String(s.kg)} title={formatKg(s.kg)} meta={s.serves} price={formatPrice(s.kg * birthdayCake.pricePerKg)} layout="stack" />
+              <ChoiceCard type="radio" name="size" value={String(s.kg)} title={formatKg(s.kg)} meta={s.serves} price={formatPrice(s.kg * baseDecoration.pricePerKg)} layout="stack" />
             ))
           }
         </div>
         <p id="err-size" class="field-error" data-error-for="size" hidden></p>
       </fieldset>
 
-      <!-- 2. Massa -->
+      <!-- 3. Massa -->
       <fieldset id="etapa-massa" class="order-step" data-motion="of-step" aria-describedby="err-dough">
         <legend class="order-step__legend">
-          <StepBadge n={2} data-motion="of-badge" />
-          <span class="sr-only">{step(2)}</span>
+          <StepBadge n={3} data-motion="of-badge" />
+          <span class="sr-only">{step(3)}</span>
           <span class="type-panel" data-motion="of-legend">Massa</span>
         </legend>
         <div class="order-step__options grid gap-[0.6rem] sm:grid-cols-2">
@@ -73,11 +104,11 @@ const step = (n: number): string => `Etapa ${n} de ${TOTAL_STEPS}:`;
         <p id="err-dough" class="field-error" data-error-for="dough" hidden></p>
       </fieldset>
 
-      <!-- 3. Recheios -->
+      <!-- 4. Recheios -->
       <fieldset id="etapa-recheios" class="order-step" data-motion="of-step" aria-describedby="err-filling filling-count">
         <legend class="order-step__legend">
-          <StepBadge n={3} data-motion="of-badge" />
-          <span class="sr-only">{step(3)}</span>
+          <StepBadge n={4} data-motion="of-badge" />
+          <span class="sr-only">{step(4)}</span>
           <span class="type-panel" data-motion="of-legend">Recheios</span>
         </legend>
         <div class="order-step__lead flex flex-wrap items-baseline justify-between gap-x-[1rem] gap-y-[0.25rem]">
@@ -120,11 +151,11 @@ const step = (n: number): string => `Etapa ${n} de ${TOTAL_STEPS}:`;
         <p id="err-filling" class="field-error" data-error-for="filling" hidden></p>
       </fieldset>
 
-      <!-- 4. Adicionais -->
+      <!-- 5. Adicionais -->
       <fieldset id="etapa-adicionais" class="order-step" data-motion="of-step">
         <legend class="order-step__legend">
-          <StepBadge n={4} data-motion="of-badge" />
-          <span class="sr-only">{step(4)}</span>
+          <StepBadge n={5} data-motion="of-badge" />
+          <span class="sr-only">{step(5)}</span>
           <span class="type-panel" data-motion="of-legend">Adicionais</span>
           <span class="order-step__optional">(opcional)</span>
         </legend>
@@ -135,6 +166,7 @@ const step = (n: number): string => `Etapa ${n} de ${TOTAL_STEPS}:`;
             ))
           }
         </div>
+        <p class="order-step__note type-small" data-extra-note hidden></p>
         {
           birthdayCake.extras
             .filter((e) => e.ask)
@@ -146,11 +178,11 @@ const step = (n: number): string => `Etapa ${n} de ${TOTAL_STEPS}:`;
         }
       </fieldset>
 
-      <!-- 5. Retirada e contato -->
+      <!-- 6. Retirada e contato -->
       <fieldset id="etapa-retirada" class="order-step" data-motion="of-step">
         <legend class="order-step__legend">
-          <StepBadge n={5} data-motion="of-badge" />
-          <span class="sr-only">{step(5)}</span>
+          <StepBadge n={6} data-motion="of-badge" />
+          <span class="sr-only">{step(6)}</span>
           <span class="type-panel" data-motion="of-legend">Retirada</span>
         </legend>
         <p class="order-step__lead order-step__pickup type-small">
@@ -201,6 +233,7 @@ const step = (n: number): string => `Etapa ${n} de ${TOTAL_STEPS}:`;
         <h2 id="summary-title" class="type-panel mt-[0.2rem] text-cocoa">Seu bolo</h2>
 
         <dl class="order-summary__details" data-summary-details>
+          <div><dt>Decoração</dt><dd data-summary="decoration">{baseDecoration.name} · {formatPrice(baseDecoration.pricePerKg)}/kg</dd></div>
           <div><dt>Tamanho</dt><dd data-summary="size">A escolher</dd></div>
           <div><dt>Massa</dt><dd data-summary="dough">A escolher</dd></div>
           <div><dt>Recheios</dt><dd data-summary="fillings">A escolher</dd></div>
