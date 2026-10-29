@@ -58,7 +58,7 @@ export const menu: MenuCategory[] = [
           // TODO: valor provisório — confirmar o preço do Morango Cravejado.
           {
             name: "Morango Cravejado",
-            price: 15,
+            price: 18,
             detail: "Morango fresco envolto em chocolate branco",
           },
         ],
