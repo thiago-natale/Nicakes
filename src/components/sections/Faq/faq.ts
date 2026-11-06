@@ -3,7 +3,7 @@
  * Endereço e horários vêm de `data/site.ts` — mude lá e o FAQ acompanha.
  */
 import { site } from '../../../data/site';
-import { birthdayCake, cakePriceFrom, formatPrice } from '../../../data/menu';
+import { birthdayCake, cakePriceFrom, formatKg, formatPrice } from '../../../data/menu';
 
 export interface FaqItem {
   question: string;
@@ -53,13 +53,55 @@ export const faqItems: FaqItem[] = [
   },
 ];
 
-/** Dados estruturados (schema.org FAQPage) para os buscadores. */
-export const faqSchema = {
+/* -------------------------------------------------------------------------- */
+/* /encomendas — dúvidas sobre o bolo de aniversário (dados de data/menu.ts)   */
+/* -------------------------------------------------------------------------- */
+
+const yields = birthdayCake.sizes.map((x) => `${formatKg(x.kg)}, ${x.serves}`).join('; ');
+const decorations = birthdayCake.decorations.map((d) => `${d.name.toLowerCase()}, ${formatPrice(d.pricePerKg)}`).join('; ');
+const extras = birthdayCake.extras.map((e) => `${e.name.toLowerCase()} (+${formatPrice(e.price)})`).join(', ');
+const fruitFee = birthdayCake.fillings.find((f) => f.price);
+
+export const orderFaqItems: FaqItem[] = [
+  {
+    question: 'Quanto custa um bolo de aniversário na Nicake’s?',
+    answer: `O preço é por quilo e depende da decoração: ${decorations}. Os adicionais são opcionais: ${extras}.${
+      fruitFee ? ` O recheio “${fruitFee.name.toLowerCase()}” tem taxa de ${formatPrice(fruitFee.price ?? 0)}.` : ''
+    } O formulário mostra o valor estimado na hora.`,
+  },
+  {
+    question: 'Qual tamanho de bolo eu preciso?',
+    answer: `Rendimento informado pela loja: ${yields}. A quantidade de fatias depende de como o bolo é cortado.`,
+  },
+  {
+    question: 'Com quanto tempo de antecedência preciso encomendar?',
+    answer: `Com pelo menos ${birthdayCake.rules.leadBusinessDays} dia de funcionamento de antecedência. O formulário já mostra a data mais próxima disponível; às segundas-feiras a loja fica fechada.`,
+  },
+  {
+    question: 'Vocês entregam o bolo?',
+    answer: `Por enquanto, os bolos de aniversário são retirados na loja: ${site.address.street}, ${site.address.district}, ${site.address.city}. Você escolhe a data e o período (manhã ou tarde) no pedido.`,
+    link: { label: 'Como chegar', href: site.address.mapsUrl },
+  },
+  {
+    question: 'Posso escolher mais de um recheio?',
+    answer: `Pode escolher até ${birthdayCake.rules.maxFillings} recheios por bolo, entre ${birthdayCake.fillings.length} sabores. Nos sabores à escolha (geleia ou frutas), a disponibilidade é confirmada pelo WhatsApp.`,
+  },
+  {
+    question: 'Como o pedido é confirmado?',
+    answer:
+      'Ao enviar o formulário, o WhatsApp abre com o pedido já escrito. A Nicake’s confere tudo, confirma a disponibilidade, a data e o valor final, e o pedido fica combinado.',
+    link: { label: 'Falar no WhatsApp', href: site.whatsapp },
+  },
+];
+
+/** Dados estruturados (schema.org FAQPage) para os buscadores — só as perguntas visíveis. */
+export const faqSchema = (items: FaqItem[], id: string) => ({
   '@context': 'https://schema.org',
   '@type': 'FAQPage',
-  mainEntity: faqItems.map((item) => ({
+  '@id': id,
+  mainEntity: items.map((item) => ({
     '@type': 'Question',
     name: item.question,
     acceptedAnswer: { '@type': 'Answer', text: item.answer },
   })),
-};
+});

@@ -9,9 +9,30 @@
 import Button from '../../ui/Button.astro';
 import Icon from '../../ui/Icon.astro';
 import SectionHeading from '../../ui/SectionHeading.astro';
-import { faqItems, faqSchema } from './faq';
+import { faqItems, faqSchema, type FaqItem } from './faq';
 import { whatsappLink } from '../../../data/site';
+import { absoluteUrl } from '../../../data/seo';
 import './faq.css';
+
+/** Reutilizável: a home usa as perguntas gerais; o /encomendas, as de encomenda. */
+interface Props {
+  items?: FaqItem[];
+  eyebrow?: string;
+  title?: string;
+  accent?: string;
+  lead?: string;
+  /** Mensagem do botão de WhatsApp */
+  question?: string;
+}
+const {
+  items = faqItems,
+  eyebrow = 'Dúvidas frequentes',
+  title = 'Antes do primeiro',
+  accent = '“quero pedir”.',
+  lead = 'Informações rápidas sobre pedidos, encomendas, endereço e funcionamento.',
+  question = 'Olá! Tenho uma dúvida sobre a Nicake’s.',
+} = Astro.props;
+const schemaId = `${absoluteUrl(Astro.url.pathname, Astro.site)}#faq`;
 ---
 
 <section id="faq" data-motion-section="faq" data-faq class="faq content-x section-y relative scroll-mt-6" aria-labelledby="faq-title">
@@ -27,14 +48,14 @@ import './faq.css';
     <div class="lg:sticky lg:top-[calc(var(--header-height)+2rem)] lg:self-start">
       <SectionHeading
         id="faq-title"
-        eyebrow="Dúvidas frequentes"
-        title="Antes do primeiro"
-        accent="“quero pedir”."
-        lead="Informações rápidas sobre pedidos, encomendas, endereço e funcionamento."
+        eyebrow={eyebrow}
+        title={title}
+        accent={accent}
+        lead={lead}
         leadClass="max-w-[22rem]"
       />
       <div class="mt-[1.2rem] flex flex-wrap items-center gap-x-[0.8rem] gap-y-[0.4rem]" data-motion="faq-cta">
-        <Button href={whatsappLink('Olá! Tenho uma dúvida sobre a Nicake’s.')} icon="whatsapp">
+        <Button href={whatsappLink(question)} icon="whatsapp">
           Ainda com dúvida? Chama a gente
         </Button>
       </div>
@@ -44,7 +65,7 @@ import './faq.css';
     <div class="faq__list" data-motion="faq-list">
       <span class="faq__rule" data-motion="faq-rule" aria-hidden="true"></span>
       {
-        faqItems.map((item, i) => {
+        items.map((item, i) => {
           const open = i === 0;
           return (
             <div class="faq__item" data-motion="faq-item">
@@ -93,7 +114,7 @@ import './faq.css';
     </div>
   </div>
 
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema(items, schemaId))} />
 </section>
 
 <script>

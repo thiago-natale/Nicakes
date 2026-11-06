@@ -2,12 +2,23 @@
 import SiteLayout from '../layouts/SiteLayout.astro';
 import OrderHeader from '../components/sections/OrderHeader/OrderHeader.astro';
 import OrderForm from '../components/sections/OrderForm/OrderForm.astro';
+import Faq from '../components/sections/Faq/Faq.astro';
+import { orderFaqItems } from '../components/sections/Faq/faq';
+import { birthdayCakeGraph } from '../data/schema';
+import { absoluteUrl, pages } from '../data/seo';
+
+const productId = `${absoluteUrl(pages.encomendas.path, Astro.site)}#bolo-de-aniversario`;
 ---
 
-<SiteLayout
-  title="Encomende seu bolo de aniversário | Nicake’s Confeitaria"
-  description="Monte seu bolo de aniversário na Nicake’s: tamanho, massa, recheios e adicionais, com valor estimado na hora e pedido enviado pelo WhatsApp."
->
+<SiteLayout page="encomendas" schema={[birthdayCakeGraph(Astro.site)]} mainEntity={productId}>
   <OrderHeader />
   <OrderForm />
+  <Faq
+    items={orderFaqItems}
+    eyebrow="Dúvidas sobre encomendas"
+    title="Antes de montar"
+    accent="o seu bolo."
+    lead="Preço por quilo, tamanhos, antecedência, retirada e como o pedido é confirmado."
+    question="Olá! Tenho uma dúvida sobre encomenda de bolo de aniversário."
+  />
 </SiteLayout>
