@@ -5,8 +5,8 @@ import { site } from '../data/site';
 ---
 
 <!-- Texto-base: revisar com a Nicake's antes de publicar. -->
-<SiteLayout title="Termos de uso | Nicake’s Confeitaria">
-  <LegalContent title="Termos de uso" updated="outubro de 2026">
+<SiteLayout page="termos">
+  <LegalContent title="Termos de uso" updated="novembro de 2026" page="termos">
     <p>
       As informações deste site — produtos, preços e horários — têm caráter informativo e podem mudar sem aviso prévio. A
       confirmação de preço, disponibilidade e prazo acontece no atendimento pela loja, pelo WhatsApp ou pelo iFood.
@@ -19,5 +19,11 @@ import { site } from '../data/site';
     </p>
     <h2>Imagens</h2>
     <p>As fotos do site são ilustrativas; a apresentação dos produtos pode variar.</p>
+    <h2>Responsável</h2>
+    <p>
+      {site.fullName} — CNPJ {site.legal.cnpj}. {site.address.street}, {site.address.district}, {site.address.city} –
+      {site.address.state}, CEP {site.address.postalCode}. Atendimento pelo WhatsApp
+      <a href={site.whatsapp} target="_blank" rel="noopener noreferrer">{site.phone.display}</a>.
+    </p>
   </LegalContent>
 </SiteLayout>

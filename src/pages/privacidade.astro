@@ -5,16 +5,29 @@ import { site } from '../data/site';
 ---
 
 <!-- Texto-base: revisar com a Nicake's antes de publicar. -->
-<SiteLayout title="Política de privacidade | Nicake’s Confeitaria">
-  <LegalContent title="Política de privacidade" updated="outubro de 2026">
+<SiteLayout page="privacidade">
+  <LegalContent title="Política de privacidade" updated="novembro de 2026" page="privacidade">
     <p>
-      Este site apresenta a {site.fullName} e o nosso cardápio. Ele não possui formulários, cadastro nem área de login, e não
-      coleta dados pessoais diretamente.
+      Este site apresenta a {site.fullName} e o nosso cardápio. Ele não tem cadastro nem área de login, e não envia dados
+      pessoais para servidores da Nicake’s.
+    </p>
+    <h2>Formulário de encomendas</h2>
+    <p>
+      Na página <a href="/encomendas">Encomendas</a>, as escolhas do bolo, o seu nome e as observações ficam salvos só no seu
+      navegador (armazenamento da sessão), para você não perder o pedido ao voltar do WhatsApp. Esses dados só saem do seu
+      aparelho quando você toca em “Enviar pedido pelo WhatsApp”: a mensagem abre no WhatsApp e é você quem decide enviá-la.
+      O botão “Limpar escolhas” apaga tudo, e fechar a aba também.
     </p>
     <h2>Serviços de terceiros</h2>
     <p>
       Ao clicar nos botões de WhatsApp, iFood ou Instagram, você é direcionado a esses serviços, que tratam seus dados segundo as
       próprias políticas de privacidade. As fontes do site são servidas pelo próprio site, sem serviços externos.
+    </p>
+    <h2>Responsável pelo site</h2>
+    <p>
+      {site.fullName} — CNPJ {site.legal.cnpj}. {site.address.street}, {site.address.district}, {site.address.city} –
+      {site.address.state}, CEP {site.address.postalCode}. Atendimento pelo WhatsApp
+      <a href={site.whatsapp} target="_blank" rel="noopener noreferrer">{site.phone.display}</a>.
     </p>
     <h2>Contato</h2>
     <p>

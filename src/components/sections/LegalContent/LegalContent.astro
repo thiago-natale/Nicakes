@@ -1,13 +1,18 @@
 ---
 /** Bloco de texto para páginas institucionais (privacidade, termos). */
+import Breadcrumbs from '../../ui/Breadcrumbs.astro';
+import type { PageKey } from '../../../data/seo';
+
 interface Props {
   title: string;
   updated: string;
+  page: PageKey;
 }
-const { title, updated } = Astro.props;
+const { title, updated, page } = Astro.props;
 ---
 
 <section class="legal content-x relative z-10 pt-[calc(var(--header-height)+2.25rem)] pb-[2.5rem]" aria-labelledby="legal-title">
+  <Breadcrumbs page={page} class="mb-[0.9rem]" />
   <h1 id="legal-title" class="font-display text-[2.4rem] leading-none font-semibold text-cocoa">{title}</h1>
   <p class="mt-[0.6rem] text-[0.7rem] text-cocoa-soft">Atualizado em {updated}</p>
   <div class="legal__body mt-[1.4rem] max-w-[70ch] space-y-[0.9rem] text-body text-cocoa-soft">
