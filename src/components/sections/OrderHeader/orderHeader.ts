@@ -3,7 +3,7 @@ export const orderHeaderCopy = {
   eyebrow: 'Encomendas',
   title: 'Monte o seu',
   accent: 'bolo de aniversário.',
-  lead: 'Escolha a decoração, o tamanho, a massa, os recheios e os detalhes. O valor aparece na hora e o pedido segue pronto para o nosso WhatsApp, onde confirmamos tudo com você.',
+  lead: 'Escolha a decoração, o tamanho, a massa, os recheios e os detalhes. O valor aparece na hora e o pedido segue pronto para o nosso WhatsApp, onde confirmamos tudo com você. Retirada na nossa loja em Uberaba.',
   stepsLabel: 'Etapas do pedido',
   steps: [
     { id: 'etapa-decoracao', label: 'Decoração' },

@@ -14,8 +14,10 @@ const heroClipD =
 
 <section id="inicio" data-motion-section="hero" class="hero content-x relative z-10 pt-(--header-height) md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] md:items-center md:gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] lg:gap-x-(--hero-gap) lg:pt-[calc(var(--header-height)+var(--hero-media-offset))]" aria-labelledby="hero-title">
   <div class="hero__content pt-[2.25rem] md:pt-[1.5rem] lg:pt-0" data-motion-hero>
-    <Eyebrow text="Confeitaria artesanal em Uberaba" />
-    <h1 id="hero-title" class="mt-[0.9rem] font-display text-[2.9rem] leading-[0.98] font-semibold tracking-[-0.01em] text-cocoa sm:text-[3.3rem] md:text-[3rem] lg:text-hero 2xl:text-[3.5rem]">
+    <!-- SEO: o h1 inclui o eyebrow ("Confeitaria artesanal em Uberaba"), texto visível com a palavra-chave local -->
+    <h1 id="hero-title">
+      <Eyebrow as="span" text="Confeitaria artesanal em Uberaba" />{' '}
+      <span class="mt-[0.9rem] block font-display text-[2.9rem] leading-[0.98] font-semibold tracking-[-0.01em] text-cocoa sm:text-[3.3rem] md:text-[3rem] lg:text-hero 2xl:text-[3.5rem]">
       <span class="block" data-motion="title-line"><span class="hero__mask block"><span class="block" data-motion="title-rise">Cada doce,</span></span></span>{' '}
       <span class="block" data-motion="title-line"><span class="hero__mask block"><span class="block" data-motion="title-rise">um gesto</span></span></span>{' '}
       <span class="block whitespace-nowrap" data-motion="title-line"
@@ -33,10 +35,11 @@ const heroClipD =
           </svg>
         </span></span
       >
+      </span>
     </h1>
 
     <p data-motion="hero-copy" class="mt-[1.1rem] max-w-[22rem] text-body text-cocoa-soft lg:mt-[1.15rem] lg:max-w-[34ch] lg:text-[0.8125rem] lg:leading-[1.3rem]">
-      A Nicake’s é feita para quem quer adoçar momentos com amor. De brigadeiros a bolos, o cuidado artesanal encontra a
+      A Nicake’s é feita para quem quer adoçar momentos com amor. De brigadeiros a bolos de aniversário sob encomenda, o cuidado artesanal encontra a
       delicadeza de celebrar.
     </p>
 
