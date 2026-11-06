@@ -1,0 +1,48 @@
+---
+/**
+ * Google Analytics 4 — só é incluído quando PUBLIC_GA4_ID está definido (BaseLayout).
+ * Carrega depois da 1ª interação (ou 5 s) e envia eventos de conversão:
+ * whatsapp_click, phone_click, ifood_click e generate_lead (envio do pedido em /encomendas).
+ * ⚠️ GA4 usa cookies: antes de ativar, inclua um aviso de consentimento e atualize a
+ * Política de privacidade.
+ */
+interface Props {
+  id: string;
+}
+const { id } = Astro.props;
+---
+
+<script is:inline define:vars={{ ga4Id: id }}>
+  // GA4 carregado só depois da 1ª interação (ou 5 s), para não pesar o carregamento.
+  // Eventos: cliques em WhatsApp, telefone, iFood e envio do pedido (/encomendas).
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  window.gtag = gtag;
+  gtag('js', new Date());
+  gtag('config', ga4Id);
+  var loaded = false;
+  function load() {
+    if (loaded) return;
+    loaded = true;
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=' + ga4Id;
+    document.head.appendChild(s);
+  }
+  ['pointerdown', 'keydown', 'scroll', 'touchstart'].forEach(function (e) {
+    window.addEventListener(e, load, { once: true, passive: true });
+  });
+  setTimeout(load, 5000);
+  document.addEventListener('click', function (ev) {
+    var a = ev.target && ev.target.closest && ev.target.closest('a[href]');
+    if (!a) return;
+    var href = a.getAttribute('href') || '';
+    var where = location.pathname;
+    if (/whatsapp\.com|wa\.me/.test(href)) gtag('event', 'whatsapp_click', { link_url: href, page_path: where });
+    else if (/^tel:/.test(href)) gtag('event', 'phone_click', { page_path: where });
+    else if (/ifood\.com/.test(href)) gtag('event', 'ifood_click', { page_path: where });
+  });
+  document.addEventListener('nicakes:order-submit', function (ev) {
+    gtag('event', 'generate_lead', { currency: 'BRL', value: (ev.detail && ev.detail.total) || 0, method: 'whatsapp' });
+  });
+</script>

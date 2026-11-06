@@ -434,6 +434,8 @@ function setup(form: HTMLFormElement): void {
       submit.setAttribute('aria-busy', 'true');
       if (submitLabel) submitLabel.textContent = 'Abrindo o WhatsApp…';
     }
+    // Conversão (GA4, se ativo — ui/Analytics.astro)
+    document.dispatchEvent(new CustomEvent('nicakes:order-submit', { detail: { total: calcTotal(sel) } }));
     window.location.href = whatsappLink(buildMessage(sel));
   });
 
