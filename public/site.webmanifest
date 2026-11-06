@@ -1,0 +1,14 @@
+{
+  "name": "Nicake’s Confeitaria",
+  "short_name": "Nicake’s",
+  "description": "Confeitaria artesanal em Uberaba-MG: bolos, doces, salgados e café.",
+  "lang": "pt-BR",
+  "start_url": "/",
+  "display": "minimal-ui",
+  "background_color": "#fff7f6",
+  "theme_color": "#939b80",
+  "icons": [
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}
