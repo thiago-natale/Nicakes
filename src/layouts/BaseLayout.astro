@@ -1,47 +1,46 @@
 ---
 import '../styles/global.css';
 import { site } from '../data/site';
+import { pages, absoluteUrl, type PageKey } from '../data/seo';
+import { baseGraph, pageGraph, toJsonLd } from '../data/schema';
+import Analytics from '../components/ui/Analytics.astro';
 
+/**
+ * <head> de todas as páginas: título e descrição (data/seo.ts), canônica,
+ * robots, Open Graph, Twitter Card, ícones, verificações (Search Console/Bing)
+ * e dados estruturados (um @graph JSON-LD: confeitaria, site, página e extras).
+ */
 interface Props {
+  /** Página registrada em data/seo.ts (título, descrição, trilha, sitemap) */
+  page?: PageKey;
+  /** Título/descrição avulsos (ex.: 404) — usados quando não há `page` */
   title?: string;
   description?: string;
-  /** Inclui os dados estruturados (schema.org) da confeitaria */
-  structuredData?: boolean;
+  /** Nós JSON-LD extras da página (Menu, Product, FAQPage…) */
+  schema?: Record<string, unknown>[];
+  /** id do nó principal da página (mainEntity do WebPage) */
+  mainEntity?: string;
   /** Página fora dos buscadores (ex.: 404) */
   noindex?: boolean;
 }
 
-const {
-  title = `${site.fullName} | Bolos, doces e café em Uberaba-MG`,
-  description = site.description,
-  structuredData = false,
-  noindex = false,
-} = Astro.props;
+const { page, schema = [], mainEntity, noindex = false } = Astro.props;
+const seo = page ? pages[page] : undefined;
+const title = seo?.title ?? Astro.props.title ?? pages.home.title;
+const description = seo?.description ?? Astro.props.description ?? pages.home.description;
 
-const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site).toString() : undefined;
-const ogImage = Astro.site ? new URL('/og-image.jpg', Astro.site).toString() : '/og-image.jpg';
+const canonical = seo && !noindex ? absoluteUrl(seo.path, Astro.site) : undefined;
+const ogImage = absoluteUrl('/og-image.jpg', Astro.site);
+const ogImageAlt = `${site.fullName} — confeitaria artesanal em ${site.address.city}`;
+const robots = noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1';
 
-const schema = {
-  '@context': 'https://schema.org',
-  '@type': 'Bakery',
-  name: site.fullName,
-  description: site.description,
-  image: ogImage,
-  telephone: site.phone.e164,
-  servesCuisine: ['Confeitaria', 'Doces', 'Salgados', 'Café'],
-  priceRange: 'R$',
-  address: {
-    '@type': 'PostalAddress',
-    streetAddress: site.address.street,
-    addressLocality: site.address.city,
-    addressRegion: site.address.state,
-    postalCode: site.address.postalCode,
-    addressCountry: 'BR',
-  },
-  openingHours: site.hours.map((hour) => hour.schema).filter(Boolean),
-  sameAs: [site.instagram.url, site.ifood],
-  hasMenu: canonical ? new URL('/cardapio', Astro.site).toString() : '/cardapio',
-};
+const jsonLd = toJsonLd([...baseGraph(Astro.site), ...(seo ? pageGraph(seo, Astro.site, { mainEntity }) : []), ...schema]);
+
+// Verificação de propriedade e Analytics: defina no ambiente de build (.env)
+// PUBLIC_GOOGLE_SITE_VERIFICATION, PUBLIC_BING_SITE_VERIFICATION e PUBLIC_GA4_ID.
+const googleVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
+const bingVerification = import.meta.env.PUBLIC_BING_SITE_VERIFICATION;
+const ga4Id = import.meta.env.PUBLIC_GA4_ID;
 ---
 
 <!doctype html>
@@ -51,27 +50,38 @@ const schema = {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    {noindex && <meta name="robots" content="noindex, follow" />}
+    <meta name="robots" content={robots} />
     {canonical && <link rel="canonical" href={canonical} />}
     <meta name="theme-color" content="#939b80" />
+    <link rel="icon" href="/favicon.ico" sizes="32x32" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    {googleVerification && <meta name="google-site-verification" content={googleVerification} />}
+    {bingVerification && <meta name="msvalidate.01" content={bingVerification} />}
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
     <meta property="og:site_name" content={site.fullName} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    {canonical && <meta property="og:url" content={canonical} />}
     <meta property="og:image" content={ogImage} />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={ogImageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <meta name="twitter:image:alt" content={ogImageAlt} />
     <link rel="preload" href="/fonts/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin />
     <link rel="preload" href="/fonts/jost.woff2" as="font" type="font/woff2" crossorigin />
     <!-- itálica usada no hero ("carinho.") e nos manifestos: sem preload ela trocava depois do 1º paint (CLS) -->
     <link rel="preload" href="/fonts/cormorant-garamond-italic.woff2" as="font" type="font/woff2" crossorigin />
 
-    {structuredData && <script type="application/ld+json" set:html={JSON.stringify(schema)} />}
+    <script type="application/ld+json" set:html={jsonLd} />
 
     <script is:inline>
       document.documentElement.classList.add('js');
@@ -80,6 +90,7 @@ const schema = {
         document.documentElement.classList.add('motion-ready');
       }, 3000);
     </script>
+    {ga4Id && <Analytics id={ga4Id} />}
     <slot name="head" />
   </head>
   <body>

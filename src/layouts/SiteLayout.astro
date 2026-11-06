@@ -13,20 +13,26 @@ import Footer from '../components/sections/Footer/Footer.astro';
  * respiro lateral (`--content-px`/`--section-px`), mantendo o fundo de ponta a ponta.
  * O slot "backdrop" recebe formas decorativas da página.
  */
+import type { PageKey } from '../data/seo';
+
 interface Props {
+  /** Página registrada em data/seo.ts (título, descrição, canônica, sitemap) */
+  page?: PageKey;
   title?: string;
   description?: string;
-  structuredData?: boolean;
+  /** Nós JSON-LD extras da página */
+  schema?: Record<string, unknown>[];
+  mainEntity?: string;
   /** Exibe o preloader de boas-vindas (somente na home) */
   preloader?: boolean;
   /** Página fora dos buscadores (ex.: 404) */
   noindex?: boolean;
 }
 
-const { title, description, structuredData, preloader = false, noindex = false } = Astro.props;
+const { page, title, description, schema, mainEntity, preloader = false, noindex = false } = Astro.props;
 ---
 
-<BaseLayout title={title} description={description} structuredData={structuredData} noindex={noindex}>
+<BaseLayout page={page} title={title} description={description} schema={schema} mainEntity={mainEntity} noindex={noindex}>
   {preloader && <Preloader />}
   <Header />
   <div class="overflow-x-clip">

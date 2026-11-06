@@ -50,6 +50,10 @@ export const site = {
     handle: '@nicakesconfeitaria_',
     url: 'https://www.instagram.com/nicakesconfeitaria_/',
   },
+  /** Dados da empresa (exibidos no rodapé e nas páginas legais) */
+  legal: {
+    cnpj: '66.519.289/0001-68',
+  },
   year: new Date().getFullYear(),
 } as const;
 
