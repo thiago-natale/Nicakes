@@ -1,0 +1,26 @@
+---
+/**
+ * Trilha de navegação visível (Início › Página) — par do BreadcrumbList em
+ * JSON-LD (data/schema.ts). Discreta: texto pequeno, separador dourado.
+ */
+import { pages, type PageKey } from '../../data/seo';
+
+interface Props {
+  page: PageKey;
+  class?: string;
+}
+const { page, class: className = '' } = Astro.props;
+const current = pages[page];
+---
+
+<nav aria-label="Trilha de navegação" class:list={['breadcrumbs', className]}>
+  <ol class="flex flex-wrap items-center gap-x-[0.45rem] text-[0.68rem] leading-[1.4] text-cocoa-soft">
+    <li>
+      <a href="/" class="inline-flex min-h-[1.75rem] items-center underline decoration-gold/60 underline-offset-[0.25em] transition-colors hover:text-rose-darker">
+        {pages.home.name}
+      </a>
+    </li>
+    <li aria-hidden="true" class="text-gold">›</li>
+    <li><span aria-current="page" class="font-medium text-cocoa">{current.name}</span></li>
+  </ol>
+</nav>

@@ -5,6 +5,7 @@
  * passos do pedido (âncoras para cada etapa). No desktop, o slider de bolos
  * aparece com a gota que cresce (como nas Encomendas da home).
  */
+import Breadcrumbs from '../../ui/Breadcrumbs.astro';
 import Eyebrow from '../../ui/Eyebrow.astro';
 import Swash from '../../ui/Swash.astro';
 import CakeSlider from '../../ui/CakeSlider.astro';
@@ -20,6 +21,7 @@ import './orderHeader.css';
 >
   <div class="grid items-center gap-[2rem] lg:grid-cols-[minmax(0,1.25fr)_minmax(0,0.75fr)] lg:gap-[clamp(2rem,5vw,6rem)]">
     <div data-motion-hero>
+      <Breadcrumbs page="encomendas" class="mb-[0.8rem]" />
       <Eyebrow text={copy.eyebrow} />
       <h1 id="order-title" class="type-section mt-[0.8rem] text-cocoa lg:text-[3rem]">
         <span class="block" data-motion="oh-line">{copy.title}</span>
