@@ -3,7 +3,8 @@
  * Endereço e horários vêm de `data/site.ts` — mude lá e o FAQ acompanha.
  */
 import { site } from '../../../data/site';
-import { birthdayCake, cakePriceFrom, formatKg, formatPrice } from '../../../data/menu';
+import { AVAILABILITY_NOTE, birthdayCake, cakePriceFrom, formatKg, formatPrice, menu, menuItem } from '../../../data/menu';
+import { pages, monthYear } from '../../../data/seo';
 
 export interface FaqItem {
   question: string;
@@ -91,6 +92,59 @@ export const orderFaqItems: FaqItem[] = [
     answer:
       'Ao enviar o formulário, o WhatsApp abre com o pedido já escrito. A Nicake’s confere tudo, confirma a disponibilidade, a data e o valor final, e o pedido fica combinado.',
     link: { label: 'Falar no WhatsApp', href: site.whatsapp },
+  },
+];
+
+
+/* -------------------------------------------------------------------------- */
+/* /cardapio — dúvidas sobre o cardápio (preços e itens de data/menu.ts)       */
+/* -------------------------------------------------------------------------- */
+
+const allPrices = menu.flatMap((c) => c.groups.flatMap((g) => g.items.flatMap((i) => i.prices ?? (i.price !== undefined ? [i.price] : []))));
+const itemCount = menu.reduce((n, c) => n + c.groups.reduce((m, g) => m + g.items.length, 0), 0);
+const groupsOf = (id: string): string =>
+  (menu.find((c) => c.id === id)?.groups ?? []).map((g) => g.title.toLowerCase()).join(', ');
+const example = (id: string): string => {
+  const r = menuItem(id, 'FAQ do cardápio (Faq/faq.ts)');
+  return `${r.fullName.toLowerCase()} (${formatPrice(r.price)})`;
+};
+const updatedLabel = monthYear(pages.cardapio.updated);
+
+export const menuFaqItems: FaqItem[] = [
+  {
+    question: 'O que tem no cardápio da Nicake’s?',
+    answer: `O cardápio da Nicake’s Confeitaria tem ${itemCount} itens em ${menu.length} categorias: ${menu
+      .map((c) => c.title.toLowerCase())
+      .join(', ')}. Nos doces há ${groupsOf('doces')}; nas bebidas, ${groupsOf('bebidas')}.`,
+  },
+  {
+    question: 'Quanto custam os produtos da Nicake’s?',
+    answer: `Os preços do cardápio vão de ${formatPrice(Math.min(...allPrices))} a ${formatPrice(Math.max(...allPrices))}. Alguns exemplos: ${example(
+      'pao-de-queijo',
+    )}, ${example('coxinha-costela')}, ${example('cake-matilda')} e ${example('cappuccino')}.`,
+  },
+  {
+    question: 'Como faço um pedido do cardápio?',
+    answer: `Você pode pedir na loja, em ${site.address.street}, ${site.address.city}; pelo WhatsApp ${site.phone.display}; ou com entrega pelo iFood. Bolos de aniversário são encomendados pela página de encomendas.`,
+    link: { label: 'Encomendar bolo de aniversário', href: '/encomendas' },
+  },
+  {
+    question: 'A Nicake’s faz entrega em Uberaba?',
+    answer:
+      'Sim, os itens do cardápio podem ser pedidos com entrega pelo iFood. Os bolos de aniversário sob encomenda, por enquanto, são retirados na loja.',
+    link: { label: 'Abrir no iFood', href: site.ifood },
+  },
+  {
+    question: 'Todos os sabores estão sempre disponíveis?',
+    answer: `Não necessariamente. ${AVAILABILITY_NOTE} Para cakes em fatia e tortas doces, vale confirmar pelo WhatsApp antes de ir à loja.`,
+  },
+  {
+    question: 'Qual é o horário de funcionamento da loja?',
+    answer: `${hours}.`,
+  },
+  {
+    question: 'Os preços do cardápio estão atualizados?',
+    answer: `Os preços desta página foram atualizados em ${updatedLabel}. Eles podem mudar sem aviso; o valor final é confirmado no atendimento.`,
   },
 ];
 

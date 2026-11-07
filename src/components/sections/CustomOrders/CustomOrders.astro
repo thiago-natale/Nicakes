@@ -3,7 +3,7 @@ import Button from '../../ui/Button.astro';
 import Icon from '../../ui/Icon.astro';
 import SectionHeading from '../../ui/SectionHeading.astro';
 import CakeSlider from '../../ui/CakeSlider.astro';
-import { orderPerks } from './customOrders';
+import { orderPerks, ordersLead } from './customOrders';
 import './customOrders.css';
 ---
 
@@ -15,7 +15,7 @@ import './customOrders.css';
         eyebrow="Encomendas"
         title="Bolos de aniversário"
         accent="sob encomenda."
-        lead="Escolha a massa, o recheio e os detalhes da decoração. A gente cuida do resto para a sua comemoração ficar ainda mais doce."
+        lead={ordersLead}
         leadClass="max-w-[30rem]"
       />
 

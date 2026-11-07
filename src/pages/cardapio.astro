@@ -3,6 +3,8 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import MenuHeader from '../components/sections/MenuHeader/MenuHeader.astro';
 import MenuCategory from '../components/sections/MenuCategory/MenuCategory.astro';
 import BirthdayCakes from '../components/sections/BirthdayCakes/BirthdayCakes.astro';
+import Faq from '../components/sections/Faq/Faq.astro';
+import { menuFaqItems } from '../components/sections/Faq/faq';
 import { menu } from '../data/menu';
 import { menuGraph } from '../data/schema';
 import { absoluteUrl, pages } from '../data/seo';
@@ -14,4 +16,12 @@ const menuId = `${absoluteUrl(pages.cardapio.path, Astro.site)}#menu`;
   <MenuHeader />
   {menu.map((category) => <MenuCategory category={category} />)}
   <BirthdayCakes />
+  <Faq
+    items={menuFaqItems}
+    eyebrow="Dúvidas sobre o cardápio"
+    title="Antes de"
+    accent="escolher o seu."
+    lead="Preços, formas de pedido, entrega pelo iFood, disponibilidade e horário da loja."
+    question="Olá! Tenho uma dúvida sobre o cardápio da Nicake’s."
+  />
 </SiteLayout>

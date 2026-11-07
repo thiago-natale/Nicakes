@@ -1,9 +1,12 @@
 /** Textos do cabeçalho da página /encomendas. */
+import { birthdayCake, cakePriceFrom, formatPrice } from '../../../data/menu';
+
 export const orderHeaderCopy = {
   eyebrow: 'Encomendas',
   title: 'Monte o seu',
   accent: 'bolo de aniversário.',
-  lead: 'Escolha a decoração, o tamanho, a massa, os recheios e os detalhes. O valor aparece na hora e o pedido segue pronto para o nosso WhatsApp, onde confirmamos tudo com você. Retirada na nossa loja em Uberaba.',
+  // Resposta direta: preço, prazo, retirada e como funciona (valores de data/menu.ts)
+  lead: `Na Nicake’s, o bolo de aniversário sob encomenda sai a partir de ${formatPrice(cakePriceFrom())} o quilo. Escolha a decoração, o tamanho, a massa e os recheios: o valor aparece na hora e o pedido segue pronto para o WhatsApp. Encomende com ${birthdayCake.rules.leadBusinessDays} dia de antecedência e retire na loja em Uberaba.`,
   stepsLabel: 'Etapas do pedido',
   steps: [
     { id: 'etapa-decoracao', label: 'Decoração' },

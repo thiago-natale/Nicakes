@@ -2,10 +2,18 @@
 import Button from '../../ui/Button.astro';
 import Breadcrumbs from '../../ui/Breadcrumbs.astro';
 import Eyebrow from '../../ui/Eyebrow.astro';
-import { menu } from '../../../data/menu';
+import { menu, formatPrice } from '../../../data/menu';
 import { site } from '../../../data/site';
+import { pages, monthYear } from '../../../data/seo';
 
-const anchors = [...menu.map((c) => ({ id: c.id, title: c.title })), { id: 'bolos', title: 'Bolos de aniversário' }];
+const anchors = [
+  ...menu.map((c) => ({ id: c.id, title: c.title })),
+  { id: 'bolos', title: 'Bolos de aniversário' },
+  { id: 'faq', title: 'Dúvidas' },
+];
+// Resumo factual do cardápio (resposta direta para buscadores e IAs)
+const prices = menu.flatMap((c) => c.groups.flatMap((g) => g.items.flatMap((i) => i.prices ?? (i.price !== undefined ? [i.price] : []))));
+const itemCount = menu.reduce((n, c) => n + c.groups.reduce((m, g) => m + g.items.length, 0), 0);
 ---
 
 <section data-motion-section="menu-header" class="content-x relative z-10 pt-[calc(var(--header-height)+2.25rem)] pb-[1rem] lg:pt-[calc(var(--header-height)+2.6rem)]" aria-labelledby="menu-title">
@@ -17,9 +25,10 @@ const anchors = [...menu.map((c) => ({ id: c.id, title: c.title })), { id: 'bolo
         Nosso <em class="text-rose-deep italic">cardápio</em>
       </h1>
       <p data-motion="mh-copy" class="mt-[0.8rem] max-w-[30rem] text-body text-cocoa-soft">
-        Doces, salgados e cafés preparados com carinho todos os dias na nossa confeitaria em Uberaba. Os preços podem mudar e alguns sabores dependem da
-        disponibilidade na vitrine.
+        O cardápio da Nicake’s Confeitaria, em Uberaba, tem {itemCount} itens entre salgados, doces e bebidas,
+        de {formatPrice(Math.min(...prices))} a {formatPrice(Math.max(...prices))}. Alguns sabores dependem da disponibilidade na vitrine.
       </p>
+      <p data-motion="mh-copy" class="mt-[0.35rem] type-small text-cocoa-soft">Preços atualizados em {monthYear(pages.cardapio.updated)}.</p>
     </div>
     <div class="flex flex-wrap gap-[0.5rem]" data-motion="mh-cta">
       <Button href={site.whatsapp} icon="whatsapp">Pedir no WhatsApp</Button>
