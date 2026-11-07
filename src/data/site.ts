@@ -21,8 +21,12 @@ export const site = {
   name: 'Nicake’s',
   fullName: 'Nicake’s Confeitaria',
   tagline: 'Confeitaria',
+  /**
+   * Frase canônica da marca (GEO/SEO) — use EXATAMENTE este texto onde a marca
+   * for definida: topo da home, meta description da home, llms.txt e schema.
+   */
   description:
-    'Nicake’s Confeitaria em Uberaba-MG: bolos, brigadeiros, donuts, brownies, salgados e café feitos com carinho. Atendimento presencial, encomendas pelo WhatsApp e delivery pelo iFood.',
+    'A Nicake’s Confeitaria é uma confeitaria artesanal em Uberaba-MG que faz bolos de aniversário sob encomenda, doces, salgados e café para o dia a dia e festas.',
   manifesto: 'Carinho que se transforma em doçura.',
   address: {
     street: 'Av. Quinze de Novembro, 715',
@@ -54,6 +58,24 @@ export const site = {
   legal: {
     cnpj: '66.519.289/0001-68',
   },
+  /**
+   * Temas que a marca domina (schema `knowsAbout` e llms.txt) — só o que o
+   * site oferece de fato.
+   */
+  knowsAbout: [
+    'Confeitaria artesanal',
+    'Bolos de aniversário sob encomenda',
+    'Bolo vintage',
+    'Decoração com chantilly, butter cream e ganache',
+    'Cakes em fatia',
+    'Donuts recheados',
+    'Brownies',
+    'Salgados',
+    'Cafés e milk-shakes',
+  ],
+  // GEO: inserir dado real aqui — ano de fundação (foundingDate) e nome de quem
+  // fundou (founder). Ficam fora do site e do schema até serem informados.
+  foundingDate: undefined as string | undefined,
   year: new Date().getFullYear(),
 } as const;
 
