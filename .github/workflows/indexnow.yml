@@ -1,0 +1,28 @@
+# Avisa o IndexNow (Bing/ChatGPT Search/Copilot) sempre que a Vercel concluir um
+# deploy de PRODUÇÃO. A Vercel, integrada ao GitHub, publica o status de cada
+# deploy no repositório; este workflow escuta esse status.
+# Também pode ser disparado à mão em Actions › IndexNow › Run workflow.
+name: IndexNow
+
+on:
+  deployment_status:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ping:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+       github.event.deployment.environment == 'Production')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Enviar URLs do sitemap ao IndexNow
+        run: node scripts/indexnow.mjs
