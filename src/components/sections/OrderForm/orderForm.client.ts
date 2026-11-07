@@ -93,6 +93,7 @@ function setup(form: HTMLFormElement): void {
     sel.period = period === 'manha' || period === 'tarde' ? period : '';
     sel.name = String(fd.get('name') ?? '');
     sel.notes = String(fd.get('notes') ?? '');
+    sel.source = String(fd.get('source') ?? '');
     return sel;
   }
 

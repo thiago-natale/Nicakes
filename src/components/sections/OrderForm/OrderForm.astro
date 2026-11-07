@@ -16,7 +16,7 @@ import Icon from '../../ui/Icon.astro';
 import StepBadge from '../../ui/StepBadge.astro';
 import { birthdayCake, defaultDecoration, formatKg, formatPrice } from '../../../data/menu';
 import { site, whatsappLink } from '../../../data/site';
-import { answerField, NOTES_MAX } from './orderForm';
+import { answerField, NOTES_MAX, SOURCES } from './orderForm';
 import './orderForm.css';
 
 const { maxFillings } = birthdayCake.rules;
@@ -222,6 +222,7 @@ const step = (n: number): string => `Etapa ${n} de ${TOTAL_STEPS}:`;
             maxlength={NOTES_MAX}
             placeholder="Ex.: decoração em tons de lilás, nome da aniversariante, alguma restrição…"
           />
+          <FormField id="order-source" name="source" type="select" label="Como nos conheceu?" optional options={SOURCES} placeholder="Prefiro não dizer" />
         </div>
       </fieldset>
     </div>

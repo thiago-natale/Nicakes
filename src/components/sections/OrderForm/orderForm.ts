@@ -22,6 +22,8 @@ export interface OrderSelection {
   period: '' | 'manha' | 'tarde';
   name: string;
   notes: string;
+  /** Opcional: como conheceu a Nicake’s (medição de canais, inclusive IAs) */
+  source: string;
 }
 
 export const emptySelection = (): OrderSelection => ({
@@ -36,10 +38,14 @@ export const emptySelection = (): OrderSelection => ({
   period: '',
   name: '',
   notes: '',
+  source: '',
 });
 
 export const PERIODS = { manha: 'pela manhã', tarde: 'à tarde' } as const;
 export const NOTES_MAX = 300;
+
+/** Opções de "Como nos conheceu?" (opcional) — vão na mensagem do WhatsApp. */
+export const SOURCES = ['Instagram', 'Google', 'ChatGPT / outra IA', 'iFood', 'Indicação de alguém', 'Passando pela loja', 'Outro'] as const;
 
 /* ------------------------------------------------------------------ */
 /* Preço                                                               */
@@ -210,6 +216,7 @@ export function buildMessage(sel: OrderSelection): string {
     `• Nome: ${sel.name.trim()}`,
   ];
   if (sel.notes.trim()) lines.push(`• Observações: ${sel.notes.trim()}`);
+  if (sel.source && (SOURCES as readonly string[]).includes(sel.source)) lines.push(`• Como conheci a Nicake’s: ${sel.source}`);
   lines.push('', `Valor estimado: ${formatPrice(total)}`);
   if (needsConfirm) lines.push('Podem confirmar a disponibilidade do sabor à escolha?');
   lines.push('Aguardo a confirmação do pedido e do valor final. Obrigado(a)!');
