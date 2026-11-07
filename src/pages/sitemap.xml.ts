@@ -3,12 +3,11 @@ import type { APIRoute } from 'astro';
 import { indexablePages, absoluteUrl } from '../data/seo';
 
 export const GET: APIRoute = ({ site }) => {
-  const lastmod = new Date().toISOString().slice(0, 10);
   const urls = indexablePages
     .map(
       (p) => `  <url>
     <loc>${absoluteUrl(p.path, site)}</loc>
-    <lastmod>${lastmod}</lastmod>
+    <lastmod>${p.updated}</lastmod>
     <changefreq>${p.changefreq}</changefreq>
     <priority>${p.priority.toFixed(1)}</priority>
   </url>`,

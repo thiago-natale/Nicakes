@@ -10,6 +10,8 @@ export interface PageSeo {
   description: string;
   /** Nome na trilha de navegação (breadcrumb) e no WebPage */
   name: string;
+  /** Última atualização do conteúdo (AAAA-MM-DD) — WebPage.dateModified e sitemap */
+  updated: string;
   /** Prioridade no sitemap (0–1) */
   priority: number;
   changefreq: 'weekly' | 'monthly' | 'yearly';
@@ -17,15 +19,19 @@ export interface PageSeo {
 
 export const pages = {
   home: {
+    updated: '2026-11-06',
     path: '/',
     name: 'Início',
     title: 'Confeitaria em Uberaba: bolos, doces e café | Nicake’s',
+    // Mesma frase canônica de data/site.ts (description)
     description:
-      'Confeitaria artesanal em Uberaba: bolos, brigadeiros, donuts, salgados e café. Encomende seu bolo de aniversário, peça pelo WhatsApp ou iFood e visite a loja.',
+      'A Nicake’s Confeitaria é uma confeitaria artesanal em Uberaba-MG que faz bolos de aniversário sob encomenda, doces, salgados e café para o dia a dia e festas.',
     priority: 1,
     changefreq: 'weekly',
   },
   cardapio: {
+    // Atualize quando mudar preços em data/menu.ts (aparece como "Preços atualizados em…")
+    updated: '2026-11-06',
     path: '/cardapio',
     name: 'Cardápio',
     title: 'Cardápio com preços: doces, salgados e café | Nicake’s',
@@ -35,6 +41,7 @@ export const pages = {
     changefreq: 'weekly',
   },
   encomendas: {
+    updated: '2026-11-06',
     path: '/encomendas',
     name: 'Encomendas',
     title: 'Bolo de aniversário sob encomenda em Uberaba | Nicake’s',
@@ -44,6 +51,7 @@ export const pages = {
     changefreq: 'monthly',
   },
   privacidade: {
+    updated: '2026-11-06',
     path: '/privacidade',
     name: 'Política de privacidade',
     title: 'Política de privacidade | Nicake’s Confeitaria Uberaba',
@@ -53,6 +61,7 @@ export const pages = {
     changefreq: 'yearly',
   },
   termos: {
+    updated: '2026-11-06',
     path: '/termos',
     name: 'Termos de uso',
     title: 'Termos de uso do site | Nicake’s Confeitaria Uberaba',
@@ -64,6 +73,10 @@ export const pages = {
 } satisfies Record<string, PageSeo>;
 
 export type PageKey = keyof typeof pages;
+
+/** "2026-11-06" → "novembro de 2026" (textos "Atualizado em …"). */
+export const monthYear = (date: string): string =>
+  new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(new Date(`${date}T12:00:00`));
 
 /** Páginas indexáveis (sitemap). A 404 fica de fora (noindex). */
 export const indexablePages: PageSeo[] = Object.values(pages);
