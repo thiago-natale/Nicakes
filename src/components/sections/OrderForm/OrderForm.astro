@@ -40,7 +40,10 @@ const leadSweets = partySweets.rules.leadBusinessDays;
 const plural = (n: number, word: string): string => `${n} ${word}${n === 1 ? '' : 's'}`;
 ---
 
-<section id="pedido" class="order section-x relative z-10 pb-[2.5rem] lg:pb-[3.5rem]" data-motion-section="order-form" aria-label="Monte o seu pedido">
+<!-- z-20 (e não z-10): a barra de total do celular é `fixed` aqui dentro e fica
+     presa ao empilhamento da seção. Com z-10, o FAQ logo abaixo (também z-10,
+     mas depois no HTML) era desenhado por cima dela. -->
+<section id="pedido" class="order section-x relative z-20 pb-[2.5rem] lg:pb-[3.5rem]" data-motion-section="order-form" aria-label="Monte o seu pedido">
   <form class="order__grid" data-order-form data-motion-hero novalidate>
     <!-- ================= Etapas ================= -->
     <div class="order__steps">
