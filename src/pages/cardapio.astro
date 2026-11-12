@@ -3,6 +3,7 @@ import SiteLayout from '../layouts/SiteLayout.astro';
 import MenuHeader from '../components/sections/MenuHeader/MenuHeader.astro';
 import MenuCategory from '../components/sections/MenuCategory/MenuCategory.astro';
 import BirthdayCakes from '../components/sections/BirthdayCakes/BirthdayCakes.astro';
+import PartySweets from '../components/sections/PartySweets/PartySweets.astro';
 import Faq from '../components/sections/Faq/Faq.astro';
 import { menuFaqItems } from '../components/sections/Faq/faq';
 import { menu } from '../data/menu';
@@ -16,6 +17,7 @@ const menuId = `${absoluteUrl(pages.cardapio.path, Astro.site)}#menu`;
   <MenuHeader />
   {menu.map((category) => <MenuCategory category={category} />)}
   <BirthdayCakes />
+  <PartySweets />
   <Faq
     items={menuFaqItems}
     eyebrow="Dúvidas sobre o cardápio"

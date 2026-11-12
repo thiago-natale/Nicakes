@@ -9,7 +9,7 @@ const priceFrom = cakePriceFrom();
 const yields = birthdayCake.sizes.filter((s) => s.kg <= 2).map((s) => `${formatKg(s.kg)}: ${s.serves}`);
 ---
 
-<section id="bolos" data-motion-section="birthday-cakes" class="section-x relative z-10 scroll-mt-6 pt-[1.75rem] pb-[2rem] lg:pb-[2.5rem]" aria-labelledby="bolos-title">
+<section id="bolos" data-motion-section="birthday-cakes" class="section-x relative z-10 scroll-mt-6 overflow-x-clip pt-[1.75rem] pb-[2rem] lg:pb-[2.5rem]" aria-labelledby="bolos-title">
   <SectionDivider id="bolos-title">Bolos de aniversário</SectionDivider>
 
   <div data-motion="bc-panel" class="mt-[1rem] grid overflow-hidden rounded-panel bg-blush shadow-panel xl:grid-cols-[minmax(0,1fr)_minmax(0,42%)]">
@@ -50,9 +50,14 @@ const yields = birthdayCake.sizes.filter((s) => s.kg <= 2).map((s) => `${formatK
       <h3 class="mt-[1rem] mb-[0.5rem] text-[0.62rem] font-medium tracking-[0.18em] text-rose-darker uppercase">Adicionais</h3>
       <div data-motion="bc-extras"><MenuList items={birthdayCake.extras} class="max-w-[22rem]" /></div>
 
-      <Button href="/encomendas" iconEnd="arrow" class="mt-[1.4rem]" data-motion="bc-cta">
-        Montar meu bolo
-      </Button>
+      <div class="mt-[1.4rem] flex flex-wrap items-center gap-x-[1.25rem] gap-y-[0.5rem]">
+        <Button href="/encomendas?pedido=bolo" iconEnd="arrow" data-motion="bc-cta">
+          Montar meu bolo
+        </Button>
+        <a href="/encomendas?pedido=bolo,docinhos" class="text-link inline-flex min-h-[2.75rem] items-center text-[0.75rem] font-medium">
+          Vai querer docinhos também? Monte os dois
+        </a>
+      </div>
     </div>
     <!-- Empilhado (16:9) até 1280px; ao lado do texto a partir daí -->
     <div class="relative aspect-video xl:aspect-auto">

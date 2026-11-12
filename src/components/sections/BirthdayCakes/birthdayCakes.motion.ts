@@ -1,6 +1,6 @@
 /**
  * BirthdayCakes (/cardapio) — mesma linguagem das encomendas da home, sem pin:
- * painel abre, a foto é revelada por uma gota que cresce (MorphSVG), o preço
+ * painel chega pela esquerda e abre, a foto é revelada por uma gota que cresce (MorphSVG), o preço
  * sobe de uma máscara, os recheios entram em cascata e os adicionais seguem o cardápio.
  */
 import gsap from 'gsap';
@@ -36,7 +36,12 @@ export function initMotion(root: HTMLElement, c: MotionConditions, order: number
   const cta = q(root, 'bc-cta');
 
   const tl = onceInView(panel, { defaults: { ease: EASE.soft } }, 'top 80%', order);
-  tl.fromTo(panel, { clipPath: 'inset(6% 6% 6% 6% round 1.5rem)' }, { clipPath: 'inset(0% 0% 0% 0% round 1.5rem)', duration: 1 * k, clearProps: 'clipPath' });
+  // Chega pela esquerda (os docinhos, logo abaixo, chegam pela direita)
+  tl.fromTo(
+    panel,
+    { x: c.isDesktop ? -48 : -16, clipPath: 'inset(6% 6% 6% 6% round 1.5rem)' },
+    { x: 0, clipPath: 'inset(0% 0% 0% 0% round 1.5rem)', duration: 1 * k, clearProps: 'clipPath,transform' },
+  );
   if (image && clip) {
     gsap.set(image, { clipPath: 'url(#bc-clip)' });
     tl.fromTo(clip, { morphSVG: '#bc-clip-seed' }, { morphSVG: 'M0 0 H1 V1 H0 Z', duration: 1.3 * k, ease: EASE.drip }, '<0.1');
