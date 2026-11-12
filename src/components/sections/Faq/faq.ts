@@ -3,7 +3,7 @@
  * Endereço e horários vêm de `data/site.ts` — mude lá e o FAQ acompanha.
  */
 import { site } from '../../../data/site';
-import { AVAILABILITY_NOTE, birthdayCake, cakePriceFrom, formatKg, formatPrice, menu, menuItem } from '../../../data/menu';
+import { AVAILABILITY_NOTE, birthdayCake, cakePriceFrom, formatKg, formatPrice, menu, menuItem, partySweets, sweetsPriceFrom } from '../../../data/menu';
 import { pages, monthYear } from '../../../data/seo';
 
 export interface FaqItem {
@@ -18,7 +18,7 @@ export const faqItems: FaqItem[] = [
   {
     question: 'Vocês fazem encomendas?',
     answer:
-      'Sim! Encomendas com pelo menos 1 dia de antecedência, para retirada na loja. Monte o pedido no site: ele chega pronto no nosso WhatsApp e a gente confirma sabores, disponibilidade e data.',
+      `Sim! Bolos de aniversário (com ${birthdayCake.rules.leadBusinessDays} dia de antecedência) e docinhos de festa (com ${partySweets.rules.leadBusinessDays} dias), para retirada na loja. Monte o pedido no site, com bolo, docinhos ou os dois: ele chega pronto no nosso WhatsApp e a gente confirma sabores, disponibilidade e data.`,
     link: { label: 'Montar minha encomenda', href: '/encomendas' },
   },
   {
@@ -31,7 +31,7 @@ export const faqItems: FaqItem[] = [
       `Pode, sim. O quilo sai a partir de ${formatPrice(cakePriceFrom())} e varia com a decoração: ${birthdayCake.decorations
         .map((d) => `${d.name.toLowerCase()}, ${formatPrice(d.pricePerKg)}`)
         .join('; ')}. Você escolhe a decoração, o tamanho, a massa, até ${birthdayCake.rules.maxFillings} recheios e os adicionais, e a gente cuida do resto.`,
-    link: { label: 'Montar meu bolo', href: '/encomendas' },
+    link: { label: 'Montar meu bolo', href: '/encomendas?pedido=bolo' },
   },
   {
     question: 'Vocês estão no iFood?',
@@ -55,13 +55,15 @@ export const faqItems: FaqItem[] = [
 ];
 
 /* -------------------------------------------------------------------------- */
-/* /encomendas — dúvidas sobre o bolo de aniversário (dados de data/menu.ts)   */
+/* /encomendas — dúvidas sobre bolo e docinhos (dados de data/menu.ts)         */
 /* -------------------------------------------------------------------------- */
 
 const yields = birthdayCake.sizes.map((x) => `${formatKg(x.kg)}, ${x.serves}`).join('; ');
 const decorations = birthdayCake.decorations.map((d) => `${d.name.toLowerCase()}, ${formatPrice(d.pricePerKg)}`).join('; ');
 const extras = birthdayCake.extras.map((e) => `${e.name.toLowerCase()} (+${formatPrice(e.price)})`).join(', ');
 const fruitFee = birthdayCake.fillings.find((f) => f.price);
+const sweetPrices = partySweets.categories.map((c) => `${c.name.toLowerCase()}, ${formatPrice(c.pricePerHundred)}`).join('; ');
+const { step: sweetStep, minTotal, unit } = partySweets.rules;
 
 export const orderFaqItems: FaqItem[] = [
   {
@@ -75,12 +77,24 @@ export const orderFaqItems: FaqItem[] = [
     answer: `Rendimento informado pela loja: ${yields}. A quantidade de fatias depende de como o bolo é cortado.`,
   },
   {
-    question: 'Com quanto tempo de antecedência preciso encomendar?',
-    answer: `Com pelo menos ${birthdayCake.rules.leadBusinessDays} dia de funcionamento de antecedência. O formulário já mostra a data mais próxima disponível; às segundas-feiras a loja fica fechada.`,
+    question: 'Quanto custam os docinhos de festa?',
+    answer: `Os docinhos são vendidos por cento, e o valor é calculado pela quantidade: ${sweetPrices}. Os brigadeiros personalizados e a cereja em cima dos mini brownies têm valor a combinar, conforme a decoração.`,
   },
   {
-    question: 'Vocês entregam o bolo?',
-    answer: `Por enquanto, os bolos de aniversário são retirados na loja: ${site.address.street}, ${site.address.district}, ${site.address.city}. Você escolhe a data e o período (manhã ou tarde) no pedido.`,
+    question: 'Qual a quantidade mínima de docinhos?',
+    answer: `O pedido mínimo é de ${minTotal} docinhos, somando todos os tipos (dá para misturar brigadeiros gourmet, super gourmet, mini brownies e personalizados). Os sabores vão de ${sweetStep} em ${sweetStep} unidades, ou seja, até ${unit / sweetStep} sabores a cada ${unit}.`,
+  },
+  {
+    question: 'Posso encomendar bolo e docinhos no mesmo pedido?',
+    answer: 'Pode, sim. No formulário, marque “Bolo de aniversário” e “Docinhos”: o resumo mostra o valor de cada item separado e o total, e tudo vai numa mensagem só pelo WhatsApp.',
+  },
+  {
+    question: 'Com quanto tempo de antecedência preciso encomendar?',
+    answer: `O bolo precisa de pelo menos ${birthdayCake.rules.leadBusinessDays} dia de funcionamento de antecedência, e os docinhos, de ${partySweets.rules.leadBusinessDays} dias. Num pedido com os dois, vale o prazo maior. O formulário já mostra a data mais próxima disponível; às segundas-feiras a loja fica fechada.`,
+  },
+  {
+    question: 'Vocês entregam o bolo e os docinhos?',
+    answer: `Por enquanto, as encomendas são retiradas na loja: ${site.address.street}, ${site.address.district}, ${site.address.city}. Você escolhe a data e o período (manhã ou tarde) no pedido.`,
     link: { label: 'Como chegar', href: site.address.mapsUrl },
   },
   {
@@ -125,13 +139,22 @@ export const menuFaqItems: FaqItem[] = [
   },
   {
     question: 'Como faço um pedido do cardápio?',
-    answer: `Você pode pedir na loja, em ${site.address.street}, ${site.address.city}; pelo WhatsApp ${site.phone.display}; ou com entrega pelo iFood. Bolos de aniversário são encomendados pela página de encomendas.`,
-    link: { label: 'Encomendar bolo de aniversário', href: '/encomendas' },
+    answer: `Você pode pedir na loja, em ${site.address.street}, ${site.address.city}; pelo WhatsApp ${site.phone.display}; ou com entrega pelo iFood. Bolos de aniversário e docinhos de festa são encomendados pela página de encomendas.`,
+    link: { label: 'Encomendar bolo ou docinhos', href: '/encomendas' },
+  },
+  {
+    question: 'Vocês fazem docinhos para festa?',
+    answer: `Fazemos, sob encomenda: ${partySweets.categories
+      .map((c) => `${c.name.toLowerCase()} (${formatPrice(c.pricePerHundred)} o cento)`)
+      .join(', ')} e brigadeiros personalizados com o tema da festa. O pedido mínimo é de ${partySweets.rules.minTotal} docinhos, somando os tipos, com ${
+      partySweets.rules.leadBusinessDays
+    } dias de antecedência.`,
+    link: { label: 'Escolher meus docinhos', href: '/encomendas?pedido=docinhos' },
   },
   {
     question: 'A Nicake’s faz entrega em Uberaba?',
     answer:
-      'Sim, os itens do cardápio podem ser pedidos com entrega pelo iFood. Os bolos de aniversário sob encomenda, por enquanto, são retirados na loja.',
+      'Sim, os itens do cardápio podem ser pedidos com entrega pelo iFood. As encomendas de bolo de aniversário e docinhos, por enquanto, são retiradas na loja.',
     link: { label: 'Abrir no iFood', href: site.ifood },
   },
   {

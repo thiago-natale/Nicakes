@@ -5,7 +5,7 @@
  * do que está nas páginas.
  */
 import { site } from './site';
-import { menu, birthdayCake, formatKg, formatPrice, cakePriceFrom, type MenuItem, type MenuGroup } from './menu';
+import { menu, birthdayCake, formatKg, formatPrice, cakePriceFrom, partySweets, sweetsPriceFrom, type MenuItem, type MenuGroup } from './menu';
 import { absoluteUrl, pages, monthYear } from './seo';
 import { faqItems, orderFaqItems, menuFaqItems, type FaqItem } from '../components/sections/Faq/faq';
 
@@ -35,7 +35,9 @@ O cardápio da ${site.fullName} tem ${itemCount} itens entre salgados, doces e b
 
 Os bolos de aniversário sob encomenda custam a partir de ${formatPrice(cakePriceFrom())} o quilo (o preço depende da decoração), com até ${
     birthdayCake.rules.maxFillings
-  } recheios por bolo, encomenda com ${birthdayCake.rules.leadBusinessDays} dia de antecedência e retirada na loja. O pedido é montado em ${url(
+  } recheios por bolo, encomenda com ${birthdayCake.rules.leadBusinessDays} dia de antecedência e retirada na loja. Os docinhos de festa (brigadeiros gourmet, super gourmet, mini brownies e personalizados) custam a partir de ${formatPrice(
+    sweetsPriceFrom(),
+  )} o cento, com pedido mínimo de ${partySweets.rules.minTotal} unidades (somando os tipos) e ${partySweets.rules.leadBusinessDays} dias de antecedência. Bolo e docinhos podem ir no mesmo pedido, montado em ${url(
     pages.encomendas.path,
   )} e enviado pelo WhatsApp, onde a loja confirma o valor final.`;
 }
@@ -46,11 +48,12 @@ export function llmsTxt(s: URL | undefined): string {
 
 ## Páginas principais
 - [Início](${url('/')}): apresentação da confeitaria, mais pedidos, prévia do cardápio, encomendas, loja e contato
-- [Cardápio com preços](${url(pages.cardapio.path)}): salgados, doces, bebidas e bolos de aniversário, com preços atualizados em ${monthYear(pages.cardapio.updated)}
-- [Encomendas: monte seu bolo de aniversário](${url(pages.encomendas.path)}): formulário com decoração, tamanho, massa, recheios e valor estimado na hora
+- [Cardápio com preços](${url(pages.cardapio.path)}): salgados, doces, bebidas, bolos de aniversário e docinhos de festa (#docinhos), com preços atualizados em ${monthYear(pages.cardapio.updated)}
+- [Encomendas: bolo de aniversário e docinhos](${url(pages.encomendas.path)}): formulário para montar o bolo e escolher os docinhos, com o valor de cada item na hora
 
 ## Produtos
 - [Bolo de aniversário sob encomenda](${url(pages.encomendas.path)}): a partir de ${formatPrice(cakePriceFrom())} o quilo; decoração ${birthdayCake.decorations.map((d) => d.name.toLowerCase()).join(', ')}
+- [Docinhos de festa sob encomenda](${url(pages.encomendas.path)}): ${partySweets.categories.map((c) => `${c.name.toLowerCase()} ${formatPrice(c.pricePerHundred)} o cento`).join('; ')}
 ${menu
   .map((c) => `- [${c.title}](${url(pages.cardapio.path)}#${c.id}): ${categorySummary(c.id)}`)
   .join('\n')}
@@ -58,7 +61,7 @@ ${menu
 ## Perguntas frequentes
 - [Dúvidas gerais](${url('/')}#faq): pedidos, iFood, endereço e horário
 - [Dúvidas sobre o cardápio](${url(pages.cardapio.path)}#faq): preços, formas de pedido, entrega e disponibilidade
-- [Dúvidas sobre encomendas](${url(pages.encomendas.path)}#faq): preço por quilo, tamanhos, antecedência, retirada e confirmação
+- [Dúvidas sobre encomendas](${url(pages.encomendas.path)}#faq): preço do bolo e dos docinhos, quantidades, antecedência, retirada e confirmação
 
 ## Contato
 - [WhatsApp ${site.phone.display}](${site.whatsapp})
@@ -111,6 +114,17 @@ Página: ${absoluteUrl(pages.encomendas.path, s)}
 - Antecedência: ${cake.rules.leadBusinessDays} dia de funcionamento. Retirada na loja (sem entrega por enquanto).
 - Como pedir: montar o bolo no site; o WhatsApp abre com o pedido escrito e a loja confirma disponibilidade, data e valor final.`;
 
+  const sw = partySweets;
+  const sweetsMd = `## Docinhos de festa sob encomenda
+
+Página: ${absoluteUrl(pages.encomendas.path, s)}
+
+${sw.categories.map((c) => `- ${c.name} (${c.weight}): ${formatPrice(c.pricePerHundred)} o cento. Sabores: ${c.flavors.join(', ')}.`).join('\n')}
+- ${sw.custom.name}: valor a combinar, conforme a decoração. ${sw.extras.map((e) => `${e.name} (${e.hint?.toLowerCase()}): valor a combinar.`).join(' ')}
+- Quantidades: preço por cento, calculado pela quantidade; sabores de ${sw.rules.step} em ${sw.rules.step} unidades (até ${sw.rules.unit / sw.rules.step} sabores por cento); pedido mínimo de ${sw.rules.minTotal} unidades, somando os tipos.
+- Antecedência: ${sw.rules.leadBusinessDays} dias de funcionamento. Retirada na loja.
+- Bolo e docinhos podem ir no mesmo pedido; o resumo mostra o valor de cada item.`;
+
   return `${intro(s)}
 
 ## Cardápio (preços atualizados em ${monthYear(pages.cardapio.updated)})
@@ -118,6 +132,8 @@ Página: ${absoluteUrl(pages.encomendas.path, s)}
 ${menuMd}
 
 ${cakeMd}
+
+${sweetsMd}
 
 ## Perguntas frequentes
 

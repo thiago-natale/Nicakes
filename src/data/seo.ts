@@ -31,22 +31,22 @@ export const pages = {
   },
   cardapio: {
     // Atualize quando mudar preços em data/menu.ts (aparece como "Preços atualizados em…")
-    updated: '2026-11-06',
+    updated: '2026-11-12',
     path: '/cardapio',
     name: 'Cardápio',
     title: 'Cardápio com preços: doces, salgados e café | Nicake’s',
     description:
-      'Veja o cardápio completo da Nicake’s em Uberaba, com preços: cakes, donuts, brownies, tortas, salgados, cafés e milk-shakes. Peça pelo WhatsApp ou iFood.',
+      'Cardápio da Nicake’s em Uberaba com preços: cakes, donuts, brownies, salgados, cafés, bolos de aniversário e docinhos de festa. Peça pelo WhatsApp ou iFood.',
     priority: 0.9,
     changefreq: 'weekly',
   },
   encomendas: {
-    updated: '2026-11-06',
+    updated: '2026-11-11',
     path: '/encomendas',
     name: 'Encomendas',
-    title: 'Bolo de aniversário sob encomenda em Uberaba | Nicake’s',
+    title: 'Bolo e docinhos sob encomenda em Uberaba | Nicake’s',
     description:
-      'Monte seu bolo de aniversário na Nicake’s: decoração, tamanho, massa e recheios, com valor estimado na hora. Envie o pedido pelo WhatsApp e retire em Uberaba.',
+      'Monte seu bolo de aniversário e escolha os docinhos de festa na Nicake’s, com o valor de cada item na hora. Envie o pedido pelo WhatsApp e retire em Uberaba.',
     priority: 0.9,
     changefreq: 'monthly',
   },
