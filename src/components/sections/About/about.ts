@@ -22,7 +22,7 @@ export const manifesto: { text: string; accent?: boolean; swash?: boolean }[] = 
  * (dados pendentes) — quando houver, inclua aqui e adicione a assinatura.
  */
 export const story =
-  'Na Av. Quinze de Novembro, em Uberaba, seguimos uma regra simples: tudo feito à mão, um pedido de cada vez. Das receitas de casa ao acabamento de festa, cada doce sai da nossa cozinha pronto para virar lembrança.';
+  'Na Av. Quinze de Novembro, em Uberaba, a Nicake’s Confeitaria (também conhecida como Nicakes) segue uma regra simples: tudo feito à mão, um pedido de cada vez. Das receitas de casa ao acabamento de festa, cada doce sai da nossa cozinha pronto para virar lembrança.';
 
 export const promises: { icon: IconName; title: string; text: string }[] = [
   {

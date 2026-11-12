@@ -27,7 +27,7 @@ function intro(s: URL | undefined): string {
 
 > ${site.description}
 
-A ${site.fullName} fica em ${site.address.street}, ${site.address.district}, ${site.address.city} – ${site.address.state} (CEP ${site.address.postalCode}). Horário: ${hours}. CNPJ ${site.legal.cnpj}.
+A ${site.fullName} (também conhecida como Nicakes) fica em ${site.address.street}, ${site.address.district}, ${site.address.city} – ${site.address.state} (CEP ${site.address.postalCode}). Horário: ${hours}. CNPJ ${site.legal.cnpj}.
 
 O cardápio da ${site.fullName} tem ${itemCount} itens entre salgados, doces e bebidas, com preços de ${formatPrice(Math.min(...allPrices))} a ${formatPrice(
     Math.max(...allPrices),

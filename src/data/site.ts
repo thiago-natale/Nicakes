@@ -20,6 +20,11 @@ export function whatsappOrderLink(product: string): string {
 export const site = {
   name: 'Nicake’s',
   fullName: 'Nicake’s Confeitaria',
+  /**
+   * Grafias com que a marca é buscada (schema: alternateName da confeitaria e
+   * do site). "Nicakes", sem apóstrofo, é como muita gente digita.
+   */
+  alternateNames: ['Nicake’s', "Nicake's", 'Nicakes', 'Nicakes Confeitaria', 'Nicake’s Confeitaria'],
   tagline: 'Confeitaria',
   /**
    * Frase canônica da marca (GEO/SEO) — use EXATAMENTE este texto onde a marca

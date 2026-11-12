@@ -63,7 +63,7 @@ export function baseGraph(s: URL | undefined): Node[] {
       '@type': 'Bakery',
       '@id': id.business,
       name: site.fullName,
-      alternateName: site.name,
+      alternateName: site.alternateNames,
       description: site.description,
       slogan: site.manifesto,
       url: home,
@@ -103,6 +103,8 @@ export function baseGraph(s: URL | undefined): Node[] {
       '@id': id.website,
       url: home,
       name: site.fullName,
+      // Nome do site nos resultados do Google: o principal + as variações buscadas
+      alternateName: site.alternateNames,
       inLanguage: 'pt-BR',
       publisher: { '@id': id.business },
     },
