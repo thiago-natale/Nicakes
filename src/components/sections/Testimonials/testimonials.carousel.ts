@@ -47,10 +47,12 @@ export function initTestimonialsCarousel(): void {
     const direction = index > current ? 1 : -1;
     current = target;
     const before = Flip.getState(cards, { props: 'opacity' });
-    const order = total >= 3 ? [(target - 1 + total) % total, target, (target + 1) % total] : cards.map((_, i) => i);
-    track!.replaceChildren(...order.map((i) => cards[i]));
+    const shown = total >= 3 ? [(target - 1 + total) % total, target, (target + 1) % total] : cards.map((_, i) => i);
+    const rest = cards.map((_, i) => i).filter((i) => !shown.includes(i));
+    track!.replaceChildren(...[...shown, ...rest].map((i) => cards[i]));
     cards.forEach((card, i) => {
       const on = i === target;
+      card.classList.toggle('is-off', !shown.includes(i));
       card.classList.toggle('is-active', on);
       card.setAttribute('aria-hidden', String(!on));
     });

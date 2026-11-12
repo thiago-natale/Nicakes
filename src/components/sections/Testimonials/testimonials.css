@@ -21,6 +21,10 @@
   /* a opacidade é animada pelo GSAP (Flip) — aqui só a cor */
   transition: color var(--duration-base) var(--ease-soft);
 }
+.testimonials__card.is-off {
+  /* Fora do trilho (há mais de 3 depoimentos): só os 3 da vez aparecem */
+  display: none;
+}
 .testimonials__card:not(.is-active) {
   /* Esmaecido, mas legível: texto cacau a 72% ainda passa de 4,5:1 (AA) */
   opacity: 0.72;

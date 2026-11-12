@@ -1,37 +1,59 @@
 /**
- * Depoimentos de clientes (seção "Memórias que adoçam").
- *
- * IMPORTANTE: os itens com `placeholder: true` são EXEMPLOS ILUSTRATIVOS — não
- * são falas reais de clientes. Substitua por depoimentos reais (com autorização
- * de quem escreveu) e remova `placeholder`. Enquanto houver placeholder, a
- * legenda "Depoimento ilustrativo" aparece no card.
+ * Depoimentos de clientes (seção "Memórias que adoçam") — comentários reais
+ * do Instagram da Nicake’s, com revisão só de ortografia e pontuação (sem
+ * mudar o sentido) e sem os emojis. A foto é a do perfil de quem escreveu
+ * (public/images/depoimentos/<photo>.webp, 96 × 96). Sem `photo`, o avatar
+ * mostra as iniciais.
  */
 export interface Testimonial {
   quote: string;
+  /** Como a pessoa aparece no Instagram (@perfil) */
   name: string;
   /** Contexto curto: o que a pessoa pediu ou viveu (ex.: "Bolo de aniversário") */
   context: string;
+  /** Arquivo da foto de perfil, sem extensão */
+  photo?: string;
+  /** Onde o depoimento foi publicado */
+  source?: string;
+  /** Exemplo ilustrativo (não é fala real) — mostra a legenda no card */
   placeholder?: boolean;
 }
 
 export const testimonials: Testimonial[] = [
   {
-    quote: 'O bolo chegou lindo, do jeitinho que imaginei — e o sabor fez todo mundo pedir mais um pedaço. Virou o centro da festa.',
-    name: 'Cliente Nicake’s',
+    quote: 'Ganhei de surpresa, no meu aniversário, um bolo daí e estava simplesmente maravilhoso. Todo mundo perguntando quem fez!',
+    name: '@fabiolameendes',
     context: 'Bolo de aniversário',
-    placeholder: true,
+    photo: 'fabiolameendes',
+    source: 'Instagram',
   },
   {
-    quote: 'Passo para um café no fim da tarde e sempre saio com uma caixinha de doces. É o tipo de carinho que a gente quer repetir.',
-    name: 'Cliente Nicake’s',
+    quote: 'Sem dúvida, são os melhores! Já provei vários sabores e posso dizer com toda a certeza: eles nos fazem voltar para comprar mais. E isso sem contar as deliciosas coxinhas. Parabéns por esse dom e pelas mãos de fada!',
+    name: '@crismells',
+    context: 'Doces e coxinhas',
+    photo: 'crismells',
+    source: 'Instagram',
+  },
+  {
+    quote: 'Jamais vou esquecer a carinha da Laura ao ver seu bolo de coração! Sem contar o sabor leve e os ingredientes extremamente frescos: um bolo que remete à memória afetiva.',
+    name: '@renatabotelhoor',
+    context: 'Bolo de aniversário',
+    photo: 'renatabotelhoor',
+    source: 'Instagram',
+  },
+  {
+    quote: 'Eu amo essa confeitaria! Se pudesse, iria toda semana, kkk. A coxinha é uma delícia, o suco natural foi o melhor que já bebemos, tudo tão gostoso, e o lugar é tão aconchegante e lindo. Eu amo mesmo!',
+    name: '@geeh_rbeatriz._',
+    context: 'Coxinha, suco e a loja',
+    photo: 'geeh-rbeatriz',
+    source: 'Instagram',
+  },
+  {
+    quote: 'Nunca tomei um café tão bom como o que tomei na cafeteria.',
+    name: '@projetoar_oficial',
     context: 'Café na loja',
-    placeholder: true,
-  },
-  {
-    quote: 'Encomendei brigadeiros para presentear e a entrega pelo iFood chegou impecável. Presente que se saboreia e se guarda na memória.',
-    name: 'Cliente Nicake’s',
-    context: 'Presente pelo iFood',
-    placeholder: true,
+    photo: 'projetoar-oficial',
+    source: 'Instagram',
   },
 ];
 
@@ -39,6 +61,8 @@ export const testimonials: Testimonial[] = [
 export const initials = (name: string): string =>
   name
     .replace(/[’']s\b/g, '')
+    .replace(/^@/, '')
+    .replace(/[_.]+/g, ' ')
     .split(/\s+/)
     .filter(Boolean)
     .slice(0, 2)
