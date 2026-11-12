@@ -1,6 +1,8 @@
 ---
 /**
- * Slider de fotos dos bolos de encomenda (data/orderGallery.ts).
+ * Slider de fotos das encomendas (data/orderGallery.ts): bolos, docinhos ou os
+ * dois intercalados (`kinds`). No slider misto, cada foto ganha uma etiqueta
+ * com o produto ("Bolo de aniversário" / "Docinhos").
  * Preenche o pai (que define o tamanho/recorte). Troca automática com barra de
  * progresso em segmentos, setas mínimas, contador, pausa (WCAG 2.2.2), teclado
  * e arraste no celular. Só a 1ª foto vem no HTML; as demais carregam quando vão
@@ -10,7 +12,7 @@
  * a troca automática espera o evento `cake-slider:ready`, disparado pela
  * animação de entrada da seção.
  */
-import { orderGallery, photoSrc, photoSrcset, GALLERY_SIZES } from '../../data/orderGallery';
+import { galleryFor, photoSrc, photoSrcset, GALLERY_KIND_LABEL, GALLERY_SIZES, type GalleryKind } from '../../data/orderGallery';
 import './cake-slider.css';
 
 interface Props {
@@ -20,16 +22,23 @@ interface Props {
   motion?: string;
   awaitIntro?: boolean;
   label?: string;
+  /** Produtos mostrados (padrão: só bolos) */
+  kinds?: GalleryKind[];
+  /** Canto dos controles: `end` (direita, padrão) ou `start` (esquerda — quando o canto direito é recortado) */
+  controls?: 'start' | 'end';
   class?: string;
 }
 
-const { sizes, motion, awaitIntro = false, label = 'Bolos de aniversário feitos pela Nicake’s', class: className = '' } = Astro.props;
+const { sizes, motion, awaitIntro = false, kinds = ['cake'], controls = 'end', label: labelProp, class: className = '' } = Astro.props;
+const orderGallery = galleryFor(kinds);
+const mixed = new Set(orderGallery.map((p) => p.kind)).size > 1;
+const label = labelProp ?? (mixed ? 'Bolos e docinhos feitos pela Nicake’s' : kinds[0] === 'sweets' ? 'Docinhos feitos pela Nicake’s' : 'Bolos de aniversário feitos pela Nicake’s');
 const total = orderGallery.length;
 const pad = (n: number): string => String(n).padStart(2, '0');
 ---
 
 <div
-  class:list={['cake-slider', className]}
+  class:list={['cake-slider', controls === 'start' && 'cake-slider--controls-start', className]}
   role="region"
   aria-roledescription="carrossel"
   aria-label={label}
@@ -62,6 +71,7 @@ const pad = (n: number): string => String(n).padStart(2, '0');
             decoding="async"
             style={`object-position: ${photo.focus}`}
           />
+          {mixed && <figcaption class="cake-slider__tag">{GALLERY_KIND_LABEL[photo.kind]}</figcaption>}
         </figure>
       ))
     }

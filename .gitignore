@@ -67,3 +67,6 @@ _*.tgz
 skills-lock.json
 /docs
 .gitattributes
+
+# Originais das fotos (fora do site; as versões publicadas ficam em public/images)
+assets-originais/

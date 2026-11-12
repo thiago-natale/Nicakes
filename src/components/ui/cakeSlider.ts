@@ -16,7 +16,7 @@ import { EASE } from '../../scripts/motion/eases';
 
 const INTERVAL = 5.5;
 const FADE = 0.9;
-const READY_FALLBACK_MS = 6000;
+const READY_FALLBACK_MS = 12000;
 /** Disparado pela entrada da seção (scripts/motion/utils.ts › sliderReady). */
 const READY_EVENT = 'cake-slider:ready';
 
@@ -208,12 +208,16 @@ function setup(root: HTMLElement): void {
   } else {
     root.addEventListener(READY_EVENT, begin, { once: true });
     // Garantia: se a animação de entrada não avisar (erro, aba em segundo plano),
-    // começa depois de alguns segundos na tela.
-    const io = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting) return;
-      io.disconnect();
-      window.setTimeout(begin, READY_FALLBACK_MS);
-    });
+    // começa depois de alguns segundos com a maior parte do slider na tela —
+    // longe o bastante da entrada normal para não "adiantar" os controles.
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+        io.disconnect();
+        window.setTimeout(begin, READY_FALLBACK_MS);
+      },
+      { threshold: 0.6 },
+    );
     io.observe(root);
   }
 }
