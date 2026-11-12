@@ -1,0 +1,112 @@
+---
+/**
+ * Painel de um produto na seção Encomendas da home (bolo ou docinhos): texto
+ * (título com destaque e ornamento, lead, botão e passos) e slider de fotos com
+ * máscara de revelação própria. `side="right"` espelha o layout (foto | texto).
+ * No celular, a foto fica sempre em cima. Animação: customOrders.motion.ts.
+ */
+import Button from '../../ui/Button.astro';
+import CakeSlider from '../../ui/CakeSlider.astro';
+import Icon from '../../ui/Icon.astro';
+import Sprinkles from '../../ui/Sprinkles.astro';
+import Swash from '../../ui/Swash.astro';
+import { MASK_FULL, MASK_SEEDS } from '../../../scripts/motion/masks';
+import type { OrderPanelData } from './customOrders';
+
+interface Props {
+  panel: OrderPanelData;
+}
+
+const { panel } = Astro.props;
+const titleId = `orders-${panel.id}-title`;
+const clipId = `co-clip-${panel.id}`;
+const seedId = `co-seed-${panel.id}`;
+const maskId = `co-path-mask-${panel.id}`;
+const reverse = panel.side === 'right';
+---
+
+<article
+  id={`encomendas-${panel.id}`}
+  class:list={['order-panel', reverse && 'order-panel--reverse']}
+  data-motion="co-panel"
+  data-side={panel.side}
+  data-clip={clipId}
+  data-seed={seedId}
+  aria-labelledby={titleId}
+>
+  <div class="order-panel__media" data-motion="co-media">
+    <CakeSlider sizes="(max-width: 899px) 100vw, 46vw" motion="co-image" awaitIntro kinds={panel.kinds} controls={reverse ? 'start' : 'end'} class="absolute inset-0" />
+  </div>
+
+  <div class="order-panel__body panel-x panel-y" data-motion="co-body">
+    <header data-motion="heading" data-heading="start">
+      <h3 id={titleId} class="order-panel__title type-section text-cocoa">
+        <span class="block" data-motion="heading-line">{panel.title}</span>{' '}
+        <span class="order-panel__accent-wrap relative inline-block">
+          <em class="block font-medium text-rose-deep italic" data-motion="heading-accent">{panel.accent}</em>
+          {
+            panel.ornament === 'swash' ? (
+              <Swash class="order-panel__ornament" data-motion="co-ornament" data-ornament="swash" />
+            ) : (
+              <Sprinkles class="order-panel__ornament order-panel__ornament--sprinkles" data-motion="co-ornament" data-ornament="sprinkles" />
+            )
+          }
+        </span>
+      </h3>
+      <p data-motion="heading-lead" class="order-panel__lead type-body mt-[0.9rem] max-w-[28rem] text-cocoa-soft">{panel.lead}</p>
+    </header>
+
+    <div class="order-panel__actions mt-[1.1rem] flex flex-col gap-[0.6rem] sm:flex-row sm:items-start sm:gap-[1.6rem] min-[56.25rem]:flex-col min-[56.25rem]:gap-[0.6rem] lg:mt-[0.9rem] lg:flex-row lg:gap-[1.6rem]">
+      <Button href={panel.cta.href} iconEnd="arrow" class="self-start sm:mt-[1.95rem] min-[56.25rem]:mt-0 lg:mt-[1.95rem]" data-motion="co-cta">
+        {panel.cta.label}
+      </Button>
+
+      <!-- pt reserva o espaço do caminho pontilhado (que passa acima dos ícones) -->
+      <ul class="relative flex pt-[1.9rem]" aria-label={panel.perksLabel} data-motion="co-perks">
+        <!-- Caminho entre os passos (gerado em JS) e o elemento que o percorre (MotionPath) -->
+        <svg class="pointer-events-none absolute inset-0 size-full overflow-visible" data-motion="co-path" aria-hidden="true" focusable="false">
+          <defs>
+            <mask id={maskId} maskUnits="userSpaceOnUse" x="-50" y="-80" width="2000" height="400">
+              <path data-motion="co-path-reveal" d="" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"></path>
+            </mask>
+          </defs>
+          <path
+            data-motion="co-path-line"
+            d=""
+            fill="none"
+            stroke="var(--color-rose)"
+            stroke-opacity="0.75"
+            stroke-width={panel.dash === '2 5' ? 1.3 : 1.6}
+            stroke-dasharray={panel.dash}
+            stroke-linecap="round"
+            mask={`url(#${maskId})`}></path>
+        </svg>
+        <Icon name={panel.traveler} class="pointer-events-none absolute top-0 left-0 z-10 hidden size-[0.85rem] text-gold" data-motion="co-traveler" />
+        {
+          panel.perks.map((perk) => (
+            <li class="relative flex w-[6.2rem] min-w-0 flex-col items-center text-center" data-motion="co-perk">
+              <span class="icon-circle size-[2.6rem] bg-white/70" data-motion="co-perk-icon">
+                <Icon name={perk.icon} class="size-[1.45rem]" strokeWidth={1.4} />
+              </span>
+              <span class="type-small mt-[0.4rem] text-cocoa-soft" style="line-height:1.3" data-motion="co-perk-text">
+                {perk.lines[0]}
+                <br />
+                {perk.lines[1]}
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </div>
+
+  <!-- Recorte da foto: cresce da forma do painel (gota ou forminha) até o retângulo (MorphSVG) -->
+  <svg class="absolute size-0" aria-hidden="true" focusable="false">
+    <defs>
+      <path id={seedId} d={MASK_SEEDS[panel.mask]}></path>
+    </defs>
+    <clipPath id={clipId} clipPathUnits="objectBoundingBox">
+      <path data-motion="co-clip" d={MASK_FULL}></path>
+    </clipPath>
+  </svg>
+</article>

@@ -1,15 +1,121 @@
-/* Seção de encomendas (BEM) */
-.custom-orders__media {
-  aspect-ratio: 16 / 9;
-  border-top-left-radius: 3.5rem 2.75rem;
+/* Seção de encomendas (BEM) — dois painéis espelhados */
+.order-panel {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
   overflow: hidden;
+  border-radius: var(--radius-panel);
+  background: var(--color-blush);
+  box-shadow: var(--shadow-panel);
+  scroll-margin-top: calc(var(--header-height) + 1rem);
+}
+.order-panel__media {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+.order-panel__body {
+  min-width: 0;
+}
+
+/* Ornamento sob o destaque do título (floreio ou granulado) */
+.order-panel__ornament {
+  position: absolute;
+  left: -3%;
+  top: 0.92em;
+  width: 106%;
+  height: auto;
+  overflow: visible;
+  pointer-events: none;
+}
+.order-panel__ornament--sprinkles {
+  top: 1em;
+  left: 2%;
+  width: 96%;
 }
 
 @media (min-width: 56.25rem) {
-  .custom-orders__media {
-    aspect-ratio: auto;
-    min-height: 100%;
+  .order-panel {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 46%);
+  }
+  .order-panel--reverse {
+    grid-template-columns: minmax(0, 46%) minmax(0, 1fr);
+  }
+  /* Bolo: texto | foto (a foto vem primeiro no HTML, para ficar em cima no celular) */
+  .order-panel:not(.order-panel--reverse) .order-panel__media {
+    order: 2;
     border-top-left-radius: 6.2rem 4.6rem;
   }
-  /* A altura do painel vem do texto; o slider apenas preenche a coluna */
+  .order-panel--reverse .order-panel__media {
+    border-top-right-radius: 6.2rem 4.6rem;
+  }
+  .order-panel__media {
+    aspect-ratio: auto;
+    min-height: 100%;
+  }
+  .order-panel__body {
+    align-self: center;
+  }
+}
+@media (min-width: 64rem) {
+  .order-panel {
+    min-height: clamp(13rem, 16vw, 19rem);
+  }
+}
+
+/* ---------- Palco fixo (desktop com altura suficiente) ----------
+   Mesma condição de STACKED_QUERY (customOrders.motion.ts): o palco ocupa a
+   tela abaixo do header e os dois painéis, da mesma altura, ficam centrados
+   na linha dos 50% da TELA — bolo em cima (base acima da linha) e docinhos
+   embaixo (topo abaixo da linha). Sobra embaixo um respiro do tamanho do header. */
+@media (min-width: 80rem) and (min-height: 48rem) {
+  .custom-orders__stage {
+    --co-gap: 1rem;
+    --co-slot: calc(50svh - var(--header-height) - 0.75rem - var(--co-gap) / 2);
+    height: calc(100svh - var(--header-height));
+    grid-template-rows: var(--co-slot) var(--co-slot);
+    align-content: start;
+    gap: var(--co-gap);
+    margin-top: 1.25rem;
+    padding-block: 0.75rem;
+  }
+  .custom-orders__stage .order-panel {
+    min-height: 0;
+    height: 100%;
+  }
+  .custom-orders__stage .order-panel__body {
+    padding-block: clamp(0.85rem, 3vh, 2.25rem);
+  }
+  /* Título numa linha só: "Bolo de aniversário do seu jeito." */
+  .custom-orders__stage .order-panel__title {
+    font-size: clamp(1.6rem, 4.2vh, 2.6rem);
+  }
+  .custom-orders__stage .order-panel__title > [data-motion='heading-line'] {
+    display: inline;
+  }
+  .custom-orders__stage .order-panel__lead {
+    max-width: 34rem;
+    margin-top: clamp(0.4rem, 1.2vh, 0.9rem);
+  }
+  .custom-orders__stage .order-panel__lead {
+    max-width: 40rem;
+  }
+  /* Botão e passos lado a lado, alinhados pela linha dos ícones */
+  .custom-orders__stage .order-panel__actions {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: clamp(1.25rem, 2.5vw, 2.25rem);
+    margin-top: clamp(0.25rem, 1vh, 0.9rem);
+  }
+  .custom-orders__stage .order-panel__actions > [data-motion='co-cta'] {
+    align-self: flex-end;
+    margin: 0 0 clamp(1.4rem, 3.6vh, 2rem);
+  }
+  .custom-orders__stage [data-motion='co-perks'] {
+    padding-top: 1.5rem;
+  }
+  .custom-orders__stage [data-motion='co-perk-icon'] {
+    width: clamp(2.1rem, 4.6vh, 2.6rem);
+    height: clamp(2.1rem, 4.6vh, 2.6rem);
+  }
 }

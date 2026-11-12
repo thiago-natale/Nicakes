@@ -1,0 +1,43 @@
+---
+/**
+ * Granulado de docinho — traços curtos coloridos em leque, para ficar sob uma
+ * palavra (como o floreio `Swash`). Cada traço tem `data-sprinkle` para cair em
+ * cascata na animação da seção. Posicione o pai com `position: relative`.
+ */
+interface Props {
+  class?: string;
+  [key: string]: unknown;
+}
+const { class: className = '', ...rest } = Astro.props;
+
+// x, y, rotação e cor de cada traço (viewBox 220 × 22)
+const bits: Array<[number, number, number, string]> = [
+  [10, 12, -28, 'var(--color-gold)'],
+  [34, 15, 18, 'var(--color-rose)'],
+  [58, 10, -8, 'var(--color-cocoa-soft)'],
+  [82, 14, 34, 'var(--color-gold)'],
+  [106, 11, -40, 'var(--color-rose-deep)'],
+  [130, 15, 12, 'var(--color-gold)'],
+  [154, 10, -20, 'var(--color-rose)'],
+  [178, 14, 26, 'var(--color-cocoa-soft)'],
+  [202, 11, -12, 'var(--color-gold)'],
+];
+---
+
+<svg class={className} viewBox="0 0 220 22" aria-hidden="true" focusable="false" {...rest}>
+  {
+    bits.map(([x, y, r, color]) => (
+      <line
+        data-sprinkle
+        x1={x - 5}
+        y1={y}
+        x2={x + 5}
+        y2={y}
+        transform={`rotate(${r} ${x} ${y})`}
+        stroke={color}
+        stroke-width="2.6"
+        stroke-linecap="round"
+      />
+    ))
+  }
+</svg>

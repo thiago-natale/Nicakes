@@ -38,8 +38,8 @@ type Entry = [name: string, init: SectionInit | Loader, mode: 'eager' | 'lazy' |
 /**
  * Ordem de página — define a ordem de criação e o refreshPriority.
  * `eager`: inicia no boot (acima da dobra). `lazy`: chunk próprio, montado ao se
- * aproximar da tela. `eager-desktop`: no desktop inicia no boot (o pin das
- * Encomendas precisa existir antes, senão o espaçador "empurra" a página).
+ * aproximar da tela. `eager-desktop`: no desktop inicia no boot (para seções
+ * com pin, cujo espaçador "empurraria" a página se fosse criado depois).
  */
 const SECTIONS: Entry[] = [
   ['hero-backdrop', heroBackdrop, 'eager'],
@@ -59,6 +59,7 @@ const SECTIONS: Entry[] = [
   ['order-form', orderForm, 'eager'],
   ['menu-category', () => import('../../components/sections/MenuCategory/menuCategory.motion'), 'lazy'],
   ['birthday-cakes', () => import('../../components/sections/BirthdayCakes/birthdayCakes.motion'), 'lazy'],
+  ['party-sweets', () => import('../../components/sections/PartySweets/partySweets.motion'), 'lazy'],
   ['footer', () => import('../../components/sections/Footer/footer.motion'), 'lazy'],
 ];
 
