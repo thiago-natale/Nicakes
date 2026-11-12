@@ -1,37 +1,55 @@
 /**
  * /encomendas — comportamento do formulário (DOM).
- * Lê as escolhas, atualiza o resumo e o valor estimado a cada mudança, aplica o
- * limite de recheios, abre os campos complementares, valida e, no envio, abre o
- * WhatsApp com a mensagem pronta. As escolhas ficam num rascunho em
- * sessionStorage (nada é enviado a servidor algum).
+ * Abre/fecha os blocos de cada produto (bolo, docinhos), lê as escolhas,
+ * atualiza o resumo agrupado, os subtotais e o valor estimado a cada mudança,
+ * aplica o limite de recheios e as quantidades dos docinhos, abre os campos
+ * complementares, valida e, no envio, abre o WhatsApp com a mensagem pronta.
+ * As escolhas ficam num rascunho em sessionStorage (nada é enviado a servidor).
  * Regras e textos: orderForm.ts (puro, testado).
  */
 import gsap from 'gsap';
-import { birthdayCake, formatKg, formatPrice } from '../../../data/menu';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { birthdayCake, formatPrice, partySweets } from '../../../data/menu';
 import { whatsappLink } from '../../../data/site';
 import { priceIn } from '../../../scripts/motion/counters';
 import { EASE } from '../../../scripts/motion/eases';
 import {
   answerField,
   buildMessage,
-  calcTotal,
+  CUSTOM_BRIEF,
+  CUSTOM_ON,
+  CUSTOM_QTY,
   decorationOf,
+  DRAFT_KEY,
+  DRAFT_VERSION,
   earliestPickup,
   extraAvailable,
   emptySelection,
   formatPickupDate,
-  pricePerKgOf,
   fromISODate,
   isOpenDay,
+  leadDaysOf,
+  orderShortLabel,
+  orderSummary,
   PERIODS,
-  priceLines,
+  pricePerKgOf,
+  snapQty,
+  SWEET_EXTRA,
+  sweetCatKey,
+  sweetExtraAvailable,
+  sweetField,
+  sweetPrice,
+  sweetQty,
+  sweetsCount,
   toISODate,
   validate,
   type OrderErrors,
   type OrderSelection,
+  type OrderSummary,
+  type ProductId,
 } from './orderForm';
 
-const DRAFT_KEY = 'nicakes:order-draft';
+const PRODUCTS: ProductId[] = ['cake', 'sweets'];
 const reduceMotion = (): boolean => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 const form = document.querySelector<HTMLFormElement>('[data-order-form]');
@@ -45,7 +63,10 @@ function setup(form: HTMLFormElement): void {
   const totalSr = $('[data-total-sr]');
   const barTotal = $('[data-bar-total]');
   const bar = $('[data-order-bar]');
-  const linesEl = $('[data-summary-lines]');
+  const groupsEl = $('[data-summary-groups]');
+  const emptyEl = $('[data-summary-empty]');
+  const pendingEl = $('[data-summary-pending]');
+  const barLabel = $('[data-bar-label]');
   const countEl = $('[data-filling-count]');
   const maxNote = $('[data-filling-max]');
   const errorsBox = $('[data-errors]');
@@ -54,32 +75,41 @@ function setup(form: HTMLFormElement): void {
   const submitText = submitLabel?.textContent ?? '';
   const dateInput = $<HTMLInputElement>('input[name="date"]');
   const dateHint = $('[data-hint-for="date"]');
-  const notes = $<HTMLTextAreaElement>('textarea[name="notes"]');
-  const notesCounter = $('[data-counter-for="order-notes"]');
 
   let attempted = false; // depois da 1ª tentativa de envio, valida a cada mudança
   let lastTotal = 0;
   let lastLines = new Set<string>();
+  const lastSubtotals: Record<string, number> = {};
   let srTimer = 0;
   let booting = true; // estado inicial (rascunho) aplicado sem animação
 
-  /* ---------- Data mínima (calculada no navegador, não no build) ---------- */
+  /* ---------- Data mínima (calculada no navegador, conforme os produtos) ---------- */
   const today = (): Date => new Date();
-  const minDate = earliestPickup(today());
-  if (dateInput) {
-    dateInput.min = toISODate(minDate);
-    const max = new Date(minDate);
-    max.setDate(max.getDate() + 180);
-    dateInput.max = toISODate(max);
-  }
-  if (dateHint) {
-    dateHint.textContent = `A partir de ${formatPickupDate(minDate)}. Segunda-feira a loja fica fechada.`;
+  let minDate = earliestPickup(today());
+  let lastLead = -1;
+  function applyMinDate(sel: OrderSelection): void {
+    const lead = leadDaysOf(sel);
+    if (lead === lastLead) return;
+    lastLead = lead;
+    minDate = earliestPickup(today(), lead);
+    if (dateInput) {
+      dateInput.min = toISODate(minDate);
+      const max = new Date(minDate);
+      max.setDate(max.getDate() + 180);
+      dateInput.max = toISODate(max);
+    }
+    if (dateHint) {
+      const who = sel.products.sweets ? `Com docinhos, ${lead} dias de antecedência: a` : 'A';
+      dateHint.textContent = `${who} partir de ${formatPickupDate(minDate)}. Segunda-feira a loja fica fechada.`;
+    }
   }
 
   /* ---------- Leitura ---------- */
   function read(): OrderSelection {
     const fd = new FormData(form);
     const sel = emptySelection();
+    const products = fd.getAll('product').map(String);
+    PRODUCTS.forEach((p) => (sel.products[p] = products.includes(p)));
     sel.decoration = String(fd.get('decoration') ?? '');
     const kg = Number(fd.get('size'));
     sel.kg = kg > 0 ? kg : null;
@@ -88,6 +118,20 @@ function setup(form: HTMLFormElement): void {
     sel.extras = fd.getAll('extra').map(String);
     for (const name of sel.fillings) sel.fillingAnswers[name] = String(fd.get(answerField('filling', name)) ?? '');
     for (const name of sel.extras) sel.extraAnswers[name] = String(fd.get(answerField('extra', name)) ?? '');
+    for (const c of partySweets.categories) {
+      const chosen: Record<string, number> = {};
+      c.flavors.forEach((f, i) => {
+        const n = Number(fd.get(sweetField(c.id, i)));
+        if (n > 0) chosen[f] = n;
+      });
+      sel.sweets[c.id] = chosen;
+    }
+    sel.custom = {
+      on: fd.get(CUSTOM_ON) === 'sim',
+      qty: Number(fd.get(CUSTOM_QTY)) || 0,
+      brief: String(fd.get(CUSTOM_BRIEF) ?? ''),
+    };
+    sel.sweetExtras = fd.getAll(SWEET_EXTRA).map(String);
     sel.date = String(fd.get('date') ?? '');
     const period = String(fd.get('period') ?? '');
     sel.period = period === 'manha' || period === 'tarde' ? period : '';
@@ -213,51 +257,91 @@ function setup(form: HTMLFormElement): void {
     }, 900);
   }
 
-  function renderLines(sel: OrderSelection): void {
-    if (!linesEl) return;
-    const lines = priceLines(sel);
-    const next = new Set(lines.map((l) => l.label));
-    linesEl.replaceChildren(
-      ...lines.map((l) => {
-        const li = document.createElement('li');
-        li.className = 'order-summary__line';
-        if (!lastLines.has(l.label)) li.classList.add('is-new');
-        const label = document.createElement('span');
-        label.textContent = l.label;
-        const leader = document.createElement('span');
-        leader.className = 'order-summary__line-leader';
-        leader.setAttribute('aria-hidden', 'true');
-        const value = document.createElement('span');
-        value.className = 'order-summary__line-value';
-        value.textContent = formatPrice(l.value);
-        li.append(label, leader, value);
-        return li;
+  /* ---------- Resumo agrupado por produto ---------- */
+  function lineEl(key: string, label: string, detail: string | undefined, value: number | null | undefined): HTMLLIElement {
+    const li = document.createElement('li');
+    li.className = 'order-summary__line';
+    if (value === undefined) li.classList.add('order-summary__line--info');
+    if (!lastLines.has(key)) li.classList.add('is-new');
+    const text = document.createElement('span');
+    text.textContent = label;
+    li.append(text);
+    if (value !== undefined) {
+      const leader = document.createElement('span');
+      leader.className = 'order-summary__line-leader';
+      leader.setAttribute('aria-hidden', 'true');
+      const v = document.createElement('span');
+      v.className = 'order-summary__line-value';
+      if (value === null) v.classList.add('is-pending');
+      v.textContent = value === null ? 'a combinar' : formatPrice(value);
+      li.append(leader, v);
+    }
+    if (detail) {
+      const d = document.createElement('span');
+      d.className = 'order-summary__line-detail';
+      d.textContent = detail;
+      li.append(d);
+    }
+    return li;
+  }
+
+  function renderGroups(summary: OrderSummary): void {
+    if (!groupsEl) return;
+    const next = new Set<string>();
+    groupsEl.replaceChildren(
+      ...summary.groups.map((g) => {
+        const section = document.createElement('section');
+        section.className = 'order-summary__group';
+        section.setAttribute('aria-label', g.title);
+        const head = document.createElement('div');
+        head.className = 'order-summary__group-head';
+        const title = document.createElement('h3');
+        title.className = 'order-summary__group-title';
+        title.textContent = g.title;
+        const sub = document.createElement('span');
+        sub.className = 'order-summary__group-subtotal';
+        sub.textContent = formatPrice(g.subtotal);
+        head.append(title, sub);
+        section.append(head);
+        if (g.lines.length) {
+          const ul = document.createElement('ul');
+          ul.className = 'order-summary__lines';
+          g.lines.forEach((l) => {
+            next.add(l.key);
+            ul.append(lineEl(l.key, l.label, l.detail, l.value));
+          });
+          section.append(ul);
+        } else {
+          const p = document.createElement('p');
+          p.className = 'order-summary__group-empty';
+          p.textContent = g.id === 'sweets' ? 'Escolha os sabores e as quantidades.' : 'Escolha o tamanho do bolo.';
+          section.append(p);
+        }
+        return section;
       }),
     );
     lastLines = next;
+    if (emptyEl) emptyEl.hidden = summary.groups.length > 0;
+    if (pendingEl) pendingEl.hidden = !summary.pending;
   }
 
-  function setDetail(key: string, text: string, empty: boolean): void {
-    const dd = $(`[data-summary="${key}"]`);
-    if (!dd) return;
-    dd.textContent = text;
-    dd.classList.toggle('is-empty', empty);
-  }
-
-  function renderSummary(sel: OrderSelection): void {
-    setDetail('decoration', `${decorationOf(sel).name} · ${formatPrice(pricePerKgOf(sel))}/kg`, false);
-    const size = birthdayCake.sizes.find((s) => s.kg === sel.kg);
-    setDetail('size', size ? `${formatKg(size.kg)} · ${size.serves}` : 'A escolher', !size);
-    setDetail('dough', sel.dough || 'A escolher', !sel.dough);
-    const fillings = sel.fillings.map((n) => {
-      const a = sel.fillingAnswers[n]?.trim();
-      return a ? `${n} (${a})` : n;
+  /** Subtotal ao vivo no cabeçalho de cada bloco. */
+  function renderSubtotals(summary: OrderSummary): void {
+    PRODUCTS.forEach((id) => {
+      const el = $(`[data-block-subtotal="${id}"]`);
+      const value = summary.groups.find((g) => g.id === id)?.subtotal ?? 0;
+      if (!el || lastSubtotals[id] === value) return;
+      lastSubtotals[id] = value;
+      swapText(el, formatPrice(value));
     });
-    setDetail('fillings', fillings.join(' e ') || 'A escolher', !fillings.length);
-    setDetail('extras', sel.extras.join(' · ') || 'Nenhum', !sel.extras.length);
+  }
+
+  function renderPickup(sel: OrderSelection): void {
+    const dd = $('[data-summary="pickup"]');
+    if (!dd) return;
     const date = fromISODate(sel.date);
-    const pickup = date ? `${formatPickupDate(date)}${sel.period ? `, ${PERIODS[sel.period]}` : ''}` : 'A escolher';
-    setDetail('pickup', pickup, !date);
+    dd.textContent = date ? `${formatPickupDate(date)}${sel.period ? `, ${PERIODS[sel.period]}` : ''}` : 'A escolher';
+    dd.classList.toggle('is-empty', !date);
   }
 
   /* ---------- Limite de recheios ---------- */
@@ -290,12 +374,125 @@ function setup(form: HTMLFormElement): void {
       const el = $(`[data-ask="${answerField('extra', e.name)}"]`);
       if (el) toggleAsk(el, sel.extras.includes(e.name));
     });
+    const custom = $(`[data-ask="${CUSTOM_ON}"]`);
+    if (custom) toggleAsk(custom, sel.custom.on);
+  }
+
+  /* ---------- Docinhos: contadores, sabores ativos e extras ---------- */
+  const extraSweetNote = $('[data-sweet-extra-note]');
+
+  function applySweets(sel: OrderSelection): void {
+    const { minTotal } = partySweets.rules;
+    for (const c of partySweets.categories) {
+      const qty = sweetQty(sel, c.id);
+      const cat = $(`[data-sweet-cat="${c.id}"]`);
+      cat?.classList.toggle('has-items', qty > 0);
+      if (qty > 0 && cat instanceof HTMLDetailsElement && booting) cat.open = true;
+      const count = $(`[data-sweet-count="${c.id}"]`);
+      if (count) {
+        const text = qty
+          ? `${qty} un. · ${formatPrice(sweetPrice(c.id, qty))}`
+          : `${c.flavors.length} sabores`;
+        if (count.textContent !== text) {
+          count.textContent = text;
+          count.classList.toggle('is-on', qty > 0);
+          if (!booting && !reduceMotion()) {
+            count.classList.remove('is-bump');
+            void count.offsetWidth;
+            count.classList.add('is-bump');
+          }
+        }
+      }
+    }
+    // Total de docinhos (o mínimo vale para o pedido todo, somando os tipos)
+    const totalEl = $('[data-sweets-total]');
+    if (totalEl) {
+      const total = sweetsCount(sel);
+      totalEl.textContent = !total
+        ? `Nenhum docinho escolhido ainda · mínimo de ${minTotal}`
+        : total < minTotal
+          ? `${total} docinhos no pedido · faltam ${minTotal - total} para o mínimo de ${minTotal}`
+          : `${total} docinhos no pedido`;
+      totalEl.classList.toggle('is-short', total > 0 && total < minTotal);
+      totalEl.classList.toggle('is-ok', total >= minTotal);
+    }
+    // Sabor com quantidade: destaque na linha e no seletor; botão "−" inativo no zero
+    $$<HTMLElement>('[data-qty]').forEach((qty) => {
+      const input = qty.querySelector<HTMLInputElement>('input');
+      const n = Number(input?.value) || 0;
+      qty.classList.toggle('is-active', n > 0);
+      qty.closest('[data-sweet-flavor]')?.classList.toggle('is-active', n > 0);
+      qty.querySelector('[data-qty-step="-1"]')?.setAttribute('aria-disabled', String(n <= 0));
+    });
+    // Cereja em cima: só com mini brownie
+    let blocked = false;
+    $$<HTMLInputElement>(`input[name="${SWEET_EXTRA}"]`).forEach((input) => {
+      const ok = sweetExtraAvailable(sel, input.value);
+      if (!ok && input.checked) blocked = true;
+      input.setAttribute('aria-disabled', String(!ok));
+      input.closest('.choice')?.classList.toggle('is-unavailable', !ok);
+    });
+    if (extraSweetNote) extraSweetNote.hidden = !blocked;
+  }
+
+  /* ---------- Produtos: abre/fecha os blocos ---------- */
+  function setProduct(id: ProductId, on: boolean, animate: boolean): void {
+    const attr = `data-${id}`;
+    if (form.hasAttribute(attr) === on) return;
+    const block = $(`[data-block="${id}"]`);
+    if (!block || !animate || reduceMotion()) {
+      form.toggleAttribute(attr, on);
+      if (!booting) ScrollTrigger.refresh();
+      return;
+    }
+    gsap.killTweensOf(block);
+    if (on) {
+      form.setAttribute(attr, '');
+      gsap.from(block, {
+        height: 0,
+        autoAlpha: 0,
+        y: 12,
+        duration: 0.55,
+        ease: EASE.soft,
+        clearProps: 'height,opacity,visibility,transform,overflow',
+        onStart: () => gsap.set(block, { overflow: 'hidden' }),
+        onComplete: () => ScrollTrigger.refresh(),
+      });
+    } else {
+      gsap.to(block, {
+        height: 0,
+        autoAlpha: 0,
+        overflow: 'hidden',
+        duration: 0.4,
+        ease: 'power2.inOut',
+        onComplete: () => {
+          form.removeAttribute(attr);
+          gsap.set(block, { clearProps: 'height,opacity,visibility,overflow' });
+          ScrollTrigger.refresh();
+        },
+      });
+    }
+  }
+
+  function applyProducts(sel: OrderSelection): void {
+    PRODUCTS.forEach((id) => setProduct(id, sel.products[id], !booting));
+    // Leitor de tela: "Etapa 2 de 7:" nas etapas visíveis (o numeral vem do CSS)
+    const visible = $$<HTMLElement>('.order-step').filter((step) => !step.closest('[data-block]') || sel.products[step.closest<HTMLElement>('[data-block]')?.dataset.block as ProductId]);
+    const shown = visible.filter((step) => step.id !== 'etapa-retirada' || sel.products.cake || sel.products.sweets);
+    $$<HTMLElement>('.order-step').forEach((step) => {
+      const sr = step.querySelector('[data-step-sr]');
+      const i = shown.indexOf(step);
+      if (sr) sr.textContent = i >= 0 ? `Etapa ${i + 1} de ${shown.length}:` : '';
+    });
   }
 
   /* ---------- Erros ---------- */
-  const groupKeys = new Set(['decoration', 'size', 'dough', 'filling', 'period']);
+  const groupKeys = new Set(['product', 'decoration', 'size', 'dough', 'filling', 'period', 'sweets']);
+  const isCatKey = (key: string): boolean => key.startsWith('sweet-cat-');
 
   function controlsOf(key: string): HTMLElement[] {
+    if (key === 'sweets') return $$<HTMLInputElement>('[data-sweet-cat] .qty__input');
+    if (isCatKey(key)) return $$<HTMLInputElement>(`[data-sweet-cat="${key.slice('sweet-cat-'.length)}"] .qty__input`);
     return $$<HTMLInputElement>(`[name="${key}"]`);
   }
 
@@ -307,6 +504,7 @@ function setup(form: HTMLFormElement): void {
     }
     controlsOf(key).forEach((c) => c.removeAttribute('aria-invalid'));
     if (groupKeys.has(key)) slot?.closest('fieldset')?.classList.remove('is-invalid');
+    if (isCatKey(key)) slot?.closest('.sweet-cat')?.classList.remove('is-invalid');
   }
 
   function showError(key: string, message: string): void {
@@ -317,6 +515,7 @@ function setup(form: HTMLFormElement): void {
     }
     controlsOf(key).forEach((c) => c.setAttribute('aria-invalid', 'true'));
     if (groupKeys.has(key)) slot?.closest('fieldset')?.classList.add('is-invalid');
+    if (isCatKey(key)) slot?.closest('.sweet-cat')?.classList.add('is-invalid');
   }
 
   /** Mostra os erros na ordem da página e devolve o primeiro controle inválido. */
@@ -339,7 +538,7 @@ function setup(form: HTMLFormElement): void {
         firstControls.forEach(({ key, el }) => {
           const li = document.createElement('li');
           const a = document.createElement('a');
-          const target = groupKeys.has(key) ? el.closest('fieldset') : el;
+          const target = groupKeys.has(key) ? el.closest('fieldset') : isCatKey(key) ? el.closest('.sweet-cat') : el;
           a.href = `#${target?.id || el.id}`;
           a.textContent = errors[key] ?? '';
           a.addEventListener('click', (ev) => {
@@ -360,7 +559,9 @@ function setup(form: HTMLFormElement): void {
   }
 
   function focusControl(el: HTMLElement): void {
-    const target = el.closest('fieldset.order-step') ?? el;
+    const details = el.closest('details');
+    if (details) details.open = true;
+    const target = el.closest('.sweet-cat') ?? el.closest('fieldset.order-step') ?? el;
     target.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
     el.focus({ preventScroll: true });
   }
@@ -368,7 +569,10 @@ function setup(form: HTMLFormElement): void {
   /* ---------- Rascunho ---------- */
   function saveDraft(): void {
     try {
-      const entries = Array.from(new FormData(form).entries()).map(([k, v]) => [k, String(v)]);
+      const entries = Array.from(new FormData(form).entries())
+        .map(([k, v]) => [k, String(v)])
+        .filter(([, v]) => v !== '0'); // quantidades zeradas não precisam ir para o rascunho
+      entries.unshift(['_v', DRAFT_VERSION]);
       sessionStorage.setItem(DRAFT_KEY, JSON.stringify(entries));
     } catch {
       /* armazenamento indisponível: segue sem rascunho */
@@ -383,6 +587,9 @@ function setup(form: HTMLFormElement): void {
       return;
     }
     if (!Array.isArray(entries)) return;
+    const v2 = entries.some(([name]) => name === '_v');
+    if (!v2 && entries.length) entries.push(['product', 'cake']); // rascunho antigo: só bolo
+    // Mantém o que o link de origem (?pedido=) já marcou no script inline
     for (const [name, value] of entries) {
       const fields = $$<HTMLInputElement | HTMLTextAreaElement>(`[name="${CSS.escape(name)}"]`);
       for (const field of fields) {
@@ -399,12 +606,21 @@ function setup(form: HTMLFormElement): void {
   function update(opts: { save?: boolean } = {}): void {
     applyDecoration(read()); // pode desmarcar um adicional indisponível
     const sel = read();
+    applyProducts(sel);
+    applyMinDate(sel);
     applyFillingLimit(sel);
+    applySweets(sel);
     applyAsks(sel);
-    renderSummary(sel);
-    renderLines(sel);
-    setTotal(calcTotal(sel));
-    if (notes && notesCounter) notesCounter.textContent = `${notes.value.length}/${notes.maxLength}`;
+    const summary = orderSummary(sel);
+    renderGroups(summary);
+    renderSubtotals(summary);
+    renderPickup(sel);
+    setTotal(summary.total);
+    if (barLabel) barLabel.textContent = orderShortLabel(sel) || 'Total estimado';
+    $$<HTMLTextAreaElement>('textarea[maxlength]').forEach((area) => {
+      const counter = $(`[data-counter-for="${area.id}"]`);
+      if (counter) counter.textContent = `${area.value.length}/${area.maxLength}`;
+    });
     if (attempted) renderErrors(validate(sel, today()));
     if (opts.save !== false) saveDraft();
   }
@@ -416,6 +632,73 @@ function setup(form: HTMLFormElement): void {
     if (d < minDate) showError('date', `A data mais próxima para retirada é ${formatPickupDate(minDate)}.`);
     else if (!isOpenDay(d)) showError('date', 'Nesse dia a loja está fechada. Escolha outra data.');
     else if (!attempted) clearError('date');
+  });
+
+  /* ---------- Seletores de quantidade ---------- */
+  form.addEventListener('click', (ev) => {
+    const btn = (ev.target as Element).closest<HTMLButtonElement>('[data-qty-step]');
+    if (!btn) return;
+    const input = btn.closest('[data-qty]')?.querySelector<HTMLInputElement>('input');
+    if (!input) return;
+    const dir = Number(btn.dataset.qtyStep);
+    const current = snapQty(Number(input.value) || 0);
+    const next = dir > 0 ? snapQty(current + partySweets.rules.step) : Math.max(0, current - partySweets.rules.step);
+    if (next === Number(input.value)) return;
+    input.value = String(next);
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  // Valor digitado: arredonda para o múltiplo de 25 ao sair do campo
+  form.addEventListener('change', (ev) => {
+    const input = ev.target as HTMLInputElement;
+    if (!input.classList?.contains('qty__input')) return;
+    const snapped = snapQty(Number(input.value));
+    if (String(snapped) !== input.value) input.value = String(snapped);
+  }, true);
+
+  // Cereja sem mini brownie: não marca (avisa)
+  form.addEventListener('click', (ev) => {
+    const input = ev.target as HTMLInputElement;
+    if (input?.name === SWEET_EXTRA && input.getAttribute('aria-disabled') === 'true') {
+      ev.preventDefault();
+      if (extraSweetNote) extraSweetNote.hidden = false;
+    }
+  });
+
+  /* ---------- "Remover" no cabeçalho do bloco ---------- */
+  form.addEventListener('click', (ev) => {
+    const btn = (ev.target as Element).closest<HTMLButtonElement>('[data-remove-product]');
+    if (!btn) return;
+    const input = $<HTMLInputElement>(`input[name="product"][value="${btn.dataset.removeProduct}"]`);
+    if (!input) return;
+    input.checked = false;
+    input.dispatchEvent(new Event('change', { bubbles: true }));
+    input.focus({ preventScroll: true });
+    $('#etapa-produtos')?.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+  });
+
+  /* ---------- Atalhos do cabeçalho da página (#bloco-bolo, #bloco-docinhos) ---------- */
+  document.addEventListener('click', (ev) => {
+    const link = (ev.target as Element).closest<HTMLAnchorElement>('a[href^="#bloco-"], a[href="#etapa-retirada"]');
+    if (!link) return;
+    const id = link.hash === '#bloco-bolo' ? 'cake' : link.hash === '#bloco-docinhos' ? 'sweets' : null;
+    const sel = read();
+    if (id && !sel.products[id]) {
+      const input = $<HTMLInputElement>(`input[name="product"][value="${id}"]`);
+      if (input) {
+        input.checked = true;
+        update();
+      }
+    } else if (!id && !sel.products.cake && !sel.products.sweets) {
+      ev.preventDefault();
+      $('#etapa-produtos')?.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+      return;
+    }
+    if (id) {
+      ev.preventDefault();
+      const block = document.getElementById(link.hash.slice(1));
+      block?.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+      block?.querySelector<HTMLElement>('.order-block__title')?.focus({ preventScroll: true });
+    }
   });
 
   form.addEventListener('input', () => update());
@@ -436,7 +719,10 @@ function setup(form: HTMLFormElement): void {
       if (submitLabel) submitLabel.textContent = 'Abrindo o WhatsApp…';
     }
     // Conversão (GA4, se ativo — ui/Analytics.astro)
-    document.dispatchEvent(new CustomEvent('nicakes:order-submit', { detail: { total: calcTotal(sel) } }));
+    const items = PRODUCTS.filter((p) => sel.products[p]);
+    document.dispatchEvent(
+      new CustomEvent('nicakes:order-submit', { detail: { total: orderSummary(sel).total, items, sweets: sweetsCount(sel) } }),
+    );
     window.location.href = whatsappLink(buildMessage(sel));
   });
 
@@ -456,7 +742,7 @@ function setup(form: HTMLFormElement): void {
     }
     renderErrors({});
     update({ save: false });
-    $<HTMLElement>('#etapa-decoracao')?.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+    $<HTMLElement>('#etapa-produtos')?.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
   });
 
   /* ---------- Barra do celular: some quando o resumo está na tela ---------- */
@@ -467,10 +753,10 @@ function setup(form: HTMLFormElement): void {
 
   restoreDraft();
   // Estado inicial sem animar o total
-  const initial = read();
-  lastTotal = calcTotal(initial);
+  const initial = orderSummary(read());
+  lastTotal = initial.total;
   [totalEl, barTotal].forEach((el) => el && (el.textContent = formatPrice(lastTotal)));
-  lastLines = new Set(priceLines(initial).map((l) => l.label));
+  lastLines = new Set(initial.groups.flatMap((g) => g.lines.map((l) => l.key)));
   update({ save: false });
   booting = false;
 }

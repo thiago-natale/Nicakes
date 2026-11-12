@@ -1,0 +1,132 @@
+---
+/**
+ * /encomendas — etapas dos docinhos: um cartão recolhível (<details>) por tipo,
+ * com um seletor de quantidade por sabor (de `step` em `step`), contador e
+ * subtotal do tipo; depois, personalizados e extras (valor a combinar).
+ * Dados: `partySweets` (src/data/menu.ts). Comportamento: orderForm.client.ts.
+ */
+import ChoiceCard from '../../ui/ChoiceCard.astro';
+import FormField from '../../ui/FormField.astro';
+import QuantityStepper from '../../ui/QuantityStepper.astro';
+import StepBadge from '../../ui/StepBadge.astro';
+import { formatPrice, partySweets } from '../../../data/menu';
+import { CUSTOM_BRIEF, CUSTOM_BRIEF_MAX, CUSTOM_ON, CUSTOM_QTY, SWEET_EXTRA, sweetCatKey, sweetField } from './orderForm';
+
+const { step, minTotal, maxPerFlavor } = partySweets.rules;
+const flavorsPerHundred = partySweets.rules.unit / step;
+---
+
+<!-- Docinhos: tipos e sabores -->
+<fieldset id="etapa-docinhos" class="order-step" data-motion="of-step" aria-describedby="sweets-rules err-sweets">
+  <legend class="order-step__legend">
+    <StepBadge data-motion="of-badge" />
+    <span class="sr-only" data-step-sr></span>
+    <span class="type-panel" data-motion="of-legend">Tipos e sabores</span>
+  </legend>
+  <p id="sweets-rules" class="order-step__lead type-small">
+    O preço é do cento, calculado pela quantidade. Escolha de {step} em {step} unidades por sabor (até {flavorsPerHundred} sabores a cada 100). O
+    pedido mínimo é de {minTotal} docinhos, e dá para somar tipos diferentes.
+  </p>
+
+  <div class="order-step__options grid gap-[0.6rem]">
+    {
+      partySweets.categories.map((c, i) => (
+        <details id={`docinhos-${c.id}`} class="sweet-cat" data-sweet-cat={c.id} data-motion="choice" open={i === 0}>
+          <summary class="sweet-cat__head">
+            <span class="sweet-cat__text">
+              <span class="sweet-cat__title">{c.name}</span>
+              <span class="sweet-cat__meta">
+                {c.weight} · <strong>{formatPrice(c.pricePerHundred)}</strong> o cento
+              </span>
+            </span>
+            <span class="sweet-cat__count" data-sweet-count={c.id}>
+              {c.flavors.length} sabores
+            </span>
+            <svg class="sweet-cat__chevron" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M4 6.2 8 10l4-3.8" />
+            </svg>
+          </summary>
+          <ul class="sweet-cat__flavors">
+            {
+              c.flavors.map((f, j) => (
+                <li class="sweet-flavor" data-sweet-flavor>
+                  <label for={sweetField(c.id, j)} class="sweet-flavor__name">
+                    {f}
+                  </label>
+                  <QuantityStepper
+                    id={sweetField(c.id, j)}
+                    name={sweetField(c.id, j)}
+                    label={f}
+                    step={step}
+                    max={maxPerFlavor}
+                    describedby={`err-${sweetCatKey(c.id)}`}
+                  />
+                </li>
+              ))
+            }
+          </ul>
+          <p id={`err-${sweetCatKey(c.id)}`} class="field-error sweet-cat__error" data-error-for={sweetCatKey(c.id)} hidden />
+        </details>
+      ))
+    }
+  </div>
+  <p class="sweets-total" data-sweets-total aria-live="polite">Nenhum docinho escolhido ainda · mínimo de {minTotal}</p>
+  <p id="err-sweets" class="field-error" data-error-for="sweets" hidden></p>
+</fieldset>
+
+<!-- Docinhos: personalizados e extras -->
+<fieldset id="etapa-personalizados" class="order-step" data-motion="of-step">
+  <legend class="order-step__legend">
+    <StepBadge data-motion="of-badge" />
+    <span class="sr-only" data-step-sr></span>
+    <span class="type-panel" data-motion="of-legend">Personalizados e extras</span>
+    <span class="order-step__optional">(opcional)</span>
+  </legend>
+  <p class="order-step__lead type-small">Itens sob medida: o valor depende da decoração e é combinado com você pelo WhatsApp.</p>
+  <div class="order-step__options grid gap-[0.6rem] sm:grid-cols-2">
+    <ChoiceCard
+      type="checkbox"
+      name={CUSTOM_ON}
+      value="sim"
+      title={partySweets.custom.name}
+      meta="Decorados com o tema da festa"
+      price="a combinar"
+      size="sm"
+    />
+    {
+      partySweets.extras.map((e) => (
+        <ChoiceCard type="checkbox" name={SWEET_EXTRA} value={e.name} title={e.name} meta={e.hint} price="a combinar" size="sm" />
+      ))
+    }
+  </div>
+  <p class="order-step__note type-small" data-sweet-extra-note hidden>A cereja em cima é para os mini brownies: escolha pelo menos um sabor deles.</p>
+
+  <div class="order-ask" data-ask={CUSTOM_ON} hidden>
+    <div class="sweet-custom">
+      <div class="sweet-custom__qty">
+        <label for={CUSTOM_QTY} class="field__label">Quantidade</label>
+        <p id={`${CUSTOM_QTY}-hint`} class="field__hint">De {step} em {step}. Somam no mínimo de {minTotal} do pedido.</p>
+        <QuantityStepper
+          id={CUSTOM_QTY}
+          name={CUSTOM_QTY}
+          label="brigadeiros personalizados"
+          step={step}
+          max={maxPerFlavor}
+          describedby={`${CUSTOM_QTY}-hint err-${CUSTOM_QTY}`}
+          class="mt-[0.4rem]"
+        />
+        <p id={`err-${CUSTOM_QTY}`} class="field-error mt-[0.35rem]" data-error-for={CUSTOM_QTY} hidden></p>
+      </div>
+      <FormField
+        id={CUSTOM_BRIEF}
+        name={CUSTOM_BRIEF}
+        type="textarea"
+        label={partySweets.custom.ask}
+        hint="Se tiver uma foto de referência, mande no WhatsApp junto com o pedido."
+        counter
+        maxlength={CUSTOM_BRIEF_MAX}
+        placeholder="Ex.: tema Frozen, azul e branco, com brilho prateado"
+      />
+    </div>
+  </div>
+</fieldset>

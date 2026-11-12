@@ -1,6 +1,6 @@
 /**
  * /encomendas — entrada das etapas e do resumo.
- * Cada etapa: o card sobe com leve giro 3D, o selo numerado dá um pop, o título
+ * Cada etapa visível: o card sobe com leve giro 3D, o selo numerado dá um pop, o título
  * sobe por palavras e as opções entram em cascata (ao entrar na tela, START.list).
  * O resumo abre do centro (clip-path), como os painéis do site.
  * Microinterações (check desenhado, contador, valor) ficam no CSS/client.
@@ -21,6 +21,8 @@ export function initMotion(root: HTMLElement, c: MotionConditions, order: number
   const k = speed(c);
 
   steps.forEach((step) => {
+    // Etapa de um produto não escolhido (bloco oculto): aparece com o bloco, sem entrada própria
+    if (!step.getClientRects().length) return;
     const splits: ReturnType<typeof split>[] = [];
     const tl = onceInView(step, { defaults: { ease: EASE.soft } }, START.list, order);
     tl.from(step, {

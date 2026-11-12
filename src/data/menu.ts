@@ -401,6 +401,107 @@ export const birthdayCake = {
   },
 };
 
+/** Tipo de docinho de festa (vendido por cento). */
+export interface SweetCategory {
+  id: string;
+  name: string;
+  /** Nome curto, para o resumo e a mensagem ("Gourmet") */
+  short: string;
+  /** Peso de cada unidade */
+  weight: string;
+  /** Preço do cento (R$) */
+  pricePerHundred: number;
+  flavors: string[];
+}
+
+/** Adicional dos docinhos, com valor a combinar. */
+export interface SweetExtra {
+  name: string;
+  /** Tipos em que o adicional está disponível */
+  appliesTo: string[];
+  hint?: string;
+}
+
+/**
+ * Docinhos de festa (sob encomenda) — fonte única para o formulário de
+ * /encomendas, a mensagem do WhatsApp, o FAQ e o schema. Preço por cento, com
+ * cálculo proporcional (ex.: 150 unidades = 1,5 × o cento). Cada sabor vai de
+ * `step` em `step` unidades (até 4 sabores a cada cento) e o pedido de
+ * docinhos tem mínimo de `minTotal` unidades, somando todos os tipos.
+ */
+export const partySweets = {
+  categories: [
+    {
+      id: "gourmet",
+      name: "Brigadeiros gourmet",
+      short: "Gourmet",
+      weight: "16 g a 18 g",
+      pricePerHundred: 170,
+      flavors: [
+        "Chocolate 50%",
+        "Chocolate com café",
+        "Leite Ninho",
+        "Ninho com Nutella",
+        "Churros",
+        "Oreo",
+        "Limão",
+        "Prestígio",
+        "Beijinho",
+        "Casadinho",
+      ],
+    },
+    {
+      id: "super-gourmet",
+      name: "Brigadeiros super gourmet",
+      short: "Super gourmet",
+      weight: "18 g a 20 g",
+      pricePerHundred: 200,
+      flavors: ["Pudim", "Ferrero Rocher", "Olho de sogra", "Granulé 50%"],
+    },
+    {
+      id: "mini-brownie",
+      name: "Mini brownies",
+      short: "Mini brownie",
+      weight: "18 g a 20 g",
+      pricePerHundred: 250,
+      flavors: [
+        "Brigadeiro de chocolate",
+        "Brigadeiro de Ninho",
+        "Ninho com uvas",
+        "Chocolate com morango",
+      ],
+    },
+  ] as SweetCategory[],
+  /** Personalizados: decoração sob medida, valor a combinar */
+  custom: {
+    name: "Brigadeiros personalizados",
+    ask: "Tema, cores e decoração",
+  },
+  extras: [
+    {
+      name: "Cereja em cima",
+      appliesTo: ["mini-brownie"],
+      hint: "Nos mini brownies",
+    },
+  ] as SweetExtra[],
+  rules: {
+    /** Preço por cento */
+    unit: 100,
+    /** Quantidade de cada sabor vai de 25 em 25 (até 4 sabores por cento) */
+    step: 25,
+    /** Pedido mínimo de docinhos, somando todos os tipos (inclusive personalizados) */
+    minTotal: 50,
+    /** Quantidade máxima por sabor no formulário */
+    maxPerFlavor: 1000,
+    /** Antecedência mínima, em dias de funcionamento da loja */
+    leadBusinessDays: 2,
+  },
+};
+
+/** Menor preço do cento — para os textos "a partir de" */
+export const sweetsPriceFrom = (): number =>
+  Math.min(...partySweets.categories.map((c) => c.pricePerHundred));
+
 /** Decoração padrão (marcada no formulário) */
 export const defaultDecoration = (): CakeDecoration =>
   birthdayCake.decorations.find((d) => d.default) ??

@@ -1,0 +1,97 @@
+---
+/**
+ * /encomendas — etapa 1: "O que vai ter na sua festa?". Dois cartões de produto
+ * (checkbox real): bolo e docinhos — dá para marcar os dois, e cada um abre o
+ * seu bloco no formulário. O estado inicial vem do rascunho e do link de origem
+ * (`?pedido=bolo|docinhos`) num script inline, antes de os blocos serem
+ * desenhados (sem "pulo" no primeiro quadro).
+ */
+import Icon, { type IconName } from '../../ui/Icon.astro';
+import StepBadge from '../../ui/StepBadge.astro';
+import { cakePriceFrom, formatPrice, sweetsPriceFrom } from '../../../data/menu';
+import { DRAFT_KEY } from './orderForm';
+
+const products: Array<{ id: string; title: string; meta: string; price: string; icon: IconName }> = [
+  {
+    id: 'cake',
+    title: 'Bolo de aniversário',
+    meta: 'Decoração, tamanho, massa e recheios',
+    price: `a partir de ${formatPrice(cakePriceFrom())} o kg`,
+    icon: 'cake',
+  },
+  {
+    id: 'sweets',
+    title: 'Docinhos',
+    meta: 'Brigadeiros gourmet, mini brownies e personalizados',
+    price: `a partir de ${formatPrice(sweetsPriceFrom())} o cento`,
+    icon: 'sweet',
+  },
+];
+---
+
+<fieldset id="etapa-produtos" class="order-step order-step--products" data-motion="of-step" aria-describedby="product-hint err-product">
+  <legend class="order-step__legend">
+    <StepBadge data-motion="of-badge" />
+    <span class="sr-only" data-step-sr></span>
+    <span class="type-panel" data-motion="of-legend">O que vai ter na sua festa?</span>
+  </legend>
+  <p id="product-hint" class="order-step__lead type-small">Pode escolher os dois: vai tudo num pedido só, com o valor de cada item.</p>
+  <div class="order-step__options grid gap-[0.6rem] min-[30rem]:grid-cols-2">
+    {
+      products.map((p) => (
+        <label class="product-card" data-motion="choice">
+          <input class="product-card__input" type="checkbox" name="product" value={p.id} />
+          <span class="product-card__box">
+            <span class="product-card__art" aria-hidden="true">
+              <Icon name={p.icon} class="size-[1.6rem]" />
+            </span>
+            <span class="product-card__text">
+              <span class="product-card__title">{p.title}</span>
+              <span class="product-card__meta">{p.meta}</span>
+              <span class="product-card__price">{p.price}</span>
+            </span>
+            <span class="product-card__state" aria-hidden="true">
+              <span class="product-card__add">
+                <svg viewBox="0 0 16 16" focusable="false"><path d="M3.5 8h9M8 3.5v9"></path></svg>
+                Adicionar
+              </span>
+              <span class="product-card__added">
+                <svg viewBox="0 0 16 16" focusable="false"><path d="M3.6 8.4 6.7 11.3 12.4 4.9"></path></svg>
+                No pedido
+              </span>
+            </span>
+          </span>
+        </label>
+      ))
+    }
+  </div>
+  <p id="err-product" class="field-error" data-error-for="product" hidden></p>
+</fieldset>
+
+<!-- Estado inicial (rascunho + ?pedido=) antes de os blocos serem desenhados -->
+<script is:inline define:vars={{ draftKey: DRAFT_KEY }}>
+  (function () {
+    var form = document.querySelector('[data-order-form]');
+    if (!form) return;
+    var chosen = {};
+    try {
+      var entries = JSON.parse(sessionStorage.getItem(draftKey) || '[]');
+      if (Array.isArray(entries) && entries.length) {
+        var v2 = entries.some(function (e) { return e[0] === '_v'; });
+        if (!v2) chosen.cake = true; // rascunho antigo (só bolo)
+        entries.forEach(function (e) { if (e[0] === 'product') chosen[e[1]] = true; });
+      }
+    } catch (err) {}
+    var param = new URLSearchParams(location.search).get('pedido') || '';
+    param.split(/[\s,+]+/).forEach(function (p) {
+      if (p === 'bolo') chosen.cake = true;
+      if (p === 'docinhos') chosen.sweets = true;
+    });
+    Object.keys(chosen).forEach(function (id) {
+      var input = form.querySelector('input[name="product"][value="' + id + '"]');
+      if (!input) return;
+      input.checked = true;
+      form.setAttribute('data-' + id, '');
+    });
+  })();
+</script>

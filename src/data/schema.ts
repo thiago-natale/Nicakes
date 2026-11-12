@@ -9,7 +9,7 @@
  *   FAQPage (seções de FAQ — ver Faq/faq.ts).
  */
 import { site } from './site';
-import { menu, birthdayCake, formatKg, type MenuGroup, type MenuItem } from './menu';
+import { menu, birthdayCake, formatKg, partySweets, type MenuGroup, type MenuItem } from './menu';
 import { orderGallery, photoSrc } from './orderGallery';
 import { absoluteUrl, pages, type PageSeo } from './seo';
 
@@ -172,7 +172,7 @@ export function menuGraph(s: URL | undefined): Node {
     name: `Cardápio da ${site.fullName}`,
     inLanguage: 'pt-BR',
     provider: { '@id': ids(s).business },
-    hasMenuSection: menu.map((category) => ({
+    hasMenuSection: menu.map((category): Node => ({
       '@type': 'MenuSection',
       name: category.title,
       hasMenuSection: category.groups.map((group) => ({
@@ -180,7 +180,29 @@ export function menuGraph(s: URL | undefined): Node {
         name: group.title,
         hasMenuItem: group.items.flatMap((item) => menuItemNode(item, group)),
       })),
-    })),
+    })).concat([
+      {
+        '@type': 'MenuSection',
+        name: 'Docinhos de festa (sob encomenda)',
+        description: `Vendidos por cento; pedido mínimo de ${partySweets.rules.minTotal} unidades, somando os tipos.`,
+        hasMenuItem: partySweets.categories.map((c) => ({
+          '@type': 'MenuItem',
+          name: c.name,
+          description: `${c.weight}. Sabores: ${c.flavors.join(', ')}.`,
+          offers: {
+            '@type': 'Offer',
+            price: c.pricePerHundred.toFixed(2),
+            priceCurrency: 'BRL',
+            priceSpecification: {
+              '@type': 'UnitPriceSpecification',
+              price: c.pricePerHundred.toFixed(2),
+              priceCurrency: 'BRL',
+              referenceQuantity: { '@type': 'QuantitativeValue', value: partySweets.rules.unit, unitCode: 'C62' },
+            },
+          },
+        })),
+      },
+    ] as Node[]),
   };
 }
 
@@ -198,7 +220,7 @@ export function birthdayCakeGraph(s: URL | undefined): Node {
     description: `Bolo de aniversário personalizado: escolha a decoração (${birthdayCake.decorations
       .map((d) => d.name.toLowerCase())
       .join(', ')}), o tamanho (${sizes}), a massa e até ${birthdayCake.rules.maxFillings} recheios. Retirada na loja em ${site.address.city}.`,
-    image: orderGallery.slice(0, 3).map((p) => absoluteUrl(photoSrc(p), s)),
+    image: orderGallery.filter((p) => p.kind === 'cake').slice(0, 3).map((p) => absoluteUrl(photoSrc(p), s)),
     brand: { '@id': ids(s).business },
     category: 'Bolos de aniversário',
     offers: birthdayCake.decorations.map((d) => ({
@@ -212,6 +234,36 @@ export function birthdayCakeGraph(s: URL | undefined): Node {
         price: d.pricePerKg.toFixed(2),
         priceCurrency: 'BRL',
         referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode: 'KGM' },
+      },
+      seller: { '@id': ids(s).business },
+      availability: 'https://schema.org/PreOrder',
+    })),
+  };
+}
+
+/** Docinhos de festa (sob encomenda) — Product com uma oferta por tipo (preço do cento). */
+export function partySweetsGraph(s: URL | undefined): Node {
+  const url = absoluteUrl(pages.encomendas.path, s);
+  const { minTotal, unit } = partySweets.rules;
+  return {
+    '@type': 'Product',
+    '@id': `${url}#docinhos`,
+    name: 'Docinhos de festa sob encomenda',
+    description: `Brigadeiros gourmet, super gourmet, mini brownies e brigadeiros personalizados, vendidos por cento (pedido mínimo de ${minTotal} unidades, somando os tipos). Retirada na loja em ${site.address.city}.`,
+    brand: { '@id': ids(s).business },
+    image: orderGallery.filter((p) => p.kind === 'sweets').slice(0, 3).map((p) => absoluteUrl(photoSrc(p), s)),
+    category: 'Docinhos de festa',
+    offers: partySweets.categories.map((c) => ({
+      '@type': 'Offer',
+      name: `${c.name} (${c.flavors.join(', ')})`,
+      url,
+      priceCurrency: 'BRL',
+      price: c.pricePerHundred.toFixed(2),
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        price: c.pricePerHundred.toFixed(2),
+        priceCurrency: 'BRL',
+        referenceQuantity: { '@type': 'QuantitativeValue', value: unit, unitCode: 'C62' },
       },
       seller: { '@id': ids(s).business },
       availability: 'https://schema.org/PreOrder',

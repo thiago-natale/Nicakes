@@ -3,9 +3,11 @@
  * Selo numerado de etapa — círculo com contorno dourado e numeral Cormorant
  * (mesma linguagem dos numerais do "Sobre"). Decorativo: o texto da etapa vai
  * no <legend>/título; passe `label` para o leitor de tela ("Etapa 1 de 5").
+ * Sem `n`, o numeral vem de um contador CSS (`counter(order-step)`): etapas
+ * ocultas (display: none) não contam, e a numeração se ajusta sozinha.
  */
 interface Props {
-  n: number;
+  n?: number;
   label?: string;
   class?: string;
   [key: string]: unknown;
@@ -14,6 +16,6 @@ const { n, label, class: className = '', ...rest } = Astro.props;
 ---
 
 <span class:list={['inline-grid size-[2.1rem] shrink-0 place-items-center rounded-full border border-gold bg-creme font-display text-[1.15rem] leading-none font-semibold text-gold-deep lining-nums', className]} {...rest}>
-  <span aria-hidden="true">{n}</span>
+  {n !== undefined ? <span aria-hidden="true">{n}</span> : <span class="step-badge__counter" aria-hidden="true"></span>}
   {label && <span class="sr-only">{label}</span>}
 </span>

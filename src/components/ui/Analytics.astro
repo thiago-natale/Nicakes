@@ -43,6 +43,13 @@ const { id } = Astro.props;
     else if (/ifood\.com/.test(href)) gtag('event', 'ifood_click', { page_path: where });
   });
   document.addEventListener('nicakes:order-submit', function (ev) {
-    gtag('event', 'generate_lead', { currency: 'BRL', value: (ev.detail && ev.detail.total) || 0, method: 'whatsapp' });
+    var d = ev.detail || {};
+    gtag('event', 'generate_lead', {
+      currency: 'BRL',
+      value: d.total || 0,
+      method: 'whatsapp',
+      order_items: (d.items || []).join(','),
+      sweets_qty: d.sweets || 0,
+    });
   });
 </script>

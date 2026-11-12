@@ -1,19 +1,18 @@
 /** Textos do cabeçalho da página /encomendas. */
-import { birthdayCake, cakePriceFrom, formatPrice } from '../../../data/menu';
+import type { IconName } from '../../ui/Icon.astro';
+import { birthdayCake, cakePriceFrom, formatPrice, partySweets, sweetsPriceFrom } from '../../../data/menu';
 
 export const orderHeaderCopy = {
   eyebrow: 'Encomendas',
-  title: 'Monte o seu',
-  accent: 'bolo de aniversário.',
+  title: 'Bolo e docinhos',
+  accent: 'sob encomenda.',
   // Resposta direta: preço, prazo, retirada e como funciona (valores de data/menu.ts)
-  lead: `Na Nicake’s, o bolo de aniversário sob encomenda sai a partir de ${formatPrice(cakePriceFrom())} o quilo. Escolha a decoração, o tamanho, a massa e os recheios: o valor aparece na hora e o pedido segue pronto para o WhatsApp. Encomende com ${birthdayCake.rules.leadBusinessDays} dia de antecedência e retire na loja em Uberaba.`,
-  stepsLabel: 'Etapas do pedido',
+  lead: `Monte o bolo de aniversário (a partir de ${formatPrice(cakePriceFrom())} o quilo), escolha os docinhos (a partir de ${formatPrice(sweetsPriceFrom())} o cento) ou peça os dois juntos. O valor de cada item aparece na hora e o pedido segue pronto para o WhatsApp. Antecedência de ${birthdayCake.rules.leadBusinessDays} dia para o bolo e ${partySweets.rules.leadBusinessDays} dias para os docinhos, com retirada na loja em Uberaba.`,
+  stepsLabel: 'Partes do pedido',
   steps: [
-    { id: 'etapa-decoracao', label: 'Decoração' },
-    { id: 'etapa-tamanho', label: 'Tamanho' },
-    { id: 'etapa-massa', label: 'Massa' },
-    { id: 'etapa-recheios', label: 'Recheios' },
-    { id: 'etapa-adicionais', label: 'Adicionais' },
-    { id: 'etapa-retirada', label: 'Retirada' },
-  ],
+    { id: 'etapa-produtos', label: 'O que encomendar', icon: 'gift' },
+    { id: 'bloco-bolo', label: 'Bolo', icon: 'cake' },
+    { id: 'bloco-docinhos', label: 'Docinhos', icon: 'sweet' },
+    { id: 'etapa-retirada', label: 'Retirada', icon: 'storefront' },
+  ] as Array<{ id: string; label: string; icon: IconName }>,
 };

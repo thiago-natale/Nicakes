@@ -1,0 +1,46 @@
+---
+/**
+ * Seletor de quantidade − [n] + — um <input type="number"> real (digitável,
+ * lido pelo FormData) entre dois botões que somam/subtraem `step`. O
+ * comportamento fica no script da seção (delegação em `[data-qty-step]`), que
+ * também arredonda o valor digitado para o múltiplo de `step`.
+ * Rótulo: passe `labelledby` (o <label for> do sabor) e `label` (nome curto para
+ * os botões: "Menos 25 de Oreo"). Alvos de toque ≥ 44px.
+ */
+import './quantity-stepper.css';
+
+interface Props {
+  id: string;
+  name: string;
+  /** Nome do item, usado nos rótulos dos botões */
+  label: string;
+  step?: number;
+  max?: number;
+  value?: number;
+  describedby?: string;
+  class?: string;
+}
+
+const { id, name, label, step = 1, max = 999, value = 0, describedby, class: className = '' } = Astro.props;
+---
+
+<div class:list={['qty', className]} data-qty>
+  <button type="button" class="qty__btn" data-qty-step="-1" aria-label={`Menos ${step} de ${label}`} aria-controls={id}>
+    <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3.5 8h9"></path></svg>
+  </button>
+  <input
+    class="qty__input"
+    type="number"
+    id={id}
+    name={name}
+    value={value}
+    min="0"
+    max={max}
+    step={step}
+    inputmode="numeric"
+    aria-describedby={describedby}
+  />
+  <button type="button" class="qty__btn" data-qty-step="1" aria-label={`Mais ${step} de ${label}`} aria-controls={id}>
+    <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M3.5 8h9M8 3.5v9"></path></svg>
+  </button>
+</div>

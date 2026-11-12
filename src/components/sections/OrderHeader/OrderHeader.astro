@@ -2,13 +2,15 @@
 /**
  * Cabeçalho da página /encomendas — mesma linguagem do Cardápio e da 404:
  * eyebrow dourado, título com destaque em itálico rosa e floreio, lead e os
- * passos do pedido (âncoras para cada etapa). No desktop, o slider de bolos
- * aparece com a gota que cresce (como nas Encomendas da home).
+ * atalhos das partes do pedido (escolha, bolo, docinhos e retirada). No
+ * desktop, o slider de bolos e docinhos aparece com a gota que cresce (como
+ * nas Encomendas da home).
  */
 import Breadcrumbs from '../../ui/Breadcrumbs.astro';
 import Eyebrow from '../../ui/Eyebrow.astro';
 import Swash from '../../ui/Swash.astro';
 import CakeSlider from '../../ui/CakeSlider.astro';
+import Icon from '../../ui/Icon.astro';
 import { orderHeaderCopy as copy } from './orderHeader';
 import './orderHeader.css';
 
@@ -35,14 +37,14 @@ import './orderHeader.css';
       <nav class="mt-[1.4rem]" aria-label={copy.stepsLabel}>
         <ol class="flex flex-wrap gap-[0.5rem] lg:gap-[0.4rem]">
           {
-            copy.steps.map((step, i) => (
+            copy.steps.map((step) => (
               <li data-motion="oh-step">
                 <a
                   href={`#${step.id}`}
                   class="inline-flex h-[2.75rem] items-center gap-[0.5rem] rounded-full border border-line bg-white/80 pr-[1rem] pl-[0.4rem] text-[0.75rem] font-medium text-cocoa transition-colors hover:border-rose hover:bg-blush lg:h-[2.3rem] lg:gap-[0.4rem] lg:pr-[0.8rem] lg:pl-[0.3rem] lg:text-[0.7rem]"
                 >
-                  <span class="inline-grid size-[1.6rem] lg:size-[1.45rem] place-items-center rounded-full border border-gold/70 bg-creme font-display text-[0.9rem] leading-none font-semibold text-gold-deep lining-nums" aria-hidden="true">
-                    {i + 1}
+                  <span class="inline-grid size-[1.6rem] lg:size-[1.45rem] place-items-center rounded-full border border-gold/70 bg-creme text-gold-deep" aria-hidden="true">
+                    <Icon name={step.icon} class="size-[0.95rem] lg:size-[0.85rem]" />
                   </span>
                   {step.label}
                 </a>
@@ -54,7 +56,7 @@ import './orderHeader.css';
     </div>
 
     <div class="order-header__media hidden lg:block" data-motion-hero>
-      <CakeSlider sizes="40vw" motion="oh-image" awaitIntro class="absolute inset-0" />
+      <CakeSlider sizes="40vw" motion="oh-image" awaitIntro kinds={['cake', 'sweets']} class="absolute inset-0" />
     </div>
   </div>
 

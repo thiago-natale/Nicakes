@@ -4,21 +4,21 @@ import OrderHeader from '../components/sections/OrderHeader/OrderHeader.astro';
 import OrderForm from '../components/sections/OrderForm/OrderForm.astro';
 import Faq from '../components/sections/Faq/Faq.astro';
 import { orderFaqItems } from '../components/sections/Faq/faq';
-import { birthdayCakeGraph } from '../data/schema';
+import { birthdayCakeGraph, partySweetsGraph } from '../data/schema';
 import { absoluteUrl, pages } from '../data/seo';
 
 const productId = `${absoluteUrl(pages.encomendas.path, Astro.site)}#bolo-de-aniversario`;
 ---
 
-<SiteLayout page="encomendas" schema={[birthdayCakeGraph(Astro.site)]} mainEntity={productId}>
+<SiteLayout page="encomendas" schema={[birthdayCakeGraph(Astro.site), partySweetsGraph(Astro.site)]} mainEntity={productId}>
   <OrderHeader />
   <OrderForm />
   <Faq
     items={orderFaqItems}
     eyebrow="Dúvidas sobre encomendas"
     title="Antes de montar"
-    accent="o seu bolo."
-    lead="Preço por quilo, tamanhos, antecedência, retirada e como o pedido é confirmado."
-    question="Olá! Tenho uma dúvida sobre encomenda de bolo de aniversário."
+    accent="o seu pedido."
+    lead="Preço do bolo e dos docinhos, quantidades, antecedência, retirada e como o pedido é confirmado."
+    question="Olá! Tenho uma dúvida sobre encomenda de bolo ou docinhos."
   />
 </SiteLayout>
