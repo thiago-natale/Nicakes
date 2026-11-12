@@ -35,7 +35,7 @@
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000, stale-while-revalidate=86400" }]
     },
     {
-      "source": "/(favicon.ico|favicon-32.png|apple-touch-icon.png|icon-512.png|og-image.jpg|site.webmanifest)",
+      "source": "/(favicon.ico|favicon-32.png|favicon-48.png|favicon-96.png|favicon-192.png|apple-touch-icon.png|icon-512.png|og-image.jpg|site.webmanifest)",
       "headers": [{ "key": "Cache-Control", "value": "public, max-age=604800" }]
     }
   ]
