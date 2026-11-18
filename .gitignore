@@ -57,16 +57,15 @@ $RECYCLE.BIN/
 # ---------------------------------------------------------------------------
 # Capturas e prévias geradas durante o desenvolvimento
 Claude outputs/
-# Configurações pessoais do Claude Code (as skills em .claude/skills ficam versionadas)
-.claude/settings.local.json
 # Pacotes temporários de sincronização
 _*.tgz
-
-
+# Ferramentas e anotações locais (Claude Code, skills e docs de trabalho):
+# ficam só na máquina, fora do repositório
 .claude/
 skills-lock.json
 /docs
 .gitattributes
 
-# Originais das fotos (fora do site; as versões publicadas ficam em public/images)
+# Originais e arquivos fora de uso (fotos, vídeos, logos): não vão para o site;
+# as versões publicadas ficam em public/
 assets-originais/
