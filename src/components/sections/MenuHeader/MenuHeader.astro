@@ -1,10 +1,10 @@
 ---
-import Button from '../../ui/Button.astro';
-import Breadcrumbs from '../../ui/Breadcrumbs.astro';
-import Eyebrow from '../../ui/Eyebrow.astro';
-import { menu, formatPrice } from '../../../data/menu';
-import { site } from '../../../data/site';
-import { pages, monthYear } from '../../../data/seo';
+import Button from '@/components/ui/Button.astro';
+import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
+import Eyebrow from '@/components/ui/Eyebrow.astro';
+import { menu, formatPrice } from '@/data/menu';
+import { site } from '@/data/site';
+import { pages, monthYear } from '@/data/seo';
 
 const anchors = [
   ...menu.map((c) => ({ id: c.id, title: c.title })),

@@ -10,11 +10,11 @@
  * (-4° → 2°, como no projeto de origem) e o vapor do café ondula em loop.
  */
 import gsap from 'gsap';
-import { EASE } from '../../../scripts/motion/eases';
-import { speed, START, type MotionConditions } from '../../../scripts/motion/config';
-import { q, q1, onceInView, revealButtons, pauseOffscreen, gentleFade } from '../../../scripts/motion/utils';
-import { split, finish } from '../../../scripts/motion/split';
-import { headingIn } from '../../../scripts/motion/heading';
+import { EASE } from '@/scripts/motion/eases';
+import { speed, START, type MotionConditions } from '@/scripts/motion/config';
+import { q, q1, onceInView, revealButtons, pauseOffscreen, gentleFade } from '@/scripts/motion/utils';
+import { split, finish } from '@/scripts/motion/split';
+import { headingIn } from '@/scripts/motion/heading';
 
 export function initMotion(root: HTMLElement, c: MotionConditions, order: number): void {
   const panel = q1(root, 'st-panel');

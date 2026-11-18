@@ -5,8 +5,8 @@
  * Teclado: Enter/Espaço (nativo do <button>), ↑ ↓ Home End entre as perguntas.
  */
 import gsap from 'gsap';
-import { registerEases, EASE } from '../../../scripts/motion/eases';
-import { requestRefresh } from '../../../scripts/motion/refresh';
+import { registerEases, EASE } from '@/scripts/motion/eases';
+import { requestRefresh } from '@/scripts/motion/refresh';
 
 registerEases();
 

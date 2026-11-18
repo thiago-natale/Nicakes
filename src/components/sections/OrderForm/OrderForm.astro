@@ -15,15 +15,15 @@
  * O envio monta a mensagem padrão (orderForm.ts) e abre o WhatsApp.
  * Lógica: orderForm.ts (pura) · orderForm.client.ts (DOM) · orderForm.motion.ts.
  */
-import Button from '../../ui/Button.astro';
-import ChoiceCard from '../../ui/ChoiceCard.astro';
-import FormField from '../../ui/FormField.astro';
-import Icon from '../../ui/Icon.astro';
-import StepBadge from '../../ui/StepBadge.astro';
+import Button from '@/components/ui/Button.astro';
+import ChoiceCard from '@/components/ui/ChoiceCard.astro';
+import FormField from '@/components/ui/FormField.astro';
+import Icon from '@/components/ui/Icon.astro';
+import StepBadge from '@/components/ui/StepBadge.astro';
 import ProductPicker from './ProductPicker.astro';
 import SweetsBlock from './SweetsBlock.astro';
-import { birthdayCake, defaultDecoration, formatKg, formatPrice, partySweets } from '../../../data/menu';
-import { site, whatsappLink } from '../../../data/site';
+import { birthdayCake, defaultDecoration, formatKg, formatPrice, partySweets } from '@/data/menu';
+import { site, whatsappLink } from '@/data/site';
 import { answerField, NOTES_MAX, SOURCES } from './orderForm';
 import './orderForm.css';
 

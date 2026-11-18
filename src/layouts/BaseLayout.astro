@@ -1,9 +1,9 @@
 ---
-import '../styles/global.css';
-import { site } from '../data/site';
-import { pages, absoluteUrl, type PageKey } from '../data/seo';
-import { baseGraph, pageGraph, toJsonLd } from '../data/schema';
-import Analytics from '../components/ui/Analytics.astro';
+import '@/styles/global.css';
+import { site } from '@/data/site';
+import { pages, absoluteUrl, type PageKey } from '@/data/seo';
+import { baseGraph, pageGraph, toJsonLd } from '@/data/schema';
+import Analytics from '@/components/ui/Analytics.astro';
 
 /**
  * <head> de todas as páginas: título e descrição (data/seo.ts), canônica,
@@ -106,7 +106,7 @@ const ga4Id = import.meta.env.PUBLIC_GA4_ID;
     <slot />
 
     <script>
-      import '../scripts/motion/index';
+      import '@/scripts/motion/index';
     </script>
   </body>
 </html>

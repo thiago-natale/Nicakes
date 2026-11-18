@@ -4,7 +4,7 @@
  * coluna em `variant` quando o item tem mais de um preço); aqui fica só o
  * conteúdo de vitrine. "\n" na descrição indica a quebra de linha no desktop.
  */
-import { menuItem, type MenuRef } from '../../../data/menu';
+import { menuItem, type MenuRef } from '@/data/menu';
 
 interface Recommendation {
   ref: MenuRef | string;

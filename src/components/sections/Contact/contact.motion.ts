@@ -5,11 +5,11 @@
  * cai e quica com squash (CustomBounce) e o ícone da marca flutua em loop.
  */
 import gsap from 'gsap';
-import { EASE } from '../../../scripts/motion/eases';
-import { speed, START, type MotionConditions } from '../../../scripts/motion/config';
-import { q, q1, onceInView, revealButtons, pauseOffscreen, gentleFade } from '../../../scripts/motion/utils';
-import { finish } from '../../../scripts/motion/split';
-import { headingIn } from '../../../scripts/motion/heading';
+import { EASE } from '@/scripts/motion/eases';
+import { speed, START, type MotionConditions } from '@/scripts/motion/config';
+import { q, q1, onceInView, revealButtons, pauseOffscreen, gentleFade } from '@/scripts/motion/utils';
+import { finish } from '@/scripts/motion/split';
+import { headingIn } from '@/scripts/motion/heading';
 
 export function initMotion(root: HTMLElement, c: MotionConditions, order: number): void {
   const panel = q1(root, 'ct-panel');

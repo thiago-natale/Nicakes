@@ -6,10 +6,10 @@
  * Scroll (desktop): a forma sálvia "respira" (morph com scrub).
  */
 import gsap from 'gsap';
-import { EASE } from '../../../scripts/motion/eases';
-import { speed, type MotionConditions } from '../../../scripts/motion/config';
-import { whenReadyToPlay, preloaderSkipped } from '../../../scripts/motion/reveal';
-import { q1 } from '../../../scripts/motion/utils';
+import { EASE } from '@/scripts/motion/eases';
+import { speed, type MotionConditions } from '@/scripts/motion/config';
+import { whenReadyToPlay, preloaderSkipped } from '@/scripts/motion/reveal';
+import { q1 } from '@/scripts/motion/utils';
 
 export function initMotion(root: HTMLElement, c: MotionConditions): void {
   if (c.reduceMotion) return;

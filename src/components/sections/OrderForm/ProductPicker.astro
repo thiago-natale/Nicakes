@@ -6,9 +6,9 @@
  * (`?pedido=bolo|docinhos`) num script inline, antes de os blocos serem
  * desenhados (sem "pulo" no primeiro quadro).
  */
-import Icon, { type IconName } from '../../ui/Icon.astro';
-import StepBadge from '../../ui/StepBadge.astro';
-import { cakePriceFrom, formatPrice, sweetsPriceFrom } from '../../../data/menu';
+import Icon, { type IconName } from '@/components/ui/Icon.astro';
+import StepBadge from '@/components/ui/StepBadge.astro';
+import { cakePriceFrom, formatPrice, sweetsPriceFrom } from '@/data/menu';
 import { DRAFT_KEY } from './orderForm';
 
 const products: Array<{ id: string; title: string; meta: string; price: string; icon: IconName }> = [

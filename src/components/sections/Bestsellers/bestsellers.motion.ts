@@ -5,12 +5,12 @@
  * e, no desktop, os pratos giram suavemente com o scroll.
  */
 import gsap from 'gsap';
-import { EASE } from '../../../scripts/motion/eases';
-import { speed, START, type MotionConditions } from '../../../scripts/motion/config';
-import { q, q1, onceInView, revealButtons, gentleFade } from '../../../scripts/motion/utils';
-import { split, finish } from '../../../scripts/motion/split';
-import { priceIn } from '../../../scripts/motion/counters';
-import { headingIn } from '../../../scripts/motion/heading';
+import { EASE } from '@/scripts/motion/eases';
+import { speed, START, type MotionConditions } from '@/scripts/motion/config';
+import { q, q1, onceInView, revealButtons, gentleFade } from '@/scripts/motion/utils';
+import { split, finish } from '@/scripts/motion/split';
+import { priceIn } from '@/scripts/motion/counters';
+import { headingIn } from '@/scripts/motion/heading';
 
 export function initMotion(root: HTMLElement, c: MotionConditions, order: number): void {
   const panel = q1(root, 'bs-panel');

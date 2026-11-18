@@ -1,8 +1,8 @@
 ---
 import BaseLayout from './BaseLayout.astro';
-import Header from '../components/sections/Header/Header.astro';
-import Preloader from '../components/sections/Preloader/Preloader.astro';
-import Footer from '../components/sections/Footer/Footer.astro';
+import Header from '@/components/sections/Header/Header.astro';
+import Preloader from '@/components/sections/Preloader/Preloader.astro';
+import Footer from '@/components/sections/Footer/Footer.astro';
 
 /**
  * Estrutura comum das páginas: header fixo, superfície rosa-clara de ponta a
@@ -13,7 +13,7 @@ import Footer from '../components/sections/Footer/Footer.astro';
  * respiro lateral (`--content-px`/`--section-px`), mantendo o fundo de ponta a ponta.
  * O slot "backdrop" recebe formas decorativas da página.
  */
-import type { PageKey } from '../data/seo';
+import type { PageKey } from '@/data/seo';
 
 interface Props {
   /** Página registrada em data/seo.ts (título, descrição, canônica, sitemap) */

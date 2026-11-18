@@ -6,11 +6,11 @@
  * chips, personalizados e extras "a combinar" e as regras do pedido.
  * Dados: partySweets (data/menu.ts). Animação: partySweets.motion.ts.
  */
-import Button from '../../ui/Button.astro';
-import CakeSlider from '../../ui/CakeSlider.astro';
-import SectionDivider from '../../ui/SectionDivider.astro';
-import { formatPrice, partySweets, sweetsPriceFrom } from '../../../data/menu';
-import { MASK_FULL, MASK_SEEDS } from '../../../scripts/motion/masks';
+import Button from '@/components/ui/Button.astro';
+import CakeSlider from '@/components/ui/CakeSlider.astro';
+import SectionDivider from '@/components/ui/SectionDivider.astro';
+import { formatPrice, partySweets, sweetsPriceFrom } from '@/data/menu';
+import { MASK_FULL, MASK_SEEDS } from '@/scripts/motion/masks';
 import { sweetsRules } from './partySweets';
 
 const priceFrom = sweetsPriceFrom();

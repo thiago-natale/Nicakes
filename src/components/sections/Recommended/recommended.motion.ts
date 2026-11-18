@@ -4,12 +4,12 @@
  * em 3D a partir do topo, com a foto revelada da esquerda (clip-path), o "+"
  * girando e o preço subindo de uma máscara.
  */
-import { EASE } from '../../../scripts/motion/eases';
-import { speed, START, type MotionConditions } from '../../../scripts/motion/config';
-import { q, q1, onceInView, gentleFade } from '../../../scripts/motion/utils';
-import { split, finish } from '../../../scripts/motion/split';
-import { headingIn } from '../../../scripts/motion/heading';
-import { priceIn } from '../../../scripts/motion/counters';
+import { EASE } from '@/scripts/motion/eases';
+import { speed, START, type MotionConditions } from '@/scripts/motion/config';
+import { q, q1, onceInView, gentleFade } from '@/scripts/motion/utils';
+import { split, finish } from '@/scripts/motion/split';
+import { headingIn } from '@/scripts/motion/heading';
+import { priceIn } from '@/scripts/motion/counters';
 
 /** Entrada de um card de produto (reutilizado por outras seções). */
 export function productCardIn(tl: gsap.core.Timeline, card: Element, at: gsap.Position, k: number, splits: ReturnType<typeof split>[]): void {

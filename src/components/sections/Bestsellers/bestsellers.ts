@@ -3,7 +3,7 @@
  * Nome e preço vêm do cardápio (src/data/menu.ts) pelo `ref` (id do item);
  * aqui fica só o conteúdo de vitrine: descrição curta, foto e alt.
  */
-import { menuItem, type MenuRef } from '../../../data/menu';
+import { menuItem, type MenuRef } from '@/data/menu';
 
 interface Bestseller {
   ref: MenuRef | string;

@@ -3,8 +3,8 @@
  * validação e a mensagem do WhatsApp. Fontes: `birthdayCake` e `partySweets`
  * (src/data/menu.ts) e os horários da loja (`site.hours`). Testável em Node.
  */
-import { birthdayCake, defaultDecoration, formatKg, formatPrice, partySweets, type CakeDecoration } from '../../../data/menu';
-import { site } from '../../../data/site';
+import { birthdayCake, defaultDecoration, formatKg, formatPrice, partySweets, type CakeDecoration } from '@/data/menu';
+import { site } from '@/data/site';
 
 export type ProductId = 'cake' | 'sweets';
 

@@ -3,11 +3,11 @@
  * Cabeçalho padrão centralizado (headingIn) + cards em sequência; em cada card, nomes deslizam, a linha
  * pontilhada dourada cresce e os preços sobem de uma máscara até assentar.
  */
-import { speed, START, type MotionConditions } from '../../../scripts/motion/config';
-import { q, q1, onceInView, revealButtons, gentleFade } from '../../../scripts/motion/utils';
-import { split, finish } from '../../../scripts/motion/split';
-import { headingIn } from '../../../scripts/motion/heading';
-import { menuCardIn } from '../../../scripts/motion/menu';
+import { speed, START, type MotionConditions } from '@/scripts/motion/config';
+import { q, q1, onceInView, revealButtons, gentleFade } from '@/scripts/motion/utils';
+import { split, finish } from '@/scripts/motion/split';
+import { headingIn } from '@/scripts/motion/heading';
+import { menuCardIn } from '@/scripts/motion/menu';
 
 export function initMotion(root: HTMLElement, c: MotionConditions, order: number): void {
   const heading = q1(root, 'heading');

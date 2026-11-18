@@ -3,7 +3,7 @@
  * cardápio (src/data/menu.ts) — renomear, mudar o preço ou trocar o item de
  * grupo lá atualiza a prévia sozinho.
  */
-import { menuItem, type MenuItem } from '../../../data/menu';
+import { menuItem, type MenuItem } from '@/data/menu';
 
 function pick(id: string): MenuItem {
   const { item, fullName, price } = menuItem(id, 'Prévia do cardápio (MenuPreview/menuPreview.ts)');

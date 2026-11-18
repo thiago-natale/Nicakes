@@ -22,12 +22,12 @@ import { listenReveal, markBooted, markHeroIntroDone, whenHeroIntroDone, preload
 import { requestRefresh, whenIdle } from './refresh';
 import { onApproach, nextTask } from './lazy';
 
-import { initMotion as heroBackdrop } from '../../components/sections/Hero/heroBackdrop.motion';
-import { initMotion as hero } from '../../components/sections/Hero/hero.motion';
-import { initMotion as menuHeader } from '../../components/sections/MenuHeader/menuHeader.motion';
-import { initMotion as notFound } from '../../components/sections/NotFound/notFound.motion';
-import { initMotion as orderHeader } from '../../components/sections/OrderHeader/orderHeader.motion';
-import { initMotion as orderForm } from '../../components/sections/OrderForm/orderForm.motion';
+import { initMotion as heroBackdrop } from '@/components/sections/Hero/heroBackdrop.motion';
+import { initMotion as hero } from '@/components/sections/Hero/hero.motion';
+import { initMotion as menuHeader } from '@/components/sections/MenuHeader/menuHeader.motion';
+import { initMotion as notFound } from '@/components/sections/NotFound/notFound.motion';
+import { initMotion as orderHeader } from '@/components/sections/OrderHeader/orderHeader.motion';
+import { initMotion as orderForm } from '@/components/sections/OrderForm/orderForm.motion';
 
 export type SectionInit = (root: HTMLElement, c: MotionConditions, order: number) => (() => void) | void;
 
@@ -44,23 +44,23 @@ type Entry = [name: string, init: SectionInit | Loader, mode: 'eager' | 'lazy' |
 const SECTIONS: Entry[] = [
   ['hero-backdrop', heroBackdrop, 'eager'],
   ['hero', hero, 'eager'],
-  ['about', () => import('../../components/sections/About/about.motion'), 'lazy'],
-  ['bestsellers', () => import('../../components/sections/Bestsellers/bestsellers.motion'), 'lazy'],
-  ['recommended', () => import('../../components/sections/Recommended/recommended.motion'), 'lazy'],
-  ['menu-preview', () => import('../../components/sections/MenuPreview/menuPreview.motion'), 'lazy'],
-  ['custom-orders', () => import('../../components/sections/CustomOrders/customOrders.motion'), 'eager-desktop'],
-  ['store', () => import('../../components/sections/Store/store.motion'), 'lazy'],
-  ['testimonials', () => import('../../components/sections/Testimonials/testimonials.motion'), 'lazy'],
-  ['faq', () => import('../../components/sections/Faq/faq.motion'), 'lazy'],
-  ['contact', () => import('../../components/sections/Contact/contact.motion'), 'lazy'],
+  ['about', () => import('@/components/sections/About/about.motion'), 'lazy'],
+  ['bestsellers', () => import('@/components/sections/Bestsellers/bestsellers.motion'), 'lazy'],
+  ['recommended', () => import('@/components/sections/Recommended/recommended.motion'), 'lazy'],
+  ['menu-preview', () => import('@/components/sections/MenuPreview/menuPreview.motion'), 'lazy'],
+  ['custom-orders', () => import('@/components/sections/CustomOrders/customOrders.motion'), 'eager-desktop'],
+  ['store', () => import('@/components/sections/Store/store.motion'), 'lazy'],
+  ['testimonials', () => import('@/components/sections/Testimonials/testimonials.motion'), 'lazy'],
+  ['faq', () => import('@/components/sections/Faq/faq.motion'), 'lazy'],
+  ['contact', () => import('@/components/sections/Contact/contact.motion'), 'lazy'],
   ['menu-header', menuHeader, 'eager'],
   ['not-found', notFound, 'eager'],
   ['order-header', orderHeader, 'eager'],
   ['order-form', orderForm, 'eager'],
-  ['menu-category', () => import('../../components/sections/MenuCategory/menuCategory.motion'), 'lazy'],
-  ['birthday-cakes', () => import('../../components/sections/BirthdayCakes/birthdayCakes.motion'), 'lazy'],
-  ['party-sweets', () => import('../../components/sections/PartySweets/partySweets.motion'), 'lazy'],
-  ['footer', () => import('../../components/sections/Footer/footer.motion'), 'lazy'],
+  ['menu-category', () => import('@/components/sections/MenuCategory/menuCategory.motion'), 'lazy'],
+  ['birthday-cakes', () => import('@/components/sections/BirthdayCakes/birthdayCakes.motion'), 'lazy'],
+  ['party-sweets', () => import('@/components/sections/PartySweets/partySweets.motion'), 'lazy'],
+  ['footer', () => import('@/components/sections/Footer/footer.motion'), 'lazy'],
 ];
 
 /** Módulos já baixados (o chunk é reaproveitado ao trocar de breakpoint). */

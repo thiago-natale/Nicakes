@@ -7,7 +7,7 @@
 import { site } from './site';
 import { menu, birthdayCake, formatKg, formatPrice, cakePriceFrom, partySweets, sweetsPriceFrom, type MenuItem, type MenuGroup } from './menu';
 import { absoluteUrl, pages, monthYear } from './seo';
-import { faqItems, orderFaqItems, menuFaqItems, type FaqItem } from '../components/sections/Faq/faq';
+import { faqItems, orderFaqItems, menuFaqItems, type FaqItem } from '@/components/sections/Faq/faq';
 
 const hours = site.hours.map((h) => `${h.long}: ${h.time}`).join('; ');
 const allPrices = menu.flatMap((c) => c.groups.flatMap((g) => g.items.flatMap((i) => i.prices ?? (i.price !== undefined ? [i.price] : []))));

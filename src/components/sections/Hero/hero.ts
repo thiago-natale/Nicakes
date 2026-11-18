@@ -1,4 +1,4 @@
-import type { IconName } from '../../ui/Icon.astro';
+import type { IconName } from '@/components/ui/Icon.astro';
 
 export const heroHighlights: { icon: IconName; lines: [string, string] }[] = [
   { icon: 'calendar-heart', lines: ['Encomendas', 'sob medida'] },

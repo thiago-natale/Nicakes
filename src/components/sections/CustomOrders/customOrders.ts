@@ -4,10 +4,10 @@
  * os passos (perks) e a identidade de cada painel (lado, máscara, ornamento e o
  * elemento que percorre o caminho dos passos).
  */
-import type { IconName } from '../../ui/Icon.astro';
-import type { GalleryKind } from '../../../data/orderGallery';
-import type { MaskName } from '../../../scripts/motion/masks';
-import { birthdayCake, cakePriceFrom, formatPrice, partySweets, sweetsPriceFrom } from '../../../data/menu';
+import type { IconName } from '@/components/ui/Icon.astro';
+import type { GalleryKind } from '@/data/orderGallery';
+import type { MaskName } from '@/scripts/motion/masks';
+import { birthdayCake, cakePriceFrom, formatPrice, partySweets, sweetsPriceFrom } from '@/data/menu';
 
 export interface OrderPanelData {
   /** Sufixo dos ids/âncoras (#encomendas-bolo) */

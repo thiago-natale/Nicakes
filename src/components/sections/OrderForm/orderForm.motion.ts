@@ -7,10 +7,10 @@
  * Só opacidade (nunca visibility): os campos continuam focáveis pelo teclado
  * antes de a entrada tocar — o foco rola a etapa para a tela e dispara a entrada.
  */
-import { EASE } from '../../../scripts/motion/eases';
-import { speed, START, type MotionConditions } from '../../../scripts/motion/config';
-import { q, q1, onceInView } from '../../../scripts/motion/utils';
-import { split, finish } from '../../../scripts/motion/split';
+import { EASE } from '@/scripts/motion/eases';
+import { speed, START, type MotionConditions } from '@/scripts/motion/config';
+import { q, q1, onceInView } from '@/scripts/motion/utils';
+import { split, finish } from '@/scripts/motion/split';
 
 export function initMotion(root: HTMLElement, c: MotionConditions, order: number): void {
   const steps = q(root, 'of-step');

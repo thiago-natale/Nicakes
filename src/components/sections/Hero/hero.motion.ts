@@ -15,14 +15,14 @@
  */
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { EASE } from '../../../scripts/motion/eases';
-import { speed, type MotionConditions } from '../../../scripts/motion/config';
-import { whenReadyToPlay, preloaderSkipped, markHeroIntroDone } from '../../../scripts/motion/reveal';
-import { whenIdle } from '../../../scripts/motion/refresh';
-import { q, q1, revealButtons, cssSpin } from '../../../scripts/motion/utils';
-import { split } from '../../../scripts/motion/split';
-import { drawIcon } from '../../../scripts/motion/draw';
-import { eyebrowIn } from '../../../scripts/motion/eyebrow';
+import { EASE } from '@/scripts/motion/eases';
+import { speed, type MotionConditions } from '@/scripts/motion/config';
+import { whenReadyToPlay, preloaderSkipped, markHeroIntroDone } from '@/scripts/motion/reveal';
+import { whenIdle } from '@/scripts/motion/refresh';
+import { q, q1, revealButtons, cssSpin } from '@/scripts/motion/utils';
+import { split } from '@/scripts/motion/split';
+import { drawIcon } from '@/scripts/motion/draw';
+import { eyebrowIn } from '@/scripts/motion/eyebrow';
 
 /** Espera o poster/1º quadro (ou a decodificação da imagem) — no máximo 1,5s. */
 function mediaReady(el: Element | null): Promise<void> {

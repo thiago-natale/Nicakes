@@ -1,5 +1,5 @@
 /** Textos da seção "Docinhos de festa" do /cardapio (regras de data/menu.ts). */
-import { partySweets } from '../../../data/menu';
+import { partySweets } from '@/data/menu';
 
 const { minTotal, step, unit, leadBusinessDays } = partySweets.rules;
 

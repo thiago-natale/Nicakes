@@ -2,11 +2,11 @@
  * MenuCategory (/cardapio) — divisor da categoria e cards do cardápio
  * (desenrolam, linhas pontilhadas crescem, preços sobem de máscaras).
  */
-import { speed, type MotionConditions } from '../../../scripts/motion/config';
-import { q, q1, onceInView, gentleFade } from '../../../scripts/motion/utils';
-import { split, finish } from '../../../scripts/motion/split';
-import { dividerIn } from '../../../scripts/motion/divider';
-import { menuCardIn } from '../../../scripts/motion/menu';
+import { speed, type MotionConditions } from '@/scripts/motion/config';
+import { q, q1, onceInView, gentleFade } from '@/scripts/motion/utils';
+import { split, finish } from '@/scripts/motion/split';
+import { dividerIn } from '@/scripts/motion/divider';
+import { menuCardIn } from '@/scripts/motion/menu';
 
 export function initMotion(root: HTMLElement, c: MotionConditions, order: number): void {
   const divider = q1(root, 'divider');

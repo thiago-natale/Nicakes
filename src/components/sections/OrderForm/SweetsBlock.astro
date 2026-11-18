@@ -5,11 +5,11 @@
  * subtotal do tipo; depois, personalizados e extras (valor a combinar).
  * Dados: `partySweets` (src/data/menu.ts). Comportamento: orderForm.client.ts.
  */
-import ChoiceCard from '../../ui/ChoiceCard.astro';
-import FormField from '../../ui/FormField.astro';
-import QuantityStepper from '../../ui/QuantityStepper.astro';
-import StepBadge from '../../ui/StepBadge.astro';
-import { formatPrice, partySweets } from '../../../data/menu';
+import ChoiceCard from '@/components/ui/ChoiceCard.astro';
+import FormField from '@/components/ui/FormField.astro';
+import QuantityStepper from '@/components/ui/QuantityStepper.astro';
+import StepBadge from '@/components/ui/StepBadge.astro';
+import { formatPrice, partySweets } from '@/data/menu';
 import { CUSTOM_BRIEF, CUSTOM_BRIEF_MAX, CUSTOM_ON, CUSTOM_QTY, SWEET_EXTRA, sweetCatKey, sweetField } from './orderForm';
 
 const { step, minTotal, maxPerFlavor } = partySweets.rules;

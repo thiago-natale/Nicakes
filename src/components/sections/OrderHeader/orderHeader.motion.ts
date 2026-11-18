@@ -5,12 +5,12 @@
  * a gota cresce até o retângulo (MorphSVG no clipPath), como nas Encomendas da home.
  */
 import gsap from 'gsap';
-import { EASE } from '../../../scripts/motion/eases';
-import { speed, type MotionConditions } from '../../../scripts/motion/config';
-import { whenReadyToPlay } from '../../../scripts/motion/reveal';
-import { q, q1, sliderReady } from '../../../scripts/motion/utils';
-import { split, finish } from '../../../scripts/motion/split';
-import { eyebrowEnter } from '../../../scripts/motion/heading';
+import { EASE } from '@/scripts/motion/eases';
+import { speed, type MotionConditions } from '@/scripts/motion/config';
+import { whenReadyToPlay } from '@/scripts/motion/reveal';
+import { q, q1, sliderReady } from '@/scripts/motion/utils';
+import { split, finish } from '@/scripts/motion/split';
+import { eyebrowEnter } from '@/scripts/motion/heading';
 
 export function initMotion(root: HTMLElement, c: MotionConditions): void {
   if (c.reduceMotion) {

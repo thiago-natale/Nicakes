@@ -1,9 +1,9 @@
 ---
-import Button from '../../ui/Button.astro';
-import CakeSlider from '../../ui/CakeSlider.astro';
-import MenuList from '../../ui/MenuList.astro';
-import SectionDivider from '../../ui/SectionDivider.astro';
-import { birthdayCake, cakePriceFrom, formatPrice, formatKg } from '../../../data/menu';
+import Button from '@/components/ui/Button.astro';
+import CakeSlider from '@/components/ui/CakeSlider.astro';
+import MenuList from '@/components/ui/MenuList.astro';
+import SectionDivider from '@/components/ui/SectionDivider.astro';
+import { birthdayCake, cakePriceFrom, formatPrice, formatKg } from '@/data/menu';
 
 const priceFrom = cakePriceFrom();
 const yields = birthdayCake.sizes.filter((s) => s.kg <= 2).map((s) => `${formatKg(s.kg)}: ${s.serves}`);

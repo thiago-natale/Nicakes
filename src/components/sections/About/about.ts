@@ -3,9 +3,9 @@
  * Os números são calculados a partir de `data/menu.ts` e `data/site.ts`:
  * atualize o cardápio/horários e eles acompanham.
  */
-import type { IconName } from '../../ui/Icon.astro';
-import { menu, birthdayCake } from '../../../data/menu';
-import { site } from '../../../data/site';
+import type { IconName } from '@/components/ui/Icon.astro';
+import { menu, birthdayCake } from '@/data/menu';
+import { site } from '@/data/site';
 
 /** Manifesto em trechos; `accent` = rosa itálico; `swash` = recebe o floreio dourado. */
 export const manifesto: { text: string; accent?: boolean; swash?: boolean }[] = [

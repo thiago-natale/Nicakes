@@ -12,7 +12,7 @@
  *   (disparado pela entrada da seção), com uma garantia de alguns segundos.
  */
 import gsap from 'gsap';
-import { EASE } from '../../scripts/motion/eases';
+import { EASE } from '@/scripts/motion/eases';
 
 const INTERVAL = 5.5;
 const FADE = 0.9;

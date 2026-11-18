@@ -15,12 +15,12 @@
  */
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { EASE } from '../../../scripts/motion/eases';
-import { speed, type MotionConditions } from '../../../scripts/motion/config';
-import { q, q1, onceInView, gentleFade, pauseOffscreen, revealButtons, cssSpin } from '../../../scripts/motion/utils';
-import { split, finish } from '../../../scripts/motion/split';
-import { drawIcon } from '../../../scripts/motion/draw';
-import { eyebrowIn } from '../../../scripts/motion/eyebrow';
+import { EASE } from '@/scripts/motion/eases';
+import { speed, type MotionConditions } from '@/scripts/motion/config';
+import { q, q1, onceInView, gentleFade, pauseOffscreen, revealButtons, cssSpin } from '@/scripts/motion/utils';
+import { split, finish } from '@/scripts/motion/split';
+import { drawIcon } from '@/scripts/motion/draw';
+import { eyebrowIn } from '@/scripts/motion/eyebrow';
 
 export function initMotion(root: HTMLElement, c: MotionConditions, order: number): (() => void) | void {
   const manifesto = q1(root, 'about-manifesto');

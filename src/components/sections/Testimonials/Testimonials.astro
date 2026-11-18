@@ -5,8 +5,8 @@
  * muda de desenho a cada depoimento; laterais esmaecidos (só no desktop).
  * Sem rotação automática: navegação por setas, pontos e teclado (← →).
  */
-import Icon from '../../ui/Icon.astro';
-import SectionHeading from '../../ui/SectionHeading.astro';
+import Icon from '@/components/ui/Icon.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
 import { testimonials, initials, blobShapes } from './testimonials';
 import './testimonials.css';
 
@@ -128,7 +128,7 @@ const order = [...visible, ...testimonials.map((_, i) => i).filter((i) => !visib
 
 <script>
   // Carrossel (GSAP Flip + MorphSVG) só é baixado quando a seção se aproxima
-  import { onApproach } from '../../../scripts/motion/lazy';
+  import { onApproach } from '@/scripts/motion/lazy';
 
   const el = document.querySelector('[data-testimonials]');
   if (el) onApproach(el, () => void import('./testimonials.carousel').then((m) => m.initTestimonialsCarousel()), '100%');

@@ -6,13 +6,13 @@
  * combinar" vêm por último.
  */
 import gsap from 'gsap';
-import { EASE } from '../../../scripts/motion/eases';
-import { speed, type MotionConditions } from '../../../scripts/motion/config';
-import { q, q1, onceInView, revealButtons, gentleFade, sliderReady } from '../../../scripts/motion/utils';
-import { finish } from '../../../scripts/motion/split';
-import { dividerIn } from '../../../scripts/motion/divider';
-import { priceIn } from '../../../scripts/motion/counters';
-import { MASK_FULL } from '../../../scripts/motion/masks';
+import { EASE } from '@/scripts/motion/eases';
+import { speed, type MotionConditions } from '@/scripts/motion/config';
+import { q, q1, onceInView, revealButtons, gentleFade, sliderReady } from '@/scripts/motion/utils';
+import { finish } from '@/scripts/motion/split';
+import { dividerIn } from '@/scripts/motion/divider';
+import { priceIn } from '@/scripts/motion/counters';
+import { MASK_FULL } from '@/scripts/motion/masks';
 
 export function initMotion(root: HTMLElement, c: MotionConditions, order: number): void {
   const divider = q1(root, 'divider');

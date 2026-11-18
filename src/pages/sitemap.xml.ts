@@ -1,6 +1,6 @@
 /** sitemap.xml — gerado a cada build com as páginas indexáveis (data/seo.ts). */
 import type { APIRoute } from 'astro';
-import { indexablePages, absoluteUrl } from '../data/seo';
+import { indexablePages, absoluteUrl } from '@/data/seo';
 
 export const GET: APIRoute = ({ site }) => {
   const urls = indexablePages

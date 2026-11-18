@@ -1,6 +1,6 @@
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { requestRefresh } from "../../../scripts/motion/refresh";
+import { requestRefresh } from "@/scripts/motion/refresh";
 
 gsap.registerPlugin(ScrollTrigger);
 

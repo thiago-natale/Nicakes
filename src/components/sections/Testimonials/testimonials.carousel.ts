@@ -10,7 +10,7 @@ import gsap from 'gsap';
 import { Flip } from 'gsap/Flip';
 import { MorphSVGPlugin } from 'gsap/MorphSVGPlugin';
 import { testimonials, blobShapes } from './testimonials';
-import { registerEases, EASE } from '../../../scripts/motion/eases';
+import { registerEases, EASE } from '@/scripts/motion/eases';
 
 gsap.registerPlugin(Flip, MorphSVGPlugin);
 registerEases();

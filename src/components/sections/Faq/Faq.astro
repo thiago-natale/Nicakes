@@ -6,12 +6,12 @@
  * botão +/− em rosa e uma forma sálvia na borda esquerda (espelha a das encomendas).
  * Inclui dados estruturados FAQPage para os buscadores.
  */
-import Button from '../../ui/Button.astro';
-import Icon from '../../ui/Icon.astro';
-import SectionHeading from '../../ui/SectionHeading.astro';
+import Button from '@/components/ui/Button.astro';
+import Icon from '@/components/ui/Icon.astro';
+import SectionHeading from '@/components/ui/SectionHeading.astro';
 import { faqItems, faqSchema, type FaqItem } from './faq';
-import { whatsappLink } from '../../../data/site';
-import { absoluteUrl } from '../../../data/seo';
+import { whatsappLink } from '@/data/site';
+import { absoluteUrl } from '@/data/seo';
 import './faq.css';
 
 /** Reutilizável: a home usa as perguntas gerais; o /encomendas, as de encomenda. */

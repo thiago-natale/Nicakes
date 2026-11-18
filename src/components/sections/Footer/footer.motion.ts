@@ -2,9 +2,9 @@
  * Footer — entrada curta (≤ 0,9s): logo sobe de uma máscara, ícones sociais
  * fazem pop e os links aparecem.
  */
-import { EASE } from '../../../scripts/motion/eases';
-import type { MotionConditions } from '../../../scripts/motion/config';
-import { q, q1, onceInView } from '../../../scripts/motion/utils';
+import { EASE } from '@/scripts/motion/eases';
+import type { MotionConditions } from '@/scripts/motion/config';
+import { q, q1, onceInView } from '@/scripts/motion/utils';
 
 export function initMotion(root: HTMLElement, c: MotionConditions, order: number): void {
   if (c.reduceMotion) return;

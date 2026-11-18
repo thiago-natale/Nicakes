@@ -4,12 +4,12 @@
  * abrem do centro e os atalhos de categoria entram em cascata com pop.
  */
 import gsap from 'gsap';
-import { EASE } from '../../../scripts/motion/eases';
-import { speed, type MotionConditions } from '../../../scripts/motion/config';
-import { whenReadyToPlay } from '../../../scripts/motion/reveal';
-import { q, q1, revealButtons } from '../../../scripts/motion/utils';
-import { split, finish } from '../../../scripts/motion/split';
-import { eyebrowIn } from '../../../scripts/motion/eyebrow';
+import { EASE } from '@/scripts/motion/eases';
+import { speed, type MotionConditions } from '@/scripts/motion/config';
+import { whenReadyToPlay } from '@/scripts/motion/reveal';
+import { q, q1, revealButtons } from '@/scripts/motion/utils';
+import { split, finish } from '@/scripts/motion/split';
+import { eyebrowIn } from '@/scripts/motion/eyebrow';
 
 export function initMotion(root: HTMLElement, c: MotionConditions): void {
   if (c.reduceMotion) {

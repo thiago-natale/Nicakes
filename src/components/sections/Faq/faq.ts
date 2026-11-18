@@ -2,9 +2,9 @@
  * Perguntas frequentes (trazidas do site anterior, nicakeconfeitaria.netlify.app #faq).
  * Endereço e horários vêm de `data/site.ts` — mude lá e o FAQ acompanha.
  */
-import { site } from '../../../data/site';
-import { AVAILABILITY_NOTE, birthdayCake, cakePriceFrom, formatKg, formatPrice, menu, menuItem, partySweets } from '../../../data/menu';
-import { pages, monthYear } from '../../../data/seo';
+import { site } from '@/data/site';
+import { AVAILABILITY_NOTE, birthdayCake, cakePriceFrom, formatKg, formatPrice, menu, menuItem, partySweets } from '@/data/menu';
+import { pages, monthYear } from '@/data/seo';
 
 export interface FaqItem {
   question: string;
