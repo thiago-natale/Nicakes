@@ -8,34 +8,64 @@ Stack: **Astro (SSG) + Tailwind CSS v4 + TypeScript**.
 ```bash
 npm install
 npm run dev       # http://localhost:4321
-npm run build     # gera /dist (site estático)
-npm run preview
+npm run build     # gera /dist (site estático) e roda a checagem de SEO (scripts/check-seo.mjs)
+npm run preview   # serve o /dist — use este (e não o dev) para medir performance
+npm run check     # checagem de tipos do Astro/TypeScript
+npm run format    # formata o código com Prettier (format:check só confere)
 ```
+
+Copie `.env.example` para `.env` para ativar verificações do Search Console/Bing e o GA4.
+A URL do site e a chave do IndexNow ficam em `site.config.mjs` (único lugar).
+
+### Convenções de código
+
+- **Imports:** use o alias `@/` para sair da pasta (`import { hours } from '@/data/hours'`); dentro da mesma pasta, `./arquivo`.
+- **Arquivos de uma seção** (`src/components/sections/<Seção>/`):
+  - `Secao.astro`: marcação;
+  - `secao.ts`: textos e dados da seção;
+  - `secao.motion.ts`: animação (GSAP), carregada sob demanda;
+  - `secao.client.ts`: comportamento no navegador (menu, acordeão, carrossel, formulário, vídeo);
+  - `secao.css`: estilos em BEM que o Tailwind não resolve.
+- **Nomes:** `PascalCase` para `.astro`; `camelCase` para `.ts` e `.css`.
+- **Eventos customizados:** declarados em `EVENTS` (`src/scripts/motion/config.ts`), com prefixo `nicakes:`. O preloader e o vídeo do hero repetem o texto literal de propósito, para os scripts continuarem inline no HTML.
 
 ## Páginas
 
 | Rota | Conteúdo |
 |---|---|
 | `/` | Landing page |
-| `/cardapio` | Cardápio completo + bolos de aniversário |
+| `/cardapio` | Cardápio completo + bolos de aniversário e docinhos |
+| `/encomendas` | Monte seu bolo e escolha os docinhos → WhatsApp |
 | `/privacidade`, `/termos` | Textos-base (revisar com a Nicake’s) |
+| `/404` | Página não encontrada (noindex) |
+| `/sitemap.xml`, `/robots.txt`, `/llms.txt`, `/llms-full.txt` | Gerados no build a partir de `src/data/` |
 
 ## Onde editar o conteúdo
 
+Todas as informações do site ficam em `src/data/`, um arquivo por categoria. Mude lá e o site inteiro (seções, FAQ, schema, llms.txt) acompanha.
+
 | O quê | Arquivo |
 |---|---|
-| Endereço, horários (`long`/`short` usados no convite da Loja), WhatsApp, iFood, Instagram | `src/data/site.ts` |
+| Nome, grafias da marca, frase canônica, manifesto, temas (`knowsAbout`) | `src/data/brand.ts` |
+| Telefone/WhatsApp (guardado uma vez, em E.164) e links com mensagem pronta (`whatsappLink()`, `whatsappOrderLink()`) | `src/data/contact.ts` |
+| Endereço e link do mapa | `src/data/location.ts` |
+| Horários (dias + abertura/fechamento; os textos e o schema são calculados) | `src/data/hours.ts` |
+| Instagram, iFood e ícones do rodapé | `src/data/social.ts` |
+| CNPJ e ano do © | `src/data/legal.ts` |
 | Links do menu (header) | `src/data/navigation.ts` |
-| Seção «Nossa loja» (textos do painel e do convite) | `src/components/sections/Store/store.ts` |
-| Cardápio completo, preços e bolos de aniversário | `src/data/menu.ts` |
+| Título, descrição e data de atualização de cada página | `src/data/seo.ts` |
+| Cardápio completo, preços, bolos de aniversário e docinhos | `src/data/menu.ts` |
+| Fotos da galeria de encomendas | `src/data/orderGallery.ts` |
+| Perguntas frequentes (home, cardápio e encomendas) | `src/data/faq.ts` |
+| Verificações (Search Console/Bing) e GA4 | `.env` (ver `.env.example`; lidos em `src/data/config.ts`) |
+| URL do site e chave do IndexNow | `site.config.mjs` |
+| Textos de cada seção (títulos, chamadas) | `src/components/sections/<Seção>/<seção>.ts` |
 | Itens exibidos na prévia do cardápio da landing | `src/components/sections/MenuPreview/menuPreview.ts` (puxa preços de `menu.ts`) |
 | Seção «A Nicake’s» (manifesto, história, promessas; números calculados) | `src/components/sections/About/about.ts` |
-| Mais pedidos | `src/components/sections/Bestsellers/bestsellers.ts` |
-| Depoimentos «Memórias que adoçam» (⚠ ilustrativos — trocar por reais) | `src/components/sections/Testimonials/testimonials.ts` |
-| Perguntas frequentes (FAQ) | `src/components/sections/Faq/faq.ts` (endereço e horários vêm de `site.ts`) |
-| Cards «Para adoçar o seu dia» | `src/components/sections/Recommended/recommended.ts` |
+| Depoimentos «Memórias que adoçam» (comentários reais do Instagram) | `src/components/sections/Testimonials/testimonials.ts` |
 
-Links de WhatsApp com mensagem pronta: use `whatsappLink(mensagem)` ou `whatsappOrderLink(produto)` de `src/data/site.ts`.
+Arquivos **derivados** (não guardam valores próprios, só montam a partir dos outros): `src/data/schema.ts` (JSON-LD) e `src/data/llms.ts` (llms.txt).
+Formatadores genéricos (preço, kg, data, telefone, hora) ficam em `src/lib/format.ts`.
 
 ## Estrutura
 
@@ -45,15 +75,22 @@ src/
     sections/   Header · Hero · About · Bestsellers · Recommended · MenuPreview ·
                 CustomOrders · Store · Testimonials · Faq · Contact · Footer · MenuHeader · MenuCategory ·
                 BirthdayCakes · LegalContent
+                OrderHeader · OrderForm · PartySweets · NotFound · Preloader
     ui/         Button · Logo · BrandSeal · Icon · ProductCard · MenuList · SectionDivider ·
-                Eyebrow · SectionHeading · Swash
-  data/         site.ts · menu.ts · navigation.ts
+                Eyebrow · SectionHeading · Swash · Breadcrumbs · CakeSlider · ChoiceCard ·
+                FormField · QuantityStepper · StepBadge · Analytics
+  data/         brand · contact · location · hours · social · legal · navigation · seo ·
+                menu · orderGallery · faq · images · config · schema (derivado) · llms (derivado)
+  lib/          format.ts (preço, kg, data, telefone, hora)
   layouts/      BaseLayout (head, SEO, schema.org) · SiteLayout (moldura, header, rodapé)
-  pages/        index · cardapio · privacidade · termos
+  pages/        index · cardapio · encomendas · privacidade · termos · 404 ·
+                sitemap.xml · robots.txt · llms.txt · llms-full.txt
   scripts/      motion/ (núcleo das animações GSAP; cada seção tem o seu *.motion.ts)
   styles/       global.css (tokens @theme + componentes)
+scripts/        check-seo.mjs (roda no build) · indexnow.mjs (roda no deploy, via GitHub Actions)
+assets-originais/  originais e arquivos fora de uso (não vão para o site; fora do git)
 public/
-  brand/        logos (colorido e branco), ícone, logo empilhado
+  brand/        logos (colorido e branco), ícone
   images/       fotos dos produtos (WebP)
   favicon-32.png · apple-touch-icon.png · icon-512.png · og-image.jpg
 ```
@@ -68,6 +105,7 @@ public/
 
 ## Layout responsivo
 
+- **Breakpoints** (`global.css` › `@theme` e `scripts/motion/config.ts` › `MEDIA`): `md` 48rem (768px, tablet: header com menu completo e hero em 2 colunas) · `lg` 56.25rem (900px, layout desktop) · `xl` 80rem · `ultra` 137.5rem (2200px). Nos `.css` de seção, use esses mesmos valores.
 - **Até 899px:** layout de celular/tablet, com fonte base de 18px.
 - **900px até 2199px:** a superfície rosa-clara ocupa a tela de ponta a ponta, sem moldura nem cantos arredondados. As seções usam colunas fluidas, e a tipografia cresce devagar (16px em 941px, até 20px).
 - **2200px ou mais:** o fundo continua de ponta a ponta e o conteúdo fica centralizado em até 2000px (`--frame-max-ultra`), via `--content-px`/`--section-px`.
@@ -90,7 +128,8 @@ Plano e auditoria: `claude/plano-padronizacao-design.md` (projeto). Regras em vi
   - `type-body`: texto corrido e lead;
   - `type-small`: descrições de card;
   - `type-eyebrow`: o chapéu.
-  - Exceções de propósito: o título do hero, o manifesto do Sobre, os numerais decorativos, as aspas e o texto dos depoimentos.
+  - Tamanhos de interface: classes `text-*` geradas pelos tokens de `@theme` (`text-fine`, `text-label`, `text-detail`, `text-crumb`, `text-meta`, `text-control`, `text-item`, `text-copy-sm`, `text-subtitle`, `text-price`, `text-page-sm`, `text-page`, `text-page-lg`). Se faltar um tamanho, crie o token.
+  - Exceções de propósito (únicos `text-[…]` do projeto): o header (medidas em px da origem), o preloader, o título do hero, o manifesto, os numerais e os números do Sobre, o numeral do `StepBadge` e as aspas e o texto dos depoimentos.
 - **Ritmo vertical:** cada seção leva `section-y` no topo (`--section-gap`), sem padding-bottom. Blocos de catálogo encadeados (Recomendados → Cardápio) usam `section-y-tight`.
 - **Linha de texto:** no desktop, todo texto começa na mesma coluna. `--panel-px` = `--content-px` − `--section-px`, então o texto dentro dos painéis alinha com o das seções abertas.
 - **Superfícies:**
@@ -115,7 +154,7 @@ Plano e auditoria: `claude/plano-padronizacao-design.md` (projeto). Regras em vi
 
 Plano e diagnóstico: `claude/plano-performance.md` (projeto). A mesma animação roda no desktop e no celular, com estes cuidados:
 
-- **Preloader em CSS puro** (`Preloader/preloader.css`): começa no 1º quadro, sem esperar o JS. O `preloader.ts` (sem GSAP) só abre os painéis quando o logo terminou e as animações estão prontas.
+- **Preloader em CSS puro** (`Preloader/preloader.css`): começa no 1º quadro, sem esperar o JS. O `preloader.client.ts` (sem GSAP) só abre os painéis quando o logo terminou e as animações estão prontas.
   - Na 1ª visita, o hero é pintado por baixo do preloader; o poster do vídeo é o LCP.
 - **Vídeo do hero:**
   - versões comprimidas, celular 480p (~370 KB) e desktop 720p (~1,2–1,4 MB), WebM + MP4, sem áudio;
@@ -135,13 +174,13 @@ Plano e diagnóstico: `claude/plano-performance.md` (projeto). A mesma animaçã
 
 - **Header** (`sections/Header/`): fixo no topo, com medidas em px idênticas à origem.
   - Menu móvel em `<dialog>` e destaque da seção visível.
+  - Arquivos: `header.client.ts` (menu e seção ativa), `headerIntro.motion.ts` (entrada), `headerMenu.motion.ts` (abertura do menu) e `headerProgress.motion.ts` (barra de rolagem).
   - Barra de progresso da rolagem (GSAP ScrollTrigger, carregado sob demanda).
   - `--header-height` é medido via JS e empurra o conteúdo para baixo do header.
   - Os itens ficam em `src/data/navigation.ts`: Início · A Nicake’s · Delícias · Cardápio · Encomendas · Loja · Dúvidas · Contato (Depoimentos segue na página, fora do menu).
 - **Preloader** (`sections/Preloader/`): aparece só na home, na primeira visita da sessão (`sessionStorage`).
   - Animação de ~4s com GSAP + SplitText. Com movimento reduzido, vira uma versão estática de 2s.
   - Ao terminar, dispara `nicakes:preloader-complete`, e o header faz a sua entrada.
-- **Botões da origem:** `ui/FramedButton.astro` e `ui/UnderlineButton.astro`.
 - **Button (`ui/Button.astro`):** `variant` (primary · light · sage · outline), `size` (sm · md · lg), `shape` (rounded · pill), `icon`/`iconEnd` (nomes do `Icon`), `disabled`. Estilos em `global.css` (`.btn`, BEM, tokens `--btn-*`): estados hover/active/focus-visible/disabled, área de toque ≥ 44px, contraste AA e aviso "abre em nova aba" em links externos.
 
 ## Nossa loja (`sections/Store/`, id `#loja`)
@@ -178,11 +217,6 @@ Coreografia "feita à mão, com calda": timelines GSAP com ScrollTrigger, SplitT
 
 ## Pendências
 
-- **Seção Sobre:** fotos da colagem provisórias (trocar por bastidores reais) e história sem ano/nome de quem fundou (incluir em `About/about.ts`; depois, opcionalmente, uma assinatura).
-
-- **Depoimentos:** os 3 textos em `Testimonials/testimonials.ts` são EXEMPLOS ILUSTRATIVOS (marcados com `placeholder: true`, e o card mostra "depoimento ilustrativo"). Substitua por depoimentos reais de clientes, com autorização, e remova o `placeholder`.
-
-- **Morango Cravejado:** o preço é provisório (`TODO` em `bestsellers.ts` e `menu.ts`).
-- **Domínio:** quando houver, defina `site` em `astro.config.mjs` para gerar URLs canônicas.
-- **Bolo de aniversário:** falta informar tamanho/rendimento e antecedência mínima.
+- **Seção Sobre:** fotos da colagem provisórias (trocar por bastidores reais) e história sem ano/nome de quem fundou (incluir em `About/about.ts` e `data/brand.ts` › `foundingDate`; depois, opcionalmente, uma assinatura).
 - **Fotos:** as atuais foram geradas por IA. Troque por fotos reais quando possível, mantendo nomes e proporções.
+- **Textos legais** (`/privacidade` e `/termos`): textos-base, revisar com a Nicake’s (responsável e contato LGPD).
