@@ -1,14 +1,17 @@
 ---
 import SiteLayout from '@/layouts/SiteLayout.astro';
 import LegalContent from '@/components/sections/LegalContent/LegalContent.astro';
-import { site } from '@/data/site';
+import { brand } from '@/data/brand';
+import { phone, whatsappUrl } from '@/data/contact';
+import { legal } from '@/data/legal';
+import { address } from '@/data/location';
 ---
 
 <!-- Texto-base: revisar com a Nicake's antes de publicar. -->
 <SiteLayout page="privacidade">
   <LegalContent title="Política de privacidade" updated="novembro de 2026" page="privacidade">
     <p>
-      Este site apresenta a {site.fullName} e o nosso cardápio. Ele não tem cadastro nem área de login, e não envia dados
+      Este site apresenta a {brand.fullName} e o nosso cardápio. Ele não tem cadastro nem área de login, e não envia dados
       pessoais para servidores da Nicake’s.
     </p>
     <h2>Formulário de encomendas</h2>
@@ -25,13 +28,13 @@ import { site } from '@/data/site';
     </p>
     <h2>Responsável pelo site</h2>
     <p>
-      {site.fullName} — CNPJ {site.legal.cnpj}. {site.address.street}, {site.address.district}, {site.address.city} –
-      {site.address.state}, CEP {site.address.postalCode}. Atendimento pelo WhatsApp
-      <a href={site.whatsapp} target="_blank" rel="noopener noreferrer">{site.phone.display}</a>.
+      {brand.fullName} — CNPJ {legal.cnpj}. {address.street}, {address.district}, {address.city} –
+      {address.state}, CEP {address.postalCode}. Atendimento pelo WhatsApp
+      <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">{phone.display}</a>.
     </p>
     <h2>Contato</h2>
     <p>
-      Dúvidas sobre privacidade podem ser enviadas pelo WhatsApp <a href={site.whatsapp} target="_blank" rel="noopener noreferrer">{site.phone.display}</a>.
+      Dúvidas sobre privacidade podem ser enviadas pelo WhatsApp <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">{phone.display}</a>.
     </p>
   </LegalContent>
 </SiteLayout>

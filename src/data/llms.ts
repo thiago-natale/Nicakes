@@ -1,15 +1,21 @@
 /**
  * Conteúdo dos arquivos /llms.txt e /llms-full.txt (padrão proposto em llmstxt.org)
  * — resumo da marca em Markdown para assistentes de IA. Tudo é montado a partir
- * dos mesmos dados do site (site.ts, menu.ts, seo.ts, FAQs), então nunca diverge
+ * dos mesmos dados do site (brand, contact, location, hours, social, legal, menu, seo, faq), então nunca diverge
  * do que está nas páginas.
  */
-import { site } from './site';
-import { menu, birthdayCake, formatKg, formatPrice, cakePriceFrom, partySweets, sweetsPriceFrom, type MenuItem, type MenuGroup } from './menu';
-import { absoluteUrl, pages, monthYear } from './seo';
-import { faqItems, orderFaqItems, menuFaqItems, type FaqItem } from '@/components/sections/Faq/faq';
+import { brand } from './brand';
+import { phone, whatsappUrl } from './contact';
+import { hours, hoursTime } from './hours';
+import { legal } from './legal';
+import { address } from './location';
+import { ifoodUrl, instagram } from './social';
+import { menu, birthdayCake, cakePriceFrom, partySweets, sweetsPriceFrom, type MenuItem, type MenuGroup } from './menu';
+import { absoluteUrl, pages } from './seo';
+import { faqItems, orderFaqItems, menuFaqItems, type FaqItem } from './faq';
+import { formatKg, formatPrice, monthYear } from '@/lib/format';
 
-const hours = site.hours.map((h) => `${h.long}: ${h.time}`).join('; ');
+const hoursText = hours.map((h) => `${h.label}: ${hoursTime(h)}`).join('; ');
 const allPrices = menu.flatMap((c) => c.groups.flatMap((g) => g.items.flatMap((i) => i.prices ?? (i.price !== undefined ? [i.price] : []))));
 const itemCount = menu.reduce((n, c) => n + c.groups.reduce((m, g) => m + g.items.length, 0), 0);
 
@@ -23,15 +29,15 @@ function categorySummary(id: string): string {
 
 function intro(s: URL | undefined): string {
   const url = (p: string) => absoluteUrl(p, s);
-  return `# ${site.fullName}
+  return `# ${brand.fullName}
 
-> ${site.description}
+> ${brand.description}
 
-A ${site.fullName} (também conhecida como Nicakes) fica em ${site.address.street}, ${site.address.district}, ${site.address.city} – ${site.address.state} (CEP ${site.address.postalCode}). Horário: ${hours}. CNPJ ${site.legal.cnpj}.
+A ${brand.fullName} (também conhecida como Nicakes) fica em ${address.street}, ${address.district}, ${address.city} – ${address.state} (CEP ${address.postalCode}). Horário: ${hoursText}. CNPJ ${legal.cnpj}.
 
-O cardápio da ${site.fullName} tem ${itemCount} itens entre salgados, doces e bebidas, com preços de ${formatPrice(Math.min(...allPrices))} a ${formatPrice(
+O cardápio da ${brand.fullName} tem ${itemCount} itens entre salgados, doces e bebidas, com preços de ${formatPrice(Math.min(...allPrices))} a ${formatPrice(
     Math.max(...allPrices),
-  )}. Os pedidos podem ser feitos na loja, pelo WhatsApp ${site.phone.display} ou com entrega pelo iFood.
+  )}. Os pedidos podem ser feitos na loja, pelo WhatsApp ${phone.display} ou com entrega pelo iFood.
 
 Os bolos de aniversário sob encomenda custam a partir de ${formatPrice(cakePriceFrom())} o quilo (o preço depende da decoração), com até ${
     birthdayCake.rules.maxFillings
@@ -64,10 +70,10 @@ ${menu
 - [Dúvidas sobre encomendas](${url(pages.encomendas.path)}#faq): preço do bolo e dos docinhos, quantidades, antecedência, retirada e confirmação
 
 ## Contato
-- [WhatsApp ${site.phone.display}](${site.whatsapp})
-- [Instagram ${site.instagram.handle}](${site.instagram.url})
-- [iFood](${site.ifood})
-- [Como chegar (Google Maps)](${site.address.mapsUrl})
+- [WhatsApp ${phone.display}](${whatsappUrl})
+- [Instagram ${instagram.handle}](${instagram.url})
+- [iFood](${ifoodUrl})
+- [Como chegar (Google Maps)](${address.mapsUrl})
 
 ## Opcional
 - [Conteúdo completo para IAs](${url('/llms-full.txt')})

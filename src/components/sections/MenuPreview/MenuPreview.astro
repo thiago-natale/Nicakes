@@ -3,7 +3,7 @@ import Button from '@/components/ui/Button.astro';
 import MenuList from '@/components/ui/MenuList.astro';
 import SectionHeading from '@/components/ui/SectionHeading.astro';
 import { menuPreview } from './menuPreview';
-import { site } from '@/data/site';
+import { ifoodUrl } from '@/data/social';
 ---
 
 <section id="cardapio" data-motion-section="menu-preview" class="section-x section-y-tight relative z-10 scroll-mt-6" aria-labelledby="menu-preview-title">
@@ -23,7 +23,7 @@ import { site } from '@/data/site';
   <div data-motion="menu-cta" class="mt-[1.4rem] flex flex-col items-center gap-[0.6rem] sm:flex-row sm:justify-center sm:gap-[1rem]">
     <Button href="/cardapio" iconEnd="arrow">Ver cardápio completo</Button>
     <p class="type-small text-cocoa-soft">
-      Também entregamos pelo <a href={site.ifood} target="_blank" rel="noopener noreferrer" class="text-link">iFood</a>.
+      Também entregamos pelo <a href={ifoodUrl} target="_blank" rel="noopener noreferrer" class="text-link">iFood</a>.
     </p>
   </div>
 </section>

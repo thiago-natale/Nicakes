@@ -22,18 +22,21 @@ import Icon from '@/components/ui/Icon.astro';
 import StepBadge from '@/components/ui/StepBadge.astro';
 import ProductPicker from './ProductPicker.astro';
 import SweetsBlock from './SweetsBlock.astro';
-import { birthdayCake, defaultDecoration, formatKg, formatPrice, partySweets } from '@/data/menu';
-import { site, whatsappLink } from '@/data/site';
+import { birthdayCake, defaultDecoration, partySweets } from '@/data/menu';
+import { whatsappLink, whatsappUrl } from '@/data/contact';
+import { hours, hoursTime, isOpen } from '@/data/hours';
+import { address } from '@/data/location';
 import { answerField, NOTES_MAX, SOURCES } from './orderForm';
 import './orderForm.css';
+import { formatKg, formatPrice } from '@/lib/format';
 
 const { maxFillings } = birthdayCake.rules;
 const doughSwatch: Record<string, string> = {
   'Massa branca': '#f6e7cc',
   'Massa de chocolate': '#5b3a2e',
 };
-const openHours = site.hours.filter((h) => h.schema).map((h) => `${h.long.toLowerCase()}, ${h.time}`);
-const closedDays = site.hours.filter((h) => !h.schema).map((h) => h.long.toLowerCase());
+const openHours = hours.filter(isOpen).map((h) => `${h.label.toLowerCase()}, ${hoursTime(h)}`);
+const closedDays = hours.filter((h) => !isOpen(h)).map((h) => h.label.toLowerCase());
 const baseDecoration = defaultDecoration();
 const leadCake = birthdayCake.rules.leadBusinessDays;
 const leadSweets = partySweets.rules.leadBusinessDays;
@@ -50,7 +53,7 @@ const plural = (n: number, word: string): string => `${n} ${word}${n === 1 ? '' 
       <noscript>
         <p class="order__noscript type-body">
           O formulário precisa de JavaScript para montar a mensagem. Você pode
-          <a class="text-link" href={site.whatsapp}>encomendar direto pelo WhatsApp</a>.
+          <a class="text-link" href={whatsappUrl}>encomendar direto pelo WhatsApp</a>.
         </p>
       </noscript>
 
@@ -228,7 +231,7 @@ const plural = (n: number, word: string): string => `${n} ${word}${n === 1 ? '' 
         <p class="order-step__lead order-step__pickup type-small">
           <Icon name="storefront" class="size-[1.1rem] shrink-0 text-rose-deep" />
           <span>
-            Retirada na loja: {site.address.street}, {site.address.district}. Horários: {openHours.join('; ')}. {closedDays.map((d) => d[0].toUpperCase() + d.slice(1)).join(', ')} fechado.
+            Retirada na loja: {address.street}, {address.district}. Horários: {openHours.join('; ')}. {closedDays.map((d) => d[0].toUpperCase() + d.slice(1)).join(', ')} fechado.
           </span>
         </p>
 

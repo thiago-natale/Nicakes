@@ -4,7 +4,8 @@
  * Medidas em px para ficar idêntico à origem, independentemente da escala
  * tipográfica do restante do site.
  */
-import { site } from '@/data/site';
+import { brand } from '@/data/brand';
+import { whatsappUrl } from '@/data/contact';
 import { navigation, type NavigationId } from '@/data/navigation';
 import Arrow from '@/components/ui/Arrow.astro';
 import Button from '@/components/ui/Button.astro';
@@ -19,7 +20,7 @@ const isHome = (Astro.url.pathname.replace(/\/$/, '') || '/') === '/';
 const items = navigation
   .filter(({ id }) => availableSections.includes(id))
   .map((item) => ({ ...item, href: isHome ? `#${item.id}` : `/#${item.id}` }));
-const ctaHref = site.whatsapp;
+const ctaHref = whatsappUrl;
 ---
 
 <header
@@ -31,11 +32,11 @@ const ctaHref = site.whatsapp;
   <a
     class="header__brand block w-[100px] shrink-0 md:col-start-1 md:row-start-1 md:justify-self-start xl:w-[121px]"
     href={isHome ? '#inicio' : '/'}
-    aria-label={`${site.fullName} — início`}
+    aria-label={`${brand.fullName} — início`}
   >
     <img
       src="/brand/logo-header.webp"
-      alt={site.fullName}
+      alt={brand.fullName}
       width="484"
       height="194"
       class="h-[62px] w-full object-contain md:h-[60px] xl:h-[72px]"

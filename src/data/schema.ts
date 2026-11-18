@@ -6,43 +6,32 @@
  * - Bakery (LocalBusiness) + WebSite: em todas as páginas (ligam o WebPage à marca).
  * - WebPage: por página; BreadcrumbList nas páginas internas (trilha visível).
  * - Extras por página: Menu (/cardapio), Product + Offer (/encomendas),
- *   FAQPage (seções de FAQ — ver Faq/faq.ts).
+ *   FAQPage (seções de FAQ — faqPageNode(), com as perguntas de data/faq.ts).
+ *
+ * Arquivo DERIVADO: monta os nós a partir dos outros arquivos de data/, sem repetir valores deles.
  */
-import { site } from './site';
-import { menu, birthdayCake, formatKg, partySweets, type MenuGroup, type MenuItem } from './menu';
+import { brand } from './brand';
+import { phone, whatsappUrl } from './contact';
+import { DAY_NAMES, hours, isOpen } from './hours';
+import type { FaqItem } from './faq';
+import { legal } from './legal';
+import { address } from './location';
+import { ifoodUrl, instagram } from './social';
+import { menu, birthdayCake, partySweets, type MenuGroup, type MenuItem } from './menu';
 import { orderGallery, photoSrc } from './orderGallery';
 import { absoluteUrl, pages, type PageSeo } from './seo';
+import { formatKg } from '@/lib/format';
 
 type Node = Record<string, unknown>;
 
-const DAYS: Record<string, string> = {
-  Su: 'Sunday',
-  Mo: 'Monday',
-  Tu: 'Tuesday',
-  We: 'Wednesday',
-  Th: 'Thursday',
-  Fr: 'Friday',
-  Sa: 'Saturday',
-};
-const ORDER = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-
-/** "Tu-Sa 09:00-19:00" → OpeningHoursSpecification */
+/** Horários (data/hours.ts) → OpeningHoursSpecification */
 function openingHours(): Node[] {
-  return site.hours
-    .filter((h) => h.schema)
-    .map((h) => {
-      const [days, time] = (h.schema as string).split(' ');
-      const [opens, closes] = time.split('-');
-      const [a, b] = days.split('-');
-      const start = ORDER.indexOf(a);
-      const end = ORDER.indexOf(b ?? a);
-      const dayOfWeek: string[] = [];
-      for (let d = start; ; d = (d + 1) % 7) {
-        dayOfWeek.push(DAYS[ORDER[d]]);
-        if (d === end) break;
-      }
-      return { '@type': 'OpeningHoursSpecification', dayOfWeek, opens, closes };
-    });
+  return hours.filter(isOpen).map((h) => ({
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: h.days.map((d) => DAY_NAMES[d]),
+    opens: h.opens,
+    closes: h.closes,
+  }));
 }
 
 export const ids = (s: URL | undefined) => {
@@ -62,49 +51,49 @@ export function baseGraph(s: URL | undefined): Node[] {
     {
       '@type': 'Bakery',
       '@id': id.business,
-      name: site.fullName,
-      alternateName: site.alternateNames,
-      description: site.description,
-      slogan: site.manifesto,
+      name: brand.fullName,
+      alternateName: brand.alternateNames,
+      description: brand.description,
+      slogan: brand.manifesto,
       url: home,
       logo: { '@type': 'ImageObject', '@id': id.logo, url: absoluteUrl('/icon-512.png', s), width: 512, height: 512 },
       image: absoluteUrl('/og-image.jpg', s),
-      telephone: site.phone.e164,
-      taxID: site.legal.cnpj,
+      telephone: phone.international,
+      taxID: legal.cnpj,
       contactPoint: {
         '@type': 'ContactPoint',
         contactType: 'customer service',
-        telephone: site.phone.e164,
-        url: site.whatsapp,
+        telephone: phone.international,
+        url: whatsappUrl,
         areaServed: 'BR',
         availableLanguage: 'pt-BR',
       },
-      knowsAbout: site.knowsAbout,
-      ...(site.foundingDate ? { foundingDate: site.foundingDate } : {}),
+      knowsAbout: brand.knowsAbout,
+      ...(brand.foundingDate ? { foundingDate: brand.foundingDate } : {}),
       priceRange: 'R$',
       currenciesAccepted: 'BRL',
       servesCuisine: ['Confeitaria', 'Doces', 'Salgados', 'Café'],
       address: {
         '@type': 'PostalAddress',
-        streetAddress: site.address.street,
-        addressLocality: site.address.city,
-        addressRegion: site.address.state,
-        postalCode: site.address.postalCode,
+        streetAddress: address.street,
+        addressLocality: address.city,
+        addressRegion: address.state,
+        postalCode: address.postalCode,
         addressCountry: 'BR',
       },
-      hasMap: site.address.mapsUrl,
-      areaServed: { '@type': 'City', name: `${site.address.city} – ${site.address.state}` },
+      hasMap: address.mapsUrl,
+      areaServed: { '@type': 'City', name: `${address.city} – ${address.state}` },
       openingHoursSpecification: openingHours(),
       hasMenu: absoluteUrl(pages.cardapio.path, s),
-      sameAs: [site.instagram.url, site.ifood],
+      sameAs: [instagram.url, ifoodUrl],
     },
     {
       '@type': 'WebSite',
       '@id': id.website,
       url: home,
-      name: site.fullName,
+      name: brand.fullName,
       // Nome do site nos resultados do Google: o principal + as variações buscadas
-      alternateName: site.alternateNames,
+      alternateName: brand.alternateNames,
       inLanguage: 'pt-BR',
       publisher: { '@id': id.business },
     },
@@ -171,7 +160,7 @@ export function menuGraph(s: URL | undefined): Node {
   return {
     '@type': 'Menu',
     '@id': `${url}#menu`,
-    name: `Cardápio da ${site.fullName}`,
+    name: `Cardápio da ${brand.fullName}`,
     inLanguage: 'pt-BR',
     provider: { '@id': ids(s).business },
     hasMenuSection: menu.map((category): Node => ({
@@ -221,7 +210,7 @@ export function birthdayCakeGraph(s: URL | undefined): Node {
     name: 'Bolo de aniversário sob encomenda',
     description: `Bolo de aniversário personalizado: escolha a decoração (${birthdayCake.decorations
       .map((d) => d.name.toLowerCase())
-      .join(', ')}), o tamanho (${sizes}), a massa e até ${birthdayCake.rules.maxFillings} recheios. Retirada na loja em ${site.address.city}.`,
+      .join(', ')}), o tamanho (${sizes}), a massa e até ${birthdayCake.rules.maxFillings} recheios. Retirada na loja em ${address.city}.`,
     image: orderGallery.filter((p) => p.kind === 'cake').slice(0, 3).map((p) => absoluteUrl(photoSrc(p), s)),
     brand: { '@id': ids(s).business },
     category: 'Bolos de aniversário',
@@ -251,7 +240,7 @@ export function partySweetsGraph(s: URL | undefined): Node {
     '@type': 'Product',
     '@id': `${url}#docinhos`,
     name: 'Docinhos de festa sob encomenda',
-    description: `Brigadeiros gourmet, super gourmet, mini brownies e brigadeiros personalizados, vendidos por cento (pedido mínimo de ${minTotal} unidades, somando os tipos). Retirada na loja em ${site.address.city}.`,
+    description: `Brigadeiros gourmet, super gourmet, mini brownies e brigadeiros personalizados, vendidos por cento (pedido mínimo de ${minTotal} unidades, somando os tipos). Retirada na loja em ${address.city}.`,
     brand: { '@id': ids(s).business },
     image: orderGallery.filter((p) => p.kind === 'sweets').slice(0, 3).map((p) => absoluteUrl(photoSrc(p), s)),
     category: 'Docinhos de festa',
@@ -275,3 +264,15 @@ export function partySweetsGraph(s: URL | undefined): Node {
 
 /** Script JSON-LD final (um @graph). */
 export const toJsonLd = (nodes: Node[]): string => JSON.stringify({ '@context': 'https://schema.org', '@graph': nodes });
+
+/** FAQPage de uma seção de perguntas (bloco JSON-LD próprio, dentro da seção). */
+export const faqPageNode = (items: FaqItem[], id: string) => ({
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  '@id': id,
+  mainEntity: items.map((item) => ({
+    '@type': 'Question',
+    name: item.question,
+    acceptedAnswer: { '@type': 'Answer', text: item.answer },
+  })),
+});

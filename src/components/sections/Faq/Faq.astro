@@ -9,8 +9,9 @@
 import Button from '@/components/ui/Button.astro';
 import Icon from '@/components/ui/Icon.astro';
 import SectionHeading from '@/components/ui/SectionHeading.astro';
-import { faqItems, faqSchema, type FaqItem } from './faq';
-import { whatsappLink } from '@/data/site';
+import { faqItems, type FaqItem } from '@/data/faq';
+import { faqPageNode } from '@/data/schema';
+import { whatsappLink } from '@/data/contact';
 import { absoluteUrl } from '@/data/seo';
 import './faq.css';
 
@@ -114,7 +115,7 @@ const schemaId = `${absoluteUrl(Astro.url.pathname, Astro.site)}#faq`;
     </div>
   </div>
 
-  <script type="application/ld+json" set:html={JSON.stringify(faqSchema(items, schemaId))} />
+  <script type="application/ld+json" set:html={JSON.stringify(faqPageNode(items, schemaId))} />
 </section>
 
 <script>

@@ -511,17 +511,3 @@ export const defaultDecoration = (): CakeDecoration =>
 export const cakePriceFrom = (): number =>
   Math.min(...birthdayCake.decorations.map((d) => d.pricePerKg));
 
-/** "1,5 kg" */
-export const formatKg = (kg: number): string =>
-  `${kg.toLocaleString("pt-BR")} kg`;
-
-const brl = new Intl.NumberFormat("pt-BR", {
-  style: "currency",
-  currency: "BRL",
-});
-
-/** Formata um preço em reais: 15 → "R$ 15,00" */
-export function formatPrice(value: number): string {
-  // Intl usa espaço não separável; mantém o visual "R$ 15,00".
-  return brl.format(value);
-}

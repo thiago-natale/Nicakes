@@ -1,4 +1,4 @@
-/** "Nossa loja" (#loja) — copy. Endereço e horários vêm de `data/site.ts`. */
+/** "Nossa loja" (#loja) — copy. Endereço e horários vêm de `data/location.ts` e `data/hours.ts`. */
 export const storeCopy = {
   eyebrow: 'Nossa loja',
   titleLines: ['Fique mais'],

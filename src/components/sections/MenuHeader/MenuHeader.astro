@@ -2,9 +2,11 @@
 import Button from '@/components/ui/Button.astro';
 import Breadcrumbs from '@/components/ui/Breadcrumbs.astro';
 import Eyebrow from '@/components/ui/Eyebrow.astro';
-import { menu, formatPrice } from '@/data/menu';
-import { site } from '@/data/site';
-import { pages, monthYear } from '@/data/seo';
+import { menu } from '@/data/menu';
+import { whatsappUrl } from '@/data/contact';
+import { ifoodUrl } from '@/data/social';
+import { pages } from '@/data/seo';
+import { formatPrice, monthYear } from '@/lib/format';
 
 const anchors = [
   ...menu.map((c) => ({ id: c.id, title: c.title })),
@@ -32,8 +34,8 @@ const itemCount = menu.reduce((n, c) => n + c.groups.reduce((m, g) => m + g.item
       <p data-motion="mh-copy" class="mt-[0.35rem] type-small text-cocoa-soft">Preços atualizados em {monthYear(pages.cardapio.updated)}.</p>
     </div>
     <div class="flex flex-wrap gap-[0.5rem]" data-motion="mh-cta">
-      <Button href={site.whatsapp} icon="whatsapp">Pedir no WhatsApp</Button>
-      <Button href={site.ifood} variant="outline" icon="bag">iFood</Button>
+      <Button href={whatsappUrl} icon="whatsapp">Pedir no WhatsApp</Button>
+      <Button href={ifoodUrl} variant="outline" icon="bag">iFood</Button>
     </div>
   </div>
 

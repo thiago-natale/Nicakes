@@ -1,10 +1,12 @@
 /**
  * Encomenda (bolo e/ou docinhos) — lógica pura (sem DOM): preço, resumo, datas,
  * validação e a mensagem do WhatsApp. Fontes: `birthdayCake` e `partySweets`
- * (src/data/menu.ts) e os horários da loja (`site.hours`). Testável em Node.
+ * (src/data/menu.ts) e os horários da loja (`data/hours.ts`). Testável em Node.
  */
-import { birthdayCake, defaultDecoration, formatKg, formatPrice, partySweets, type CakeDecoration } from '@/data/menu';
-import { site } from '@/data/site';
+import { birthdayCake, defaultDecoration, partySweets, type CakeDecoration } from '@/data/menu';
+import { brand } from '@/data/brand';
+import { openWeekdays } from '@/data/hours';
+import { formatKg, formatPrice } from '@/lib/format';
 
 export type ProductId = 'cake' | 'sweets';
 
@@ -225,29 +227,8 @@ export function orderShortLabel(sel: OrderSelection): string {
 /* Datas — retirada com antecedência mínima, só em dias de funcionamento */
 /* ------------------------------------------------------------------ */
 
-const DAY_CODES = ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'];
-
-/** Dias da semana (0 = domingo) em que a loja abre, lidos de `site.hours` ("Tu-Sa 09:00-19:00"). */
-export function openWeekdays(): Set<number> {
-  const open = new Set<number>();
-  for (const h of site.hours) {
-    if (!h.schema) continue;
-    const days = h.schema.split(' ')[0];
-    for (const part of days.split(',')) {
-      const [a, b] = part.split('-');
-      const start = DAY_CODES.indexOf(a);
-      const end = DAY_CODES.indexOf(b ?? a);
-      if (start < 0 || end < 0) continue;
-      for (let d = start; ; d = (d + 1) % 7) {
-        open.add(d);
-        if (d === end) break;
-      }
-    }
-  }
-  return open;
-}
-
-const OPEN = openWeekdays();
+/** Dias da semana (0 = domingo) em que a loja abre — de data/hours.ts. */
+const OPEN = openWeekdays;
 export const isOpenDay = (d: Date): boolean => OPEN.has(d.getDay());
 
 /** "2026-11-08" (data local, sem fuso) */
@@ -379,7 +360,7 @@ export function buildMessage(sel: OrderSelection): string {
   const summary = orderSummary(sel);
   const date = fromISODate(sel.date);
   const both = summary.groups.length > 1;
-  const lines = [`Olá, ${site.name}! Montei meu pedido pelo site:`];
+  const lines = [`Olá, ${brand.name}! Montei meu pedido pelo site:`];
 
   if (sel.products.cake) {
     const size = birthdayCake.sizes.find((s) => s.kg === sel.kg);

@@ -7,7 +7,9 @@
 import Button from '@/components/ui/Button.astro';
 import Icon from '@/components/ui/Icon.astro';
 import SectionHeading from '@/components/ui/SectionHeading.astro';
-import { site } from '@/data/site';
+import { phone, whatsappUrl } from '@/data/contact';
+import { address } from '@/data/location';
+import { ifoodUrl, instagram } from '@/data/social';
 import './contact.css';
 ---
 
@@ -28,8 +30,8 @@ import './contact.css';
         leadClass="max-w-[24rem]"
       />
       <div class="mt-[1.3rem] flex flex-wrap gap-[0.6rem]" data-motion="ct-buttons">
-        <Button href={site.whatsapp} icon="whatsapp">Chamar no WhatsApp</Button>
-        <Button href={site.ifood} variant="outline" icon="bag">Pedir no iFood</Button>
+        <Button href={whatsappUrl} icon="whatsapp">Chamar no WhatsApp</Button>
+        <Button href={ifoodUrl} variant="outline" icon="bag">Pedir no iFood</Button>
       </div>
     </div>
 
@@ -41,21 +43,21 @@ import './contact.css';
         <Icon name="whatsapp" class="mt-[0.2rem] size-[1.05rem] shrink-0 text-sage-deep" strokeWidth={1.6} />
         <span>
           <span class="type-small block text-cocoa-soft">WhatsApp</span>
-          <a href={site.whatsapp} target="_blank" rel="noopener noreferrer" class="contact__link font-medium">{site.phone.display}</a>
+          <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" class="contact__link font-medium">{phone.display}</a>
         </span>
       </li>
       <li class="flex items-start gap-[0.75rem]" data-motion="ct-item">
         <Icon name="instagram" class="mt-[0.2rem] size-[1.05rem] shrink-0 text-sage-deep" strokeWidth={1.6} />
         <span>
           <span class="type-small block text-cocoa-soft">Instagram</span>
-          <a href={site.instagram.url} target="_blank" rel="noopener noreferrer" class="contact__link font-medium">{site.instagram.handle}</a>
+          <a href={instagram.url} target="_blank" rel="noopener noreferrer" class="contact__link font-medium">{instagram.handle}</a>
         </span>
       </li>
       <li class="flex items-start gap-[0.75rem]" data-motion="ct-item">
         <Icon name="pin" class="mt-[0.2rem] size-[1.05rem] shrink-0 text-sage-deep" data-motion="ct-pin" />
         <span>
           <span class="type-small block text-cocoa-soft">Loja</span>
-          <span class="font-medium">{site.address.street} · {site.address.city}</span><br />
+          <span class="font-medium">{address.street} · {address.city}</span><br />
           <a href="#loja" class="text-link type-small mt-[0.2rem]">Horários e como chegar<Icon name="arrow" class="text-link__icon" /></a>
         </span>
       </li>

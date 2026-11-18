@@ -1,10 +1,15 @@
 /**
  * Perguntas frequentes (trazidas do site anterior, nicakeconfeitaria.netlify.app #faq).
- * Endereço e horários vêm de `data/site.ts` — mude lá e o FAQ acompanha.
+ * Endereço, horários e contato vêm de location.ts, hours.ts e contact.ts — mude lá e o FAQ acompanha.
+ * Usado em: seção Faq (home, /cardapio, /encomendas), schema FAQPage e llms.txt.
  */
-import { site } from '@/data/site';
-import { AVAILABILITY_NOTE, birthdayCake, cakePriceFrom, formatKg, formatPrice, menu, menuItem, partySweets } from '@/data/menu';
-import { pages, monthYear } from '@/data/seo';
+import { phone, whatsappUrl } from './contact';
+import { hours, hoursShort } from './hours';
+import { address } from './location';
+import { ifoodUrl } from './social';
+import { AVAILABILITY_NOTE, birthdayCake, cakePriceFrom, menu, menuItem, partySweets } from './menu';
+import { pages } from './seo';
+import { formatKg, formatPrice, monthYear } from '@/lib/format';
 
 export interface FaqItem {
   question: string;
@@ -12,7 +17,7 @@ export interface FaqItem {
   link?: { label: string; href: string };
 }
 
-const hours = site.hours.map((h) => `${h.long}: ${h.short.toLowerCase()}`).join(' · ');
+const hoursText = hours.map((h) => `${h.label}: ${hoursShort(h).toLowerCase()}`).join(' · ');
 
 export const faqItems: FaqItem[] = [
   {
@@ -36,16 +41,16 @@ export const faqItems: FaqItem[] = [
   {
     question: 'Vocês estão no iFood?',
     answer: 'Estamos! O botão “Pedir no iFood” leva direto para a página oficial da Nicake’s no aplicativo.',
-    link: { label: 'Abrir no iFood', href: site.ifood },
+    link: { label: 'Abrir no iFood', href: ifoodUrl },
   },
   {
     question: 'Onde fica a Nicake’s?',
-    answer: `${site.address.street}, ${site.address.district}, ${site.address.city} – ${site.address.state}. CEP ${site.address.postalCode}.`,
-    link: { label: 'Como chegar', href: site.address.mapsUrl },
+    answer: `${address.street}, ${address.district}, ${address.city} – ${address.state}. CEP ${address.postalCode}.`,
+    link: { label: 'Como chegar', href: address.mapsUrl },
   },
   {
     question: 'Qual é o horário de funcionamento?',
-    answer: `${hours}.`,
+    answer: `${hoursText}.`,
   },
   {
     question: 'Os produtos estão disponíveis todos os dias?',
@@ -94,8 +99,8 @@ export const orderFaqItems: FaqItem[] = [
   },
   {
     question: 'Vocês entregam o bolo e os docinhos?',
-    answer: `Por enquanto, as encomendas são retiradas na loja: ${site.address.street}, ${site.address.district}, ${site.address.city}. Você escolhe a data e o período (manhã ou tarde) no pedido.`,
-    link: { label: 'Como chegar', href: site.address.mapsUrl },
+    answer: `Por enquanto, as encomendas são retiradas na loja: ${address.street}, ${address.district}, ${address.city}. Você escolhe a data e o período (manhã ou tarde) no pedido.`,
+    link: { label: 'Como chegar', href: address.mapsUrl },
   },
   {
     question: 'Posso escolher mais de um recheio?',
@@ -105,7 +110,7 @@ export const orderFaqItems: FaqItem[] = [
     question: 'Como o pedido é confirmado?',
     answer:
       'Ao enviar o formulário, o WhatsApp abre com o pedido já escrito. A Nicake’s confere tudo, confirma a disponibilidade, a data e o valor final, e o pedido fica combinado.',
-    link: { label: 'Falar no WhatsApp', href: site.whatsapp },
+    link: { label: 'Falar no WhatsApp', href: whatsappUrl },
   },
 ];
 
@@ -139,7 +144,7 @@ export const menuFaqItems: FaqItem[] = [
   },
   {
     question: 'Como faço um pedido do cardápio?',
-    answer: `Você pode pedir na loja, em ${site.address.street}, ${site.address.city}; pelo WhatsApp ${site.phone.display}; ou com entrega pelo iFood. Bolos de aniversário e docinhos de festa são encomendados pela página de encomendas.`,
+    answer: `Você pode pedir na loja, em ${address.street}, ${address.city}; pelo WhatsApp ${phone.display}; ou com entrega pelo iFood. Bolos de aniversário e docinhos de festa são encomendados pela página de encomendas.`,
     link: { label: 'Encomendar bolo ou docinhos', href: '/encomendas' },
   },
   {
@@ -155,7 +160,7 @@ export const menuFaqItems: FaqItem[] = [
     question: 'A Nicake’s faz entrega em Uberaba?',
     answer:
       'Sim, os itens do cardápio podem ser pedidos com entrega pelo iFood. As encomendas de bolo de aniversário e docinhos, por enquanto, são retiradas na loja.',
-    link: { label: 'Abrir no iFood', href: site.ifood },
+    link: { label: 'Abrir no iFood', href: ifoodUrl },
   },
   {
     question: 'Todos os sabores estão sempre disponíveis?',
@@ -163,7 +168,7 @@ export const menuFaqItems: FaqItem[] = [
   },
   {
     question: 'Qual é o horário de funcionamento da loja?',
-    answer: `${hours}.`,
+    answer: `${hoursText}.`,
   },
   {
     question: 'Os preços do cardápio estão atualizados?',
@@ -172,13 +177,3 @@ export const menuFaqItems: FaqItem[] = [
 ];
 
 /** Dados estruturados (schema.org FAQPage) para os buscadores — só as perguntas visíveis. */
-export const faqSchema = (items: FaqItem[], id: string) => ({
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  '@id': id,
-  mainEntity: items.map((item) => ({
-    '@type': 'Question',
-    name: item.question,
-    acceptedAnswer: { '@type': 'Answer', text: item.answer },
-  })),
-});

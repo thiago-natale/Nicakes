@@ -1,5 +1,5 @@
 ---
-import { site } from '@/data/site';
+import { brand } from '@/data/brand';
 
 /**
  * Logotipo oficial (PNG da marca convertido para WebP).
@@ -15,6 +15,6 @@ const { variant = 'color', class: className = 'h-[3.6rem]', href = '/' } = Astro
 const src = variant === 'white' ? '/brand/logo-horizontal-white.webp' : '/brand/logo-horizontal.webp';
 ---
 
-<a href={href} class="inline-flex shrink-0 rounded-md" aria-label={`${site.fullName} — página inicial`}>
-  <img src={src} alt={site.fullName} width="344" height="200" class:list={['w-auto', className]} decoding="async" loading={variant === 'white' ? 'lazy' : undefined} />
+<a href={href} class="inline-flex shrink-0 rounded-md" aria-label={`${brand.fullName} — página inicial`}>
+  <img src={src} alt={brand.fullName} width="344" height="200" class:list={['w-auto', className]} decoding="async" loading={variant === 'white' ? 'lazy' : undefined} />
 </a>

@@ -9,7 +9,8 @@ import Button from '@/components/ui/Button.astro';
 import SectionHeading from '@/components/ui/SectionHeading.astro';
 import Icon from '@/components/ui/Icon.astro';
 import Swash from '@/components/ui/Swash.astro';
-import { site } from '@/data/site';
+import { hours, hoursShort, isOpen } from '@/data/hours';
+import { address } from '@/data/location';
 import { storeCopy } from './store';
 import './store.css';
 ---
@@ -33,14 +34,14 @@ import './store.css';
       <address class="type-body mt-[1.2rem] flex gap-[0.7rem] text-cocoa not-italic" data-motion="st-address">
         <Icon name="pin" class="mt-[0.1rem] size-[1rem] shrink-0 text-sage-deep" data-motion="st-pin" />
         <span>
-          <strong class="font-medium">{site.address.street}</strong><br />
-          {site.address.district} · {site.address.city} – {site.address.state}<br />
-          <span class="type-small text-cocoa-soft">CEP {site.address.postalCode}</span>
+          <strong class="font-medium">{address.street}</strong><br />
+          {address.district} · {address.city} – {address.state}<br />
+          <span class="type-small text-cocoa-soft">CEP {address.postalCode}</span>
         </span>
       </address>
 
       <div class="mt-[1.3rem] flex flex-wrap gap-[0.6rem]" data-motion="st-cta">
-        <Button href={site.address.mapsUrl} variant="sage" icon="pin" iconEnd="arrow">Como chegar</Button>
+        <Button href={address.mapsUrl} variant="sage" icon="pin" iconEnd="arrow">Como chegar</Button>
       </div>
     </div>
 
@@ -77,11 +78,11 @@ import './store.css';
 
       <dl class="type-small mt-[1.6rem] text-left text-cocoa" aria-label="Horário de funcionamento">
         {
-          site.hours.map((hour) => (
+          hours.map((hour) => (
             <div class="store__hour flex justify-between gap-[0.9rem] py-[0.65rem]" data-motion="st-hour">
               <span class="store__hour-rule" data-motion="st-hour-rule" aria-hidden="true" />
-              <dt>{hour.long}</dt>
-              <dd class={hour.schema ? 'font-medium whitespace-nowrap tabular-nums' : 'whitespace-nowrap text-cocoa-soft'}>{hour.short}</dd>
+              <dt>{hour.label}</dt>
+              <dd class={isOpen(hour) ? 'font-medium whitespace-nowrap tabular-nums' : 'whitespace-nowrap text-cocoa-soft'}>{hoursShort(hour)}</dd>
             </div>
           ))
         }

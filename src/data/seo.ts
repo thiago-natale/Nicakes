@@ -23,7 +23,7 @@ export const pages = {
     path: '/',
     name: 'Início',
     title: 'Confeitaria em Uberaba: bolos, doces e café | Nicake’s',
-    // Mesma frase canônica de data/site.ts (description)
+    // Mesma frase canônica de data/brand.ts (description)
     description:
       'A Nicake’s Confeitaria é uma confeitaria artesanal em Uberaba-MG que faz bolos de aniversário sob encomenda, doces, salgados e café para o dia a dia e festas.',
     priority: 1,
@@ -73,10 +73,6 @@ export const pages = {
 } satisfies Record<string, PageSeo>;
 
 export type PageKey = keyof typeof pages;
-
-/** "2026-11-06" → "novembro de 2026" (textos "Atualizado em …"). */
-export const monthYear = (date: string): string =>
-  new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' }).format(new Date(`${date}T12:00:00`));
 
 /** Páginas indexáveis (sitemap). A 404 fica de fora (noindex). */
 export const indexablePages: PageSeo[] = Object.values(pages);

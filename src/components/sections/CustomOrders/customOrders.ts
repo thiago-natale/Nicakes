@@ -7,7 +7,8 @@
 import type { IconName } from '@/components/ui/Icon.astro';
 import type { GalleryKind } from '@/data/orderGallery';
 import type { MaskName } from '@/scripts/motion/masks';
-import { birthdayCake, cakePriceFrom, formatPrice, partySweets, sweetsPriceFrom } from '@/data/menu';
+import { birthdayCake, cakePriceFrom, partySweets, sweetsPriceFrom } from '@/data/menu';
+import { formatPrice } from '@/lib/format';
 
 export interface OrderPanelData {
   /** Sufixo dos ids/âncoras (#encomendas-bolo) */

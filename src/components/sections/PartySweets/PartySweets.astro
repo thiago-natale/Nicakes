@@ -9,9 +9,10 @@
 import Button from '@/components/ui/Button.astro';
 import CakeSlider from '@/components/ui/CakeSlider.astro';
 import SectionDivider from '@/components/ui/SectionDivider.astro';
-import { formatPrice, partySweets, sweetsPriceFrom } from '@/data/menu';
+import { partySweets, sweetsPriceFrom } from '@/data/menu';
 import { MASK_FULL, MASK_SEEDS } from '@/scripts/motion/masks';
 import { sweetsRules } from './partySweets';
+import { formatPrice } from '@/lib/format';
 
 const priceFrom = sweetsPriceFrom();
 ---

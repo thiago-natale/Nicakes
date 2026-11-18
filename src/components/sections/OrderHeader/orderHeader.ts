@@ -1,6 +1,7 @@
 /** Textos do cabeçalho da página /encomendas. */
 import type { IconName } from '@/components/ui/Icon.astro';
-import { birthdayCake, cakePriceFrom, formatPrice, partySweets, sweetsPriceFrom } from '@/data/menu';
+import { birthdayCake, cakePriceFrom, partySweets, sweetsPriceFrom } from '@/data/menu';
+import { formatPrice } from '@/lib/format';
 
 export const orderHeaderCopy = {
   eyebrow: 'Encomendas',

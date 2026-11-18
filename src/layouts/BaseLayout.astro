@@ -1,6 +1,8 @@
 ---
 import '@/styles/global.css';
-import { site } from '@/data/site';
+import { brand } from '@/data/brand';
+import { publicEnv } from '@/data/config';
+import { address } from '@/data/location';
 import { pages, absoluteUrl, type PageKey } from '@/data/seo';
 import { baseGraph, pageGraph, toJsonLd } from '@/data/schema';
 import Analytics from '@/components/ui/Analytics.astro';
@@ -31,16 +33,13 @@ const description = seo?.description ?? Astro.props.description ?? pages.home.de
 
 const canonical = seo && !noindex ? absoluteUrl(seo.path, Astro.site) : undefined;
 const ogImage = absoluteUrl('/og-image.jpg', Astro.site);
-const ogImageAlt = `${site.fullName} — confeitaria artesanal em ${site.address.city}`;
+const ogImageAlt = `${brand.fullName} — confeitaria artesanal em ${address.city}`;
 const robots = noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1';
 
 const jsonLd = toJsonLd([...baseGraph(Astro.site), ...(seo ? pageGraph(seo, Astro.site, { mainEntity }) : []), ...schema]);
 
-// Verificação de propriedade e Analytics: defina no ambiente de build (.env)
-// PUBLIC_GOOGLE_SITE_VERIFICATION, PUBLIC_BING_SITE_VERIFICATION e PUBLIC_GA4_ID.
-const googleVerification = import.meta.env.PUBLIC_GOOGLE_SITE_VERIFICATION;
-const bingVerification = import.meta.env.PUBLIC_BING_SITE_VERIFICATION;
-const ga4Id = import.meta.env.PUBLIC_GA4_ID;
+// Verificação de propriedade e Analytics: variáveis PUBLIC_* (ver .env.example e data/config.ts)
+const { googleSiteVerification: googleVerification, bingSiteVerification: bingVerification, ga4Id } = publicEnv;
 ---
 
 <!doctype html>
@@ -68,7 +67,7 @@ const ga4Id = import.meta.env.PUBLIC_GA4_ID;
 
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
-    <meta property="og:site_name" content={site.fullName} />
+    <meta property="og:site_name" content={brand.fullName} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     {canonical && <meta property="og:url" content={canonical} />}

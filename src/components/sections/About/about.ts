@@ -1,11 +1,11 @@
 /**
  * Seção "A Nicake’s" (#sobre) — copy e dados.
- * Os números são calculados a partir de `data/menu.ts` e `data/site.ts`:
+ * Os números são calculados a partir de `data/menu.ts` e `data/hours.ts`:
  * atualize o cardápio/horários e eles acompanham.
  */
 import type { IconName } from '@/components/ui/Icon.astro';
 import { menu, birthdayCake } from '@/data/menu';
-import { site } from '@/data/site';
+import { openWeekdays } from '@/data/hours';
 
 /** Manifesto em trechos; `accent` = rosa itálico; `swash` = recebe o floreio dourado. */
 export const manifesto: { text: string; accent?: boolean; swash?: boolean }[] = [
@@ -45,19 +45,8 @@ export const promises: { icon: IconName; title: string; text: string }[] = [
 /* ---------- Números da casa (dados reais do projeto) ---------- */
 const menuItems = menu.reduce((total, category) => total + category.groups.reduce((n, group) => n + group.items.length, 0), 0);
 
-const DAY_INDEX: Record<string, number> = { Mo: 0, Tu: 1, We: 2, Th: 3, Fr: 4, Sa: 5, Su: 6 };
-/** Dias abertos a partir do schema dos horários ("Tu-Sa 09:00-19:00", "Su …"). */
-const openDays = new Set(
-  site.hours.flatMap((h) => {
-    if (!h.schema) return [];
-    const [range] = h.schema.split(' ');
-    const [from, to = from] = range.split('-');
-    const a = DAY_INDEX[from];
-    const b = DAY_INDEX[to];
-    if (a === undefined || b === undefined) return [];
-    return Array.from({ length: b - a + 1 }, (_, i) => a + i);
-  }),
-).size;
+/** Dias da semana em que a loja abre (de data/hours.ts). */
+const openDays = openWeekdays.size;
 
 export const stats: { value: string; label: string; sr: string }[] = [
   { value: String(menuItems), label: 'delícias no cardápio', sr: `${menuItems} delícias no cardápio` },

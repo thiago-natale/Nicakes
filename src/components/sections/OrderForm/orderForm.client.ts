@@ -9,10 +9,11 @@
  */
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { birthdayCake, formatPrice, partySweets } from '@/data/menu';
-import { whatsappLink } from '@/data/site';
+import { birthdayCake, partySweets } from '@/data/menu';
+import { whatsappLink } from '@/data/contact';
 import { priceIn } from '@/scripts/motion/counters';
 import { EASE } from '@/scripts/motion/eases';
+import { formatPrice } from '@/lib/format';
 import {
   answerField,
   buildMessage,
