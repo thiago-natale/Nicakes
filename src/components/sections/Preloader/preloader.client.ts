@@ -7,7 +7,7 @@
  *      `nicakes:preloader-reveal` (o hero começa a entrar junto);
  *   3. ao fim da abertura remove o preloader e dispara `nicakes:preloader-complete`.
  */
-import { SESSION_KEY } from './preloader-config';
+import { SESSION_KEY } from './preloaderConfig';
 
 /** Dispara os eventos fora de qualquer callback (microtask). */
 function emit(name: string): void {

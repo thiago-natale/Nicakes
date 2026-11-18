@@ -9,7 +9,7 @@
  * só abre os painéis quando o logo terminou E as animações do site estão
  * prontas, e dispara `nicakes:preloader-reveal` / `nicakes:preloader-complete`.
  */
-import { SESSION_KEY } from './preloader-config';
+import { SESSION_KEY } from './preloaderConfig';
 import './preloader.css';
 
 const words = [
@@ -94,7 +94,7 @@ const chars = words.map((w) => ({ ...w, chars: [...w.text].map((ch) => ({ ch, i:
 </noscript>
 
 <script>
-  import { initPreloader } from './preloader';
+  import { initPreloader } from './preloader.client';
 
   initPreloader();
 </script>

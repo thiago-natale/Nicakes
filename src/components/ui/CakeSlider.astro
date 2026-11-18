@@ -6,14 +6,14 @@
  * Preenche o pai (que define o tamanho/recorte). Troca automática com barra de
  * progresso em segmentos, setas mínimas, contador, pausa (WCAG 2.2.2), teclado
  * e arraste no celular. Só a 1ª foto vem no HTML; as demais carregam quando vão
- * aparecer. Comportamento: cakeSlider.ts · estilos: cake-slider.css.
+ * aparecer. Comportamento: cakeSlider.ts · estilos: cakeSlider.css.
  *
  * `motion` vai no viewport (alvo do recorte em gota da seção). Com `awaitIntro`,
  * a troca automática espera o evento `cake-slider:ready`, disparado pela
  * animação de entrada da seção.
  */
 import { galleryFor, photoSrc, photoSrcset, GALLERY_KIND_LABEL, GALLERY_SIZES, type GalleryKind } from '@/data/orderGallery';
-import './cake-slider.css';
+import './cakeSlider.css';
 
 interface Props {
   /** `sizes` do <img> (largura exibida) */
@@ -99,5 +99,5 @@ const pad = (n: number): string => String(n).padStart(2, '0');
 </div>
 
 <script>
-  import './cakeSlider';
+  import './cakeSlider.client';
 </script>

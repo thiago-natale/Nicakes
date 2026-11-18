@@ -131,5 +131,5 @@ const order = [...visible, ...testimonials.map((_, i) => i).filter((i) => !visib
   import { onApproach } from '@/scripts/motion/lazy';
 
   const el = document.querySelector('[data-testimonials]');
-  if (el) onApproach(el, () => void import('./testimonials.carousel').then((m) => m.initTestimonialsCarousel()), '100%');
+  if (el) onApproach(el, () => void import('./testimonials.client').then((m) => m.initTestimonialsCarousel()), '100%');
 </script>

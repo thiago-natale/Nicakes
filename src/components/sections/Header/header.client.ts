@@ -1,6 +1,6 @@
 /** Header: menu móvel (<dialog>), seção ativa e altura dinâmica. Portado do projeto de origem. */
-import { initHeaderIntro } from "./header-intro";
-import type { MenuMotion } from "./header-menu.motion";
+import { initHeaderIntro } from "./headerIntro.motion";
+import type { MenuMotion } from "./headerMenu.motion";
 
 export function initHeader() {
   const header = document.querySelector<HTMLElement>("[data-header]");
@@ -223,7 +223,7 @@ export function initHeader() {
   toggle.hidden = false;
   header.setAttribute("data-enhanced", "");
 
-  void import("./header-menu.motion")
+  void import("./headerMenu.motion")
     .then(({ createMenuMotion }) => {
       if (!signal.aborted) menuMotion = createMenuMotion(menu);
     })
@@ -232,7 +232,7 @@ export function initHeader() {
     });
 
   // The menu is ready before the optional animation bundle is loaded.
-  void import("./header-motion")
+  void import("./headerProgress.motion")
     .then(({ initHeaderMotion }) => {
       if (!signal.aborted) disposeMotion = initHeaderMotion(header);
     })

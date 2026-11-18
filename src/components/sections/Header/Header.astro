@@ -104,7 +104,7 @@ const ctaHref = whatsappUrl;
   Menu móvel = um cardápio: o cartão é "arrastado" de baixo para a frente da tela
   (inclinado → plano) e a capa sálvia se abre como a de um cardápio, revelando
   os links. Ao fechar, a capa volta e o cartão desce. Orquestração em
-  header-menu.motion.ts; sem JS de animação (ou com movimento reduzido) abre seco/fade.
+  headerMenu.motion.ts; sem JS de animação (ou com movimento reduzido) abre seco/fade.
 -->
 <dialog
   id="mobile-menu"
@@ -172,7 +172,7 @@ const ctaHref = whatsappUrl;
 </dialog>
 
 <script>
-  import { initHeader } from './header';
+  import { initHeader } from './header.client';
 
   initHeader();
 </script>
