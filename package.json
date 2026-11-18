@@ -8,6 +8,9 @@
     "dev": "astro dev",
     "build": "astro build && node scripts/check-seo.mjs",
     "preview": "astro preview",
+    "check": "astro check",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "astro": "astro",
     "indexnow": "node scripts/indexnow.mjs",
     "check:seo": "node scripts/check-seo.mjs"
@@ -17,5 +20,11 @@
     "astro": "^5.13.0",
     "gsap": "^3.15.0",
     "tailwindcss": "^4.1.11"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "prettier": "^3.10.1",
+    "prettier-plugin-astro": "^1.1.2",
+    "typescript": "^5.9.3"
   }
 }
