@@ -4,9 +4,20 @@ export const EVENTS = {
   /** Disparado pelo preloader no início da abertura dos painéis (ou na hora, se pulado). */
   preloaderReveal: 'nicakes:preloader-reveal',
   preloaderComplete: 'nicakes:preloader-complete',
+  /** Hero: recorte da mídia concluído — o vídeo pode começar a tocar. */
+  heroMediaRevealed: 'nicakes:hero-media-revealed',
+  /** /encomendas: pedido enviado ao WhatsApp (Analytics: generate_lead). */
+  orderSubmit: 'nicakes:order-submit',
 } as const;
 
+/**
+ * Breakpoints — os mesmos de global.css (@theme --breakpoint-*):
+ * md 48rem (tablet: header com menu completo, hero em 2 colunas) ·
+ * lg 56.25rem (layout desktop) · xl 80rem · ultra 137.5rem.
+ */
 export const MEDIA = {
+  /** md — tablet (header com menu completo, hero em 2 colunas) */
+  isTablet: '(min-width: 48rem)',
   isDesktop: '(min-width: 56.25rem)',
   isMobile: '(max-width: 56.2499rem)',
   reduceMotion: '(prefers-reduced-motion: reduce)',

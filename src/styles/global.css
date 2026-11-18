@@ -116,9 +116,11 @@
   --shadow-plate: 0 0.8rem 1.2rem -0.7rem rgb(84 52 54 / 0.5);    /* pratos e fotos redondas */
   --shadow-control: 0 0.3rem 0.6rem -0.3rem rgb(146 79 77 / 0.6); /* botões pequenos (+) */
 
-  /* Breakpoints — layout desktop a partir de 900px; moldura centralizada só no ultrawide */
-  --breakpoint-lg: 56.25rem;
-  --breakpoint-ultra: 137.5rem; /* 2200px */
+  /* Breakpoints — os mesmos de scripts/motion/config.ts (MEDIA).
+     sm 40rem e xl 80rem: padrão do Tailwind. CSS de seção usa os valores literais. */
+  --breakpoint-md: 48rem;       /* 768px — tablet: header com menu completo, hero em 2 colunas */
+  --breakpoint-lg: 56.25rem;    /* 900px — layout desktop */
+  --breakpoint-ultra: 137.5rem; /* 2200px — conteúdo centralizado */
 
   /* Animação */
   --ease-soft: cubic-bezier(0.22, 0.61, 0.36, 1);

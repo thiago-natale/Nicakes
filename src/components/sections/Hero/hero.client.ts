@@ -41,7 +41,7 @@ export function initHeroVideo(): void {
     started = true;
     applyMotionPreference();
   };
-  document.addEventListener('nicakes:hero-media-revealed', start, { once: true });
+  document.addEventListener('nicakes:hero-media-revealed', start, { once: true }); // = EVENTS.heroMediaRevealed (literal: mantém este script inline no HTML)
   window.setTimeout(start, 6000);
   if (reduce.matches) start();
   sync();

@@ -50,7 +50,7 @@ export async function initPreloader(): Promise<void> {
   const reveal = (): void => {
     if (revealed) return;
     revealed = true;
-    emit('nicakes:preloader-reveal');
+    emit('nicakes:preloader-reveal'); // = EVENTS.preloaderReveal (literal: mantém este script inline no HTML)
   };
 
   const complete = (): void => {
@@ -65,7 +65,7 @@ export async function initPreloader(): Promise<void> {
     }
     root.dataset.preloaderComplete = 'true';
     reveal();
-    emit('nicakes:preloader-complete');
+    emit('nicakes:preloader-complete'); // = EVENTS.preloaderComplete
   };
 
   if (preloader) delete root.dataset.preloaderComplete;

@@ -1,7 +1,8 @@
 import gsap from "gsap";
+import { EVENTS } from "@/scripts/motion/config";
 
 /** O header entra junto com o hero, quando o preloader abre os painéis. */
-const PRELOADER_COMPLETE = "nicakes:preloader-reveal";
+const PRELOADER_COMPLETE = EVENTS.preloaderReveal;
 
 export function initHeaderIntro(header: HTMLElement) {
   const items = Array.from(header.children);

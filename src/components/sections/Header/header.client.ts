@@ -1,4 +1,5 @@
 /** Header: menu móvel (<dialog>), seção ativa e altura dinâmica. Portado do projeto de origem. */
+import { MEDIA } from "@/scripts/motion/config";
 import { initHeaderIntro } from "./headerIntro.motion";
 import type { MenuMotion } from "./headerMenu.motion";
 
@@ -29,7 +30,7 @@ export function initHeader() {
 
   const controller = new AbortController();
   const { signal } = controller;
-  const desktop = window.matchMedia("(min-width: 48rem)");
+  const desktop = window.matchMedia(MEDIA.isTablet);
   let previousOverflow = "";
   let destination: HTMLElement | null = null;
   let disposeMotion: (() => void) | undefined;

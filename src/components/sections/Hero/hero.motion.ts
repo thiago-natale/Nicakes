@@ -16,7 +16,7 @@
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { EASE } from '@/scripts/motion/eases';
-import { speed, type MotionConditions } from '@/scripts/motion/config';
+import { EVENTS, speed, type MotionConditions } from '@/scripts/motion/config';
 import { whenReadyToPlay, preloaderSkipped, markHeroIntroDone } from '@/scripts/motion/reveal';
 import { whenIdle } from '@/scripts/motion/refresh';
 import { q, q1, revealButtons, cssSpin } from '@/scripts/motion/utils';
@@ -98,7 +98,7 @@ export function initMotion(root: HTMLElement, c: MotionConditions): (() => void)
 
   const playVideo = (): void => {
     // Fora do callback do GSAP (microtask): quem escuta não entra neste context
-    queueMicrotask(() => document.dispatchEvent(new CustomEvent('nicakes:hero-media-revealed')));
+    queueMicrotask(() => document.dispatchEvent(new CustomEvent(EVENTS.heroMediaRevealed)));
   };
 
   const tl = gsap.timeline({

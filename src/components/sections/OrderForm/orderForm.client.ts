@@ -11,6 +11,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { birthdayCake, partySweets } from '@/data/menu';
 import { whatsappLink } from '@/data/contact';
+import { EVENTS } from '@/scripts/motion/config';
 import { priceIn } from '@/scripts/motion/counters';
 import { EASE } from '@/scripts/motion/eases';
 import { formatPrice } from '@/lib/format';
@@ -721,7 +722,7 @@ function setup(form: HTMLFormElement): void {
     // Conversão (GA4, se ativo — ui/Analytics.astro)
     const items = PRODUCTS.filter((p) => sel.products[p]);
     document.dispatchEvent(
-      new CustomEvent('nicakes:order-submit', { detail: { total: orderSummary(sel).total, items, sweets: sweetsCount(sel) } }),
+      new CustomEvent(EVENTS.orderSubmit, { detail: { total: orderSummary(sel).total, items, sweets: sweetsCount(sel) } }),
     );
     window.location.href = whatsappLink(buildMessage(sel));
   });
