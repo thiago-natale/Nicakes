@@ -12,10 +12,10 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { SITE_URL, INDEXNOW_KEY } from '../site.config.mjs';
 
 const DIST = process.env.DIST ?? 'dist';
-const SITE = (process.env.SITE_URL ?? 'https://www.nicakesconfeitaria.com.br').replace(/\/$/, '');
-const INDEXNOW_KEY = 'a125c911fca46bf31b93075b379370ce';
+const SITE = SITE_URL;
 
 const errors = [];
 const warns = [];

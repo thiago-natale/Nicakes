@@ -11,8 +11,8 @@
  * Antes de enviar, espera a chave responder (o domínio pode levar alguns
  * segundos para servir a versão nova).
  */
-const SITE_URL = (process.env.SITE_URL ?? 'https://www.nicakesconfeitaria.com.br').replace(/\/$/, '');
-const KEY = 'a125c911fca46bf31b93075b379370ce';
+import { SITE_URL, INDEXNOW_KEY } from '../site.config.mjs';
+const KEY = INDEXNOW_KEY;
 const KEY_URL = `${SITE_URL}/${KEY}.txt`;
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
