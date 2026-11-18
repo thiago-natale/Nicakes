@@ -7,7 +7,6 @@
  * avatar e autor assentam, os cards laterais chegam deslizando de cada lado e
  * os controles fecham a sequência (o coração do ponto ativo bate).
  */
-import gsap from 'gsap';
 import { EASE } from '../../../scripts/motion/eases';
 import { speed, START, type MotionConditions } from '../../../scripts/motion/config';
 import { q, q1, onceInView, gentleFade } from '../../../scripts/motion/utils';

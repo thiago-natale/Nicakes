@@ -35,7 +35,6 @@ import {
   pricePerKgOf,
   snapQty,
   SWEET_EXTRA,
-  sweetCatKey,
   sweetExtraAvailable,
   sweetField,
   sweetPrice,

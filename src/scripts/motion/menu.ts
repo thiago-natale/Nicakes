@@ -3,7 +3,6 @@
  * cresce da esquerda e o preço sobe de uma máscara até assentar.
  * Usado pela prévia da home e pelo /cardapio.
  */
-import gsap from 'gsap';
 import { EASE } from './eases';
 import { q, q1 } from './utils';
 import { split } from './split';

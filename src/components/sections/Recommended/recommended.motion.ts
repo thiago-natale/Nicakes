@@ -4,7 +4,6 @@
  * em 3D a partir do topo, com a foto revelada da esquerda (clip-path), o "+"
  * girando e o preço subindo de uma máscara.
  */
-import gsap from 'gsap';
 import { EASE } from '../../../scripts/motion/eases';
 import { speed, START, type MotionConditions } from '../../../scripts/motion/config';
 import { q, q1, onceInView, gentleFade } from '../../../scripts/motion/utils';

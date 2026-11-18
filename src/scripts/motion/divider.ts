@@ -2,7 +2,6 @@
  * Divisor de seção (SectionDivider): linhas douradas desenhadas do centro
  * para fora, corações com batida dupla e título subindo por palavras.
  */
-import gsap from 'gsap';
 import { EASE } from './eases';
 import { q, q1 } from './utils';
 import { split } from './split';

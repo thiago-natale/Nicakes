@@ -7,7 +7,6 @@
  * uma (como os pontilhados do cardápio), as perguntas sobem por palavras e os
  * botões +/− fazem pop girando; a resposta aberta assenta por último.
  */
-import gsap from 'gsap';
 import { EASE } from '../../../scripts/motion/eases';
 import { speed, START, type MotionConditions } from '../../../scripts/motion/config';
 import { q, q1, onceInView, revealButtons, gentleFade } from '../../../scripts/motion/utils';
