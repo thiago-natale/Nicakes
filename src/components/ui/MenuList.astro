@@ -18,7 +18,7 @@ const { items, columns, class: className = '' } = Astro.props;
 <div class:list={['menu-list', className]}>
   {
     columns && (
-      <div class="mb-1 flex justify-end gap-3 text-[0.6rem] tracking-[0.08em] text-cocoa-soft uppercase" aria-hidden="true">
+      <div class="mb-1 flex justify-end gap-3 text-fine tracking-[0.08em] text-cocoa-soft uppercase" aria-hidden="true">
         {columns.map((col) => <span class="w-[4.2rem] text-right">{col}</span>)}
       </div>
     )
@@ -26,10 +26,10 @@ const { items, columns, class: className = '' } = Astro.props;
   <ul class="space-y-[0.45rem]">
     {
       items.map((item) => (
-        <li data-motion="ml-row" class="flex items-baseline gap-2 text-[0.78rem] leading-[1.25] text-cocoa">
+        <li data-motion="ml-row" class="flex items-baseline gap-2 text-item leading-[1.25] text-cocoa">
           <span class="min-w-0" data-motion="ml-name">
             {item.name}
-            {item.detail && <span class="block text-[0.65rem] text-cocoa-soft">{item.detail}</span>}
+            {item.detail && <span class="block text-detail text-cocoa-soft">{item.detail}</span>}
           </span>
           <span class="menu-list__leader min-w-[1rem] flex-1 self-end" aria-hidden="true" data-motion="ml-leader" />
           {item.prices && columns ? (

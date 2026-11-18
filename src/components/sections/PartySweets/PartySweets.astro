@@ -27,12 +27,12 @@ const priceFrom = sweetsPriceFrom();
     </div>
 
     <div class="px-[1.5rem] py-[1.6rem] lg:px-[2rem]">
-      <p class="font-display text-[1.6rem] leading-none font-semibold text-cocoa">
+      <p class="font-display text-price leading-none font-semibold text-cocoa">
         <span class="sr-only">A partir de {formatPrice(priceFrom)} o cento</span>
-        <span class="mr-[0.35em] font-sans text-[0.7rem] font-normal text-cocoa-soft" aria-hidden="true">a partir de</span>
+        <span class="mr-[0.35em] font-sans text-meta font-normal text-cocoa-soft" aria-hidden="true">a partir de</span>
         <span aria-hidden="true" class="tabular-nums" data-motion="ps-price">{formatPrice(priceFrom)}</span>
-        <span class="ml-[0.2em] font-sans text-[0.7rem] font-normal text-cocoa-soft" aria-hidden="true">/ cento</span>
-        <span class="ml-[0.3em] font-sans text-[0.7rem] font-normal text-cocoa-soft">· sob encomenda</span>
+        <span class="ml-[0.2em] font-sans text-meta font-normal text-cocoa-soft" aria-hidden="true">/ cento</span>
+        <span class="ml-[0.3em] font-sans text-meta font-normal text-cocoa-soft">· sob encomenda</span>
       </p>
 
       <p class="mt-[0.5rem] type-small text-cocoa-soft">{sweetsRules}</p>
@@ -42,17 +42,17 @@ const priceFrom = sweetsPriceFrom();
           partySweets.categories.map((c) => (
             <div data-motion="ps-type">
               <div class="flex items-baseline gap-2 text-cocoa">
-                <h3 class="min-w-0 text-[0.62rem] font-medium tracking-[0.18em] text-rose-darker uppercase">
+                <h3 class="min-w-0 text-label font-medium tracking-[0.18em] text-rose-darker uppercase">
                   {c.name} <span class="font-normal tracking-normal normal-case text-cocoa-soft">· {c.weight}</span>
                 </h3>
                 <span class="menu-list__leader min-w-[1rem] flex-1 self-end" aria-hidden="true" />
-                <span class="shrink-0 text-[0.78rem] font-medium whitespace-nowrap tabular-nums">
-                  {formatPrice(c.pricePerHundred)} <span class="text-[0.65rem] font-normal text-cocoa-soft">o cento</span>
+                <span class="shrink-0 text-item font-medium whitespace-nowrap tabular-nums">
+                  {formatPrice(c.pricePerHundred)} <span class="text-detail font-normal text-cocoa-soft">o cento</span>
                 </span>
               </div>
               <ul class="mt-[0.45rem] flex flex-wrap gap-[0.4rem]" aria-label={`Sabores de ${c.name.toLowerCase()}`}>
                 {c.flavors.map((f) => (
-                  <li data-motion="ps-chip" class="rounded-full bg-white/80 px-[0.7rem] py-[0.25rem] text-[0.7rem] text-cocoa">
+                  <li data-motion="ps-chip" class="rounded-full bg-white/80 px-[0.7rem] py-[0.25rem] text-meta text-cocoa">
                     {f}
                   </li>
                 ))}
@@ -62,23 +62,23 @@ const priceFrom = sweetsPriceFrom();
         }
 
         <ul class="space-y-[0.45rem]" data-motion="ps-custom">
-          <li class="flex items-baseline gap-2 text-[0.78rem] leading-[1.25] text-cocoa">
+          <li class="flex items-baseline gap-2 text-item leading-[1.25] text-cocoa">
             <span class="min-w-0">
               {partySweets.custom.name}
-              <span class="block text-[0.65rem] text-cocoa-soft">Decorados com o tema, as cores e os detalhes da festa</span>
+              <span class="block text-detail text-cocoa-soft">Decorados com o tema, as cores e os detalhes da festa</span>
             </span>
             <span class="menu-list__leader min-w-[1rem] flex-1 self-end" aria-hidden="true" />
-            <span class="shrink-0 text-[0.7rem] text-rose-darker italic">valor a combinar</span>
+            <span class="shrink-0 text-meta text-rose-darker italic">valor a combinar</span>
           </li>
           {
             partySweets.extras.map((e) => (
-              <li class="flex items-baseline gap-2 text-[0.78rem] leading-[1.25] text-cocoa">
+              <li class="flex items-baseline gap-2 text-item leading-[1.25] text-cocoa">
                 <span class="min-w-0">
                   {e.name}
-                  {e.hint && <span class="block text-[0.65rem] text-cocoa-soft">{e.hint}</span>}
+                  {e.hint && <span class="block text-detail text-cocoa-soft">{e.hint}</span>}
                 </span>
                 <span class="menu-list__leader min-w-[1rem] flex-1 self-end" aria-hidden="true" />
-                <span class="shrink-0 text-[0.7rem] text-rose-darker italic">valor a combinar</span>
+                <span class="shrink-0 text-meta text-rose-darker italic">valor a combinar</span>
               </li>
             ))
           }
@@ -87,7 +87,7 @@ const priceFrom = sweetsPriceFrom();
 
       <div class="mt-[1.4rem] flex flex-wrap items-center gap-x-[1.25rem] gap-y-[0.5rem]">
         <Button href="/encomendas?pedido=docinhos" iconEnd="arrow" data-motion="ps-cta">Escolher meus docinhos</Button>
-        <a href="/encomendas?pedido=bolo,docinhos" class="text-link inline-flex min-h-[2.75rem] items-center text-[0.75rem] font-medium" data-motion="ps-both">
+        <a href="/encomendas?pedido=bolo,docinhos" class="text-link inline-flex min-h-[2.75rem] items-center text-control font-medium" data-motion="ps-both">
           Vai querer o bolo também? Monte os dois
         </a>
       </div>

@@ -25,7 +25,7 @@ import './orderHeader.css';
     <div data-motion-hero>
       <Breadcrumbs page="encomendas" class="mb-[0.8rem]" />
       <Eyebrow text={copy.eyebrow} />
-      <h1 id="order-title" class="type-section mt-[0.8rem] text-cocoa lg:text-[3rem]">
+      <h1 id="order-title" class="type-section mt-[0.8rem] text-cocoa lg:text-page-lg">
         <span class="block" data-motion="oh-line">{copy.title}</span>
         <span class="order-header__accent-wrap relative inline-block">
           <em class="block font-medium text-rose-deep italic" data-motion="oh-accent">{copy.accent}</em>
@@ -41,7 +41,7 @@ import './orderHeader.css';
               <li data-motion="oh-step">
                 <a
                   href={`#${step.id}`}
-                  class="inline-flex h-[2.75rem] items-center gap-[0.5rem] rounded-full border border-line bg-white/80 pr-[1rem] pl-[0.4rem] text-[0.75rem] font-medium text-cocoa transition-colors hover:border-rose hover:bg-blush lg:h-[2.3rem] lg:gap-[0.4rem] lg:pr-[0.8rem] lg:pl-[0.3rem] lg:text-[0.7rem]"
+                  class="inline-flex h-[2.75rem] items-center gap-[0.5rem] rounded-full border border-line bg-white/80 pr-[1rem] pl-[0.4rem] text-control font-medium text-cocoa transition-colors hover:border-rose hover:bg-blush lg:h-[2.3rem] lg:gap-[0.4rem] lg:pr-[0.8rem] lg:pl-[0.3rem] lg:text-meta"
                 >
                   <span class="inline-grid size-[1.6rem] lg:size-[1.45rem] place-items-center rounded-full border border-gold/70 bg-creme text-gold-deep" aria-hidden="true">
                     <Icon name={step.icon} class="size-[0.95rem] lg:size-[0.85rem]" />

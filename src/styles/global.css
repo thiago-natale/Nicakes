@@ -84,25 +84,34 @@
   --font-display: "Cormorant Garamond", "Cormorant Fallback", Garamond, "Times New Roman", serif;
   --font-sans: "Jost", "Segoe UI", system-ui, sans-serif;
 
-  /* Escala tipográfica (1rem = 16px na largura de referência de 941px) */
-  --text-micro: 0.625rem;            /* 10px — microcopy, rodapé */
-  --text-micro--line-height: 1.5;
-  --text-caption: 0.6875rem;         /* 11px — descrições curtas */
-  --text-caption--line-height: 1.55;
+  /* Escala tipográfica (1rem = 16px na largura de referência de 941px).
+     Textos corridos e títulos de seção usam os utilitários type-* (mais abaixo);
+     estes tokens geram as classes text-* para os demais casos. */
   --text-nav: 0.8125rem;             /* 13px — navegação, botões */
   --text-nav--line-height: 1.3;
   --text-body: 0.8125rem;            /* 13px — parágrafos */
   --text-body--line-height: 1.6;
   --text-card: 1.125rem;             /* 18px serif — títulos de card */
   --text-card--line-height: 1.12;
-  --text-title-sm: 1.3rem;           /* ~21px serif — títulos do bloco de contato */
-  --text-title-sm--line-height: 1.15;
-  --text-title: 1.65rem;             /* ~26px serif — títulos de seção */
-  --text-title--line-height: 1.1;
-  --text-title-lg: 1.8rem;           /* ~29px serif — títulos de painel */
-  --text-title-lg--line-height: 1.02;
   --text-hero: 3.15rem;              /* ~50px serif — título principal */
   --text-hero--line-height: 0.98;
+
+  /* Tamanhos de interface — só o tamanho da fonte; a altura de linha vem do
+     contexto ou de uma classe leading-*. Use estes no lugar de text-[…]. */
+  --text-fine: 0.6rem;               /* legendas minúsculas (números do Sobre, cabeçalho de colunas) */
+  --text-label: 0.62rem;             /* rótulos em caixa-alta, notas de grupo do cardápio */
+  --text-detail: 0.65rem;            /* detalhe abaixo do nome do produto */
+  --text-crumb: 0.68rem;             /* trilha de navegação */
+  --text-meta: 0.7rem;               /* "a partir de", chips, "atualizado em" */
+  --text-control: 0.75rem;           /* chips de navegação e links de ação */
+  --text-item: 0.78rem;              /* linhas do cardápio e de listas de preço */
+  --text-copy-sm: 0.8rem;            /* texto curto em painéis de produto */
+  --text-subtitle: 1.2rem;           /* serif — títulos de grupo, perguntas do FAQ */
+  --text-subtitle-lg: 1.3rem;        /* serif — perguntas do FAQ no desktop */
+  --text-price: 1.6rem;              /* serif — preço em destaque */
+  --text-page-sm: 2.4rem;            /* serif — h1 das páginas legais */
+  --text-page: 2.6rem;               /* serif — h1 das páginas internas (celular) */
+  --text-page-lg: 3rem;              /* serif — h1 das páginas internas (desktop) */
 
   /* Raios */
   --radius-panel: 1.5rem;

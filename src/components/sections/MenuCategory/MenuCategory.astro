@@ -19,9 +19,9 @@ const single = category.groups.length === 1;
     {
       category.groups.map((group) => (
         <article data-motion="menu-card" class="mb-[0.7rem] break-inside-avoid rounded-card border border-line bg-white/70 px-[1.15rem] pt-[1rem] pb-[1.1rem]">
-          {!single && <h3 data-motion="menu-card-title" class="mb-[0.7rem] font-display text-[1.2rem] leading-none font-semibold text-rose-darker">{group.title}</h3>}
+          {!single && <h3 data-motion="menu-card-title" class="mb-[0.7rem] font-display text-subtitle leading-none font-semibold text-rose-darker">{group.title}</h3>}
           <MenuList items={group.items} columns={group.columns} class={single ? 'md:columns-2 md:gap-x-10 2xl:columns-3' : ''} />
-          {group.note && <p class="mt-[0.7rem] text-[0.62rem] text-cocoa-soft italic">{group.note}</p>}
+          {group.note && <p class="mt-[0.7rem] text-label text-cocoa-soft italic">{group.note}</p>}
         </article>
       ))
     }
